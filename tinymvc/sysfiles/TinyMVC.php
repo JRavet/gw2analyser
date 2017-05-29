@@ -85,11 +85,10 @@ class tmvc
    *
    * @access	public
    */    
-  public function main()
+  public function main($controller = "default", $action = "index", $params = null)
   {
     /* set initial timer */
     self::timer('tmvc_app_start');
-    
     /* set path_info */
     $this->path_info = !empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :
 	    (!empty($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '');
@@ -99,6 +98,8 @@ class tmvc
     
     /* include application config */
     include('config_application.php');
+    $config['default_controller'] = $controller;
+    $config['default_action'] = $action;
     $this->config = $config;
 
     /* url remapping/routing */    
@@ -117,7 +118,7 @@ class tmvc
       ob_start();
     
     /* execute controller action */
-    $this->controller->{$this->action}();
+    $this->controller->{$this->action}($params);
     
     if($this->config['timer'])
     {

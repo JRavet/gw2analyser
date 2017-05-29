@@ -1,4 +1,8 @@
 <?php
+require_once("../../../htdocs/scripts.php");
+$tmvc->main("data_collector", "active_collector", $argv[1]);
+
+exit;
 DEFINE('SECONDS', 1000000);
 DEFINE('REGION', $argv[1]);
 date_default_timezone_set("UTC");

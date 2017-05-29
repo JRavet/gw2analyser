@@ -36,6 +36,7 @@ require(TMVC_BASEDIR . 'sysfiles' . DS . 'TinyMVC.php');
 $tmvc = new tmvc();
 
 /* tally-ho! */
-$tmvc->main();
+# put this line in a script to call the appropriate controller-start of that script
+// $tmvc->main("controller", "action", "params");
 
 ?>
