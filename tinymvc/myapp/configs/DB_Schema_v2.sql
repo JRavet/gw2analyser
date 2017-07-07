@@ -49,7 +49,6 @@ CREATE TABLE server_info
 (
 server_id int(4),
 name varchar(60),
-abbreviation varchar(5),
 PRIMARY KEY(server_id)
 );
 
