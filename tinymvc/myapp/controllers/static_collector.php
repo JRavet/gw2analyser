@@ -20,6 +20,7 @@ class Static_Collector_Controller extends TinyMVC_Controller
 	private function store_log_codes()
 	{
 		$this->load->model("log_code","codes");
+		$this->codes->store_codes();
 	}
 	private function get_cardinal_direction()
 	{
