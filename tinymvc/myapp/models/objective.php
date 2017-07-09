@@ -40,8 +40,8 @@ class objective extends TinyMVC_Model
 				'coordY' => isset($objective->coord) ? $objective->coord[1] : 0,
 				'coordZ' => isset($objective->coord) ? $objective->coord[2] : 0,
 				'label_coordX' => isset($objective->label_coord) ? $objective->label_coord[0] : 0,
-				'label_coordY' => isset($objective->label_coord) ? $objective->label_coord[0] : 0,
-				'marker' => $objective->marker,
+				'label_coordY' => isset($objective->label_coord) ? $objective->label_coord[1] : 0,
+				'marker' => isset($objective->marker) ? $objective->marker : '',
 				'compass_direction' => $this->get_compass_direction($objective),
 				'chat_link' => $objective->chat_link
 			));
