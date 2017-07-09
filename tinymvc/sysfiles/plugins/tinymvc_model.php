@@ -36,6 +36,10 @@ class TinyMVC_Model
   function __construct($poolname=null) {
     $this->db = tmvc::instance()->controller->load->database($poolname);
   }
+
+  function save($data) {
+	$this->db->insert($this->_table, $data);
+  }
   
 }
 
