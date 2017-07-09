@@ -6,8 +6,8 @@ class Static_Collector_Controller extends TinyMVC_Controller
 	{
 		$this->store_guild_upgrades();
 		$this->store_log_codes();
-		$this->store_supply_routes();
 		$this->store_objectives();
+		$this->store_supply_routes();
 		$this->store_servers();
 	}
 
@@ -23,7 +23,8 @@ class Static_Collector_Controller extends TinyMVC_Controller
 	}
 	private function store_supply_routes()
 	{
-
+		$this->load->model("supply_route","routes");
+		$this->routes->store_supply_routes();
 	}
 	private function store_objectives()
 	{
