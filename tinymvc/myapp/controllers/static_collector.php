@@ -15,7 +15,8 @@ class Static_Collector_Controller extends TinyMVC_Controller
 
 	private function store_guild_upgrades()
 	{
-
+		$this->load->model('objective_upgrade', 'upgrades');
+		$this->upgrades->store_upgrades();
 	}
 	private function store_log_codes()
 	{
