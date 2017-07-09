@@ -121,7 +121,6 @@ num_yaks int(3),
 duration_owned time,
 PRIMARY KEY(id),
 FOREIGN KEY(obj_id) REFERENCES objective(obj_id)
-ON DELETE CASCADE,
 FOREIGN KEY(match_detail_id) REFERENCES match_detail(id)
 ON DELETE CASCADE
 );
@@ -147,8 +146,18 @@ timeStamp datetime,
 capture_history_id int(11) unsigned,
 upgrade_id int(4),
 PRIMARY KEY (id),
-FOREIGN KEY(upgrade_id) REFERENCES objective_upgrade(id)
-ON DELETE CASCADE,
+FOREIGN KEY(upgrade_id) REFERENCES objective_upgrade(id),
+FOREIGN KEY(capture_history_id) REFERENCES capture_history(id)
+ON DELETE CASCADE
+);
+
+CREATE TABLE yak_history
+(
+id int(11) unsigned AUTO_INCREMENT,
+timeStamp datetime,
+capture_history_id int(11) unsigned,
+num_yaks int(4),
+PRIMARY KEY (id),
 FOREIGN KEY(capture_history_id) REFERENCES capture_history(id)
 ON DELETE CASCADE
 );
@@ -180,10 +189,8 @@ from_obj varchar(10),
 to_obj varchar(10),
 estimated_travel_time float(3,1),
 PRIMARY KEY (from_obj, to_obj),
-FOREIGN KEY (from_obj) REFERENCES objective(obj_id)
-ON DELETE CASCADE,
+FOREIGN KEY (from_obj) REFERENCES objective(obj_id),
 FOREIGN KEY (to_obj) REFERENCES objective(obj_id)
-ON DELETE CASCADE
 );
 
 CREATE USER 'gw2analyser'@'localhost' IDENTIFIED BY 'themirrorimage';
