@@ -13,7 +13,6 @@ class log_code extends TinyMVC_Model
 
 	public function store_codes()
 	{
-        $this->db->delete($this->_table); // delete all entries in the table and start fresh
 		$codes = array(
 			array("id" => -1, "type" => 'database error', "message" => 'A database error has occurred'),
             array("id" => 0, "type" => 'note', "message" => ''),

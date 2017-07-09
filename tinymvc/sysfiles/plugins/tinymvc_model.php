@@ -38,7 +38,19 @@ class TinyMVC_Model
   }
 
   function save($data) {
-	$this->db->insert($this->_table, $data);
+  	try
+  	{
+		$this->db->insert($this->_table, $data);
+	}
+	catch (Exception $e)
+	{
+		echo $e->getMessage();
+	}
+  }
+
+  function delete_all()
+  {
+  	$this->db->delete($this->_table);
   }
   
 }

@@ -16,8 +16,6 @@ class supply_route extends TinyMVC_Model
 
 	public function store_supply_routes()
 	{
-		$this->db->delete($this->_table);
-
 		$routes = array(
 		#BEGIN GREEN BL
 			#BEGIN S CAMP

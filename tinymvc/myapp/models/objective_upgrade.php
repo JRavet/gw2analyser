@@ -14,8 +14,6 @@ class objective_upgrade extends TinyMVC_Model
 
 	function store_upgrades()
 	{
-	   	$this->db->delete($this->_table);
-
 	    $guild_upgrades = json_decode(file_get_contents("https://api.guildwars2.com/v2/guild/upgrades?ids=all"));
 
         foreach ($guild_upgrades as $upgrade)
