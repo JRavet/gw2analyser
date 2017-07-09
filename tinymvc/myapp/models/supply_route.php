@@ -144,9 +144,12 @@ class supply_route extends TinyMVC_Model
 		#END EB
 		);
 
+		$id_counter = 1;
 		foreach ($routes as $route)
 		{
+			$route['id'] = $id_counter; // set the id statically, so rewriting data doesnt cause id-creep
 			$this->save($route);
+			$id_counter++;
 		}
 	}
 }
