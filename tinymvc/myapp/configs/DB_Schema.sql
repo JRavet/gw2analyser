@@ -33,6 +33,7 @@ PRIMARY KEY(guild_id)
 
 CREATE TABLE guild_emblem
 (
+id int(11) unsigned AUTO_INCREMENT,
 guild_id varchar(60),
 background_id int(5),
 foreground_id int(5),
@@ -40,7 +41,7 @@ flags varchar(255),
 background_color_id int(5),
 foreground_primary_color_id int(5),
 foreground_secondary_color_id int(5),
-PRIMARY KEY(guild_id,background_id, foreground_id, flags),
+PRIMARY KEY(id),
 FOREIGN KEY (guild_id) REFERENCES guild (guild_id)
 ON DELETE CASCADE
 );
@@ -64,6 +65,7 @@ PRIMARY KEY(id)
 
 CREATE TABLE map_score
 (
+id int(11) unsigned AUTO_INCREMENT,
 match_detail_id int(11) unsigned,
 timeStamp datetime,
 map_id enum("RedHome","BlueHome","GreenHome","Center"),
@@ -79,20 +81,21 @@ redDeaths int(4),
 green_ppt int(3),
 blue_ppt int(3),
 red_ppt int(3),
-PRIMARY KEY(timeStamp,match_detail_id,map_id),
+PRIMARY KEY(id),
 FOREIGN KEY(match_detail_id) references match_detail(id)
 ON DELETE CASCADE
 );
 
 CREATE TABLE skirmish_score
 (
+id int(11) unsigned AUTO_INCREMENT,
 match_detail_id int(11) unsigned,
 timeStamp datetime,
 skirmish_number int(2),
 red_skirmish_score int(3),
 blue_skirmish_score int(3),
 green_skirmish_score int(3),
-PRIMARY KEY(match_detail_id,timeStamp),
+PRIMARY KEY(id),
 FOREIGN KEY(match_detail_id) REFERENCES match_detail(id)
 ON DELETE CASCADE
 );
@@ -120,7 +123,7 @@ num_yaks_est int(3),
 num_yaks int(3),
 duration_owned time,
 PRIMARY KEY(id),
-FOREIGN KEY(obj_id) REFERENCES objective(obj_id)
+FOREIGN KEY(obj_id) REFERENCES objective(obj_id),
 FOREIGN KEY(match_detail_id) REFERENCES match_detail(id)
 ON DELETE CASCADE
 );
@@ -164,12 +167,13 @@ ON DELETE CASCADE
 
 CREATE TABLE server_linking
 (
+id int(11) unsigned AUTO_INCREMENT,
 match_detail_id int(11) unsigned,
 server_id int(4),
 server_color enum("Red","Blue","Green"),
 server_lead boolean,
 server_population varchar(15),
-PRIMARY KEY(match_detail_id, server_id),
+PRIMARY KEY(id),
 FOREIGN KEY(match_detail_id) REFERENCES match_detail(id)
 ON DELETE CASCADE,
 FOREIGN KEY(server_id) REFERENCES server_info(server_id)
@@ -185,10 +189,11 @@ PRIMARY KEY (id)
 
 CREATE TABLE supply_route
 (
+id int(11) unsigned AUTO_INCREMENT,
 from_obj varchar(10),
 to_obj varchar(10),
 estimated_travel_time float(3,1),
-PRIMARY KEY (from_obj, to_obj),
+PRIMARY KEY (id),
 FOREIGN KEY (from_obj) REFERENCES objective(obj_id),
 FOREIGN KEY (to_obj) REFERENCES objective(obj_id)
 );

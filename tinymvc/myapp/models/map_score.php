@@ -1,5 +1,6 @@
 <?php
 /*
+id int(11) unsigned AUTO_INCREMENT,
 match_detail_id int(11) unsigned,
 timeStamp datetime,
 map_id enum("RedHome","BlueHome","GreenHome","Center"),
@@ -15,7 +16,7 @@ redDeaths int(4),
 green_ppt int(3),
 blue_ppt int(3),
 red_ppt int(3),
-PRIMARY KEY(timeStamp,match_detail_id,map_id),
+PRIMARY KEY(id),
 FOREIGN KEY(match_detail_id) references match_detail(id)
 ON DELETE CASCADE
 */
