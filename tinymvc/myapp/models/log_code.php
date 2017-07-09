@@ -7,12 +7,13 @@ PRIMARY KEY (id)
 */
 class log_code extends TinyMVC_Model
 {
-	private $_table = "log_code";
-	private $pk = "id";
+	protected $_table = "log_code";
+	protected $pk = "id";
 
 
 	public function store_codes()
 	{
+        $this->db->delete($this->_table); // delete all entries in the table and start fresh
 		$codes = array(
 			array("id" => -1, "type" => 'database error', "message" => 'A database error has occurred'),
             array("id" => 0, "type" => 'note', "message" => ''),
@@ -47,7 +48,7 @@ class log_code extends TinyMVC_Model
         );
         foreach($codes as $code)
         {
-			$this->db->insert($this->_table, $code);
+			$this->save($code);
         }
 	}
 }

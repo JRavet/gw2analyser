@@ -191,7 +191,7 @@ GRANT SELECT
 ON Gw2Analyser.*
 TO 'gw2analyser'@'localhost';
 CREATE USER 'gw2datacollector'@'localhost' IDENTIFIED BY 'egamirrorimeht';
-GRANT SELECT, INSERT, UPDATE
+GRANT SELECT, INSERT, UPDATE, DELETE
 ON Gw2Analyser.*
 TO 'gw2datacollector'@'localhost';
 CREATE USER 'gw2admin'@'localhost' IDENTIFIED BY 'J0rDa1n';
