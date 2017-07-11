@@ -24,7 +24,7 @@ class objective extends TinyMVC_Model
 
 	function store_objectives()
 	{
-		$objectives = json_decode(file_get_contents("https://api.guildwars2.com/v2/wvw/objectives?ids=all"));
+		$objectives = (new gw2_api())->get_objectives();
 
 		foreach ($objectives as $objective)
 		{

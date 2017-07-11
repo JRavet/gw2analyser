@@ -14,7 +14,7 @@ class objective_upgrade extends TinyMVC_Model
 
 	function store_upgrades()
 	{
-	    $guild_upgrades = json_decode(file_get_contents("https://api.guildwars2.com/v2/guild/upgrades?ids=all"));
+	    $guild_upgrades = (new gw2_api())->get_guild_upgrades();
 
         foreach ($guild_upgrades as $upgrade)
         {
