@@ -13,10 +13,6 @@ class Default_Controller extends TinyMVC_Controller
 {
 	public function index()
 	{
-		$this->load->model("guild","guild_model");
-		$guilds = $this->guild_model->get_guilds();
-
-		$this->view->assign("guilds", $guilds);
 		$this->view->display('index_view');
 	}
 	private function _test()
