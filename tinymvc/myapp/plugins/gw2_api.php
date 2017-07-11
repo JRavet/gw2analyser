@@ -10,11 +10,23 @@ class gw2_api extends TinyMVC_Controller {
 		$this->regional_match_ids = $this->get_match_ids();
 	}
 
+	/**
+	 * Updates the property regional_match_ids with new data
+	 *
+	 * @return nothing; sets the private property $this->regional_match_ids
+	**/
 	public function refresh_regional_match_ids()
 	{ // currently unnecessary and unused
 		$this->regional_match_ids = $this->get_match_ids();
 	}
 
+	/**
+	 * Retrieves a list of match-ids from the api
+	 * Filters them down to matches only in the specified region
+	 * Condenses them into a string of comma-separated match-ids
+	 *
+	 * @return string of comma-separated match-ids according to region
+	**/
 	public function get_match_ids()
 	{
 		$all_ids = json_decode(file_get_contents("https://api.guildwars2.com/v2/wvw/matches/overview"));
@@ -32,19 +44,13 @@ class gw2_api extends TinyMVC_Controller {
 	}
 
 	/**
-	 * Retrieves a list of matches with full state-data from the api
-	 * Filters list down to matches within the specified region
+	 * Retrieves a list of regional matches with full state-data from the api
 	 *
-	 * @return array of world names and ids
+	 * @return array of full match data
 	**/
 	public function get_matches()
 	{
 		$matches = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?ids=' . $this->regional_match_ids));
-	
-		foreach ($matches as $match)
-		{
-			echo $match->id . "\n";
-		}
 
 		while ( is_null($matches) || !isset($matches[0]->start_time) )
 		{ // if the api failed in returning data, try again

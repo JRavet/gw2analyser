@@ -16,10 +16,14 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		public function __construct($region)
 		{
 			$this->api = new gw2_api($region);
-			$this->start_collector();
+			$this->main_loop(); // start the collector
 		}
 
-		public function start_collector()
+		/**
+		 * The main driver logic of the active collector
+		 *
+		**/
+		private function main_loop()
 		{
 			$tick_timer = 5.0;
 			$sync_data = $this->synchronize(); // initial synchronize
@@ -35,13 +39,13 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					{
 						$this->store_match_details($match);
 					}
-					$this->store_activity_data($match, $timeStamp, $tick_timer);
+					$this->store_capture_history($match, $tick_timer, $timeStamp);
 					$this->store_scores($match, $tick_timer, $timeStamp);
 				} // END foreach
 
-				if ( $sync_data['store_data'] === TRUE )
-				{
-					$sync_data['store_data'] = FALSE;
+				if ( $sync_data['new_week'] === TRUE )
+				{ // if new match-details were stored, don't do it again
+					$sync_data['new_week'] = FALSE;
 				}
 
 				$diff = (microtime(true) - $begin_time)*SECONDS;
@@ -49,6 +53,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				if ($tick_timer == 0.5 || $diff > (30*SECONDS))
 				{
+					// TODO if diff > TIME, apply corrections but do not force resync
 					$sync_data = $this->synchronize($sync_data, $diff);
 					$idle_time = 1;
 					$tick_timer = 5.5;
@@ -63,12 +68,53 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				}
 			} // end looping
 		}
-		private function synchronize()
+		private function synchronize($sync_data, $diff) //TODO rename $diff
 		{
-			// to fix off-by-a-second issues:
-			// for loop over the data
-			// if !isset($data[$tier]) then compare scores; if tick happened, $data[$tier]=...
-			echo "synchronized\n";
+			if ($diff >= (30*SECONDS))
+			{ //if the processing time was over 30 seconds, no need to idle before syncing
+				$sync_data['sync_wait'] = FALSE; //just to ensure it doesn't wait extra time
+			}
+
+			if ( $sync_data['sync_wait'] === TRUE && $diff < (25*SECONDS) )
+			{ //if there should be an initial delay, and the processing-time wasnt too long, idle for some time
+				usleep(23*SECONDS - $diff); //sleep for a combined (processing+idle) time of 25 seconds
+			}
+
+			$score_data = $this->api->get_matches();
+			//TODO set prev_score[$tiers] here
+			usleep(2*SECONDS); // wait 2 seconds so the score data just collected will be different
+
+			while (TRUE)
+			{
+				$matches = $this->api->get_matches();
+
+				// TODO set current_score[$tiers] here
+
+				//$current_score = $matches[0]->scores->green + $matches[0]->scores->blue + $matches[0]->scores->red;
+
+				// TODO foreach compare by [$tiers] here
+				// $current_score >= ($prev_score+230)
+				// array of boolean values by [$tier] if $tier_ready
+				if ($all_tiers_ready == TRUE) // TODO <-- is shorthand
+				{
+					$new_start_time = $matches[0]->start_time;
+
+					if ($new_start_time != $sync_data["prev_start_time"])
+					{
+						$new_week = TRUE;
+					}
+
+					return array(
+						"new_week" => $new_week,
+						"prev_start_time" => $new_start_time,
+						"sync_wait" => TRUE
+					);
+				} // END if all_tiers_ready == TRUE
+
+				$prev_score = $current_score;
+
+				usleep(2*SECONDS);
+			} // END while
 		}
 		private function store_scores()
 		{
@@ -84,19 +130,19 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			echo "stored skirmish scores\n";
 		}
-		private function check_guild_claim()
+		private function store_claim_history()
 		{
 			echo "guild claimed\n";
 		}
-		private function store_activity_data()
+		private function store_capture_history()
 		{
-			$this->check_objective_upgrades();
-			$this->check_guild_claim();
-			$this->estimate_yaks_delivered();
 			$this->get_server_owner();
+			$this->estimate_yaks_delivered();
+			$this->store_claim_history();
+			$this->store_upgrade_history();
 			echo "stored activity data\n";
 		}
-		private function check_objective_upgrades()
+		private function store_upgrade_history()
 		{
 			echo "checked objective upgrades\n";
 		}
