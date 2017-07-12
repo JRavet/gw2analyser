@@ -106,6 +106,7 @@ id int(4),
 name varchar(64),
 description text,
 icon text,
+tactic_slot tinyint(1),
 PRIMARY KEY(id)
 );
 
