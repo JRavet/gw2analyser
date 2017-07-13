@@ -27,8 +27,8 @@ if (class_exists('Static_Collector_Controller', false) === false)
 			if ($params == "-a" OR $params == "-c")
 			{
 				$this->load->model("log_code");
-				$this->log_codes->delete_all();
-				$this->log_codes->store_codes();
+				$this->log_code->delete_all();
+				$this->log_code->store_codes();
 			}
 			if ($params == "-a" OR $params == "-r")
 			{
@@ -47,11 +47,12 @@ if (class_exists('Static_Collector_Controller', false) === false)
 				$this->load->model("guild");
 				$this->guild->store_guild((object)array(
 					'guild_id' => '',
-					'emblem_last_updated' => '',
+					'emblem_last_updated' => 0,
 					'name' => '',
 					'tag' => ''
 				));
 			}
+
 			// re-enable foreign key checking
 			$this->conn->db->pdo->query('SET FOREIGN_KEY_CHECKS=1;');
 		}
