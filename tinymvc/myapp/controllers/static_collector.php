@@ -11,6 +11,7 @@ if (class_exists('Static_Collector_Controller', false) === false)
 			// remove foreign key restraints temporarily
 			$this->load->model("log_code", "conn"); // need a dummy model to set foreign key checking
 			$this->conn->db->pdo->query('SET FOREIGN_KEY_CHECKS=0;');
+
 			if ($params == "-a" OR $params == "-o")
 			{
 				$this->load->model("objective");
@@ -25,9 +26,9 @@ if (class_exists('Static_Collector_Controller', false) === false)
 			}
 			if ($params == "-a" OR $params == "-c")
 			{
-				$this->load->model("log_code","codes");
-				$this->codes->delete_all();
-				$this->codes->store_codes();
+				$this->load->model("log_code");
+				$this->log_codes->delete_all();
+				$this->log_codes->store_codes();
 			}
 			if ($params == "-a" OR $params == "-r")
 			{
