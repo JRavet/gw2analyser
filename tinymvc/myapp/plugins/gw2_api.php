@@ -4,7 +4,7 @@ class gw2_api extends TinyMVC_Controller {
 
 	private $match_id;
 
-	function __construct($match_id)
+	function __construct($match_id=NULL)
 	{
 		$this->match_id = $match_id;
 	}
