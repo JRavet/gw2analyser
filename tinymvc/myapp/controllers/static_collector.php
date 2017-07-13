@@ -13,15 +13,15 @@ if (class_exists('Static_Collector_Controller', false) === false)
 			$this->conn->db->pdo->query('SET FOREIGN_KEY_CHECKS=0;');
 			if ($params == "-a" OR $params == "-o")
 			{
-				$this->load->model("objective","objectives");
-				$this->objectives->delete_all();
-				$this->objectives->store_objectives();
+				$this->load->model("objective");
+				$this->objective->delete_all();
+				$this->objective->store_objectives();
 			}
 			if ($params == "-a" OR $params == "-u")
 			{
-				$this->load->model('objective_upgrade', 'upgrades');
-				$this->upgrades->delete_all();
-				$this->upgrades->store_upgrades();
+				$this->load->model('objective_upgrade');
+				$this->objective_upgrade->delete_all();
+				$this->objective_upgrade->store_upgrades();
 			}
 			if ($params == "-a" OR $params == "-c")
 			{
@@ -31,19 +31,19 @@ if (class_exists('Static_Collector_Controller', false) === false)
 			}
 			if ($params == "-a" OR $params == "-r")
 			{
-				$this->load->model("supply_route","routes");
-				$this->routes->delete_all();
-				$this->routes->store_supply_routes();
+				$this->load->model("supply_route");
+				$this->supply_route->delete_all();
+				$this->supply_route->store_supply_routes();
 			}
 			if ($params == "-a" OR $params == "-s")
 			{
-				$this->load->model("server_info","server_info");
+				$this->load->model("server_info");
 				$this->server_info->delete_all();
 				$this->server_info->store_server_info();
 			}
 			if ($params == "-a" OR $params == "-g")
 			{
-				$this->load->model("guild","guild");
+				$this->load->model("guild");
 				$this->guild->store_guild((object)array(
 					'guild_id' => '',
 					'emblem_last_updated' => '',
