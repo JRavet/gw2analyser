@@ -2,63 +2,39 @@
 
 class gw2_api extends TinyMVC_Controller {
 
-	private $region;
-	private $regional_match_ids;
+	private $match_id;
 
-	function __construct($region=1) {
-		$this->region = $region;
-		$this->regional_match_ids = $this->get_match_ids();
-	}
-
-	/**
-	 * Updates the property regional_match_ids with new data
-	 *
-	 * @return nothing; sets the private property $this->regional_match_ids
-	**/
-	public function refresh_regional_match_ids()
-	{ // currently unnecessary and unused
-		$this->regional_match_ids = $this->get_match_ids();
-	}
-
-	/**
-	 * Retrieves a list of match-ids from the api
-	 * Filters them down to matches only in the specified region
-	 * Condenses them into a string of comma-separated match-ids
-	 *
-	 * @return string of comma-separated match-ids according to region
-	**/
-	public function get_match_ids()
+	function __construct($match_id)
 	{
-		$all_ids = json_decode(file_get_contents("https://api.guildwars2.com/v2/wvw/matches/overview"));
-		$regional_ids = "";
-
-		foreach ($all_ids as $id)
-		{
-			if ( preg_match("/" . $this->region . "\-[0-9]*/", $id) ) // ensure the match id is relevant to the region
-			{ // 1 = NA; 2 = EU
-				$regional_ids .= $id . ",";
-			}
-		}
-
-		return $regional_ids;
+		$this->match_id = $match_id;
 	}
 
 	/**
-	 * Retrieves a list of regional matches with full state-data from the api
+	 * Retrieves full match-data for this instances match_id
 	 *
-	 * @return array of full match data
+	 * @return object of match-data
 	**/
-	public function get_matches()
+	public function get_match_data()
 	{
-		$matches = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?ids=' . $this->regional_match_ids));
+		$match = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?id=' . $this->match_id));
 
-		while ( is_null($matches) || !isset($matches[0]->start_time) )
+		while ( is_null($match) || !isset($match->start_time) )
 		{ // if the api failed in returning data, try again
 			usleep(500000); // half-second
-			$matches = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?ids=' . $this->regional_match_ids));
+			$match = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?id=' . $this->match_id));
 		}
 
-		return $matches;
+		return $match;
+	}
+
+	/**
+	 * Retrieves list of scores (NOT kills/deaths!)
+	 *
+	 * @return array of score-data
+	**/
+	public function get_scores()
+	{
+		return json_decode(file_get_contents("https://api.guildwars2.com/v2/wvw/matches/scores?id=" . $this->match_id));
 	}
 
 	/**
