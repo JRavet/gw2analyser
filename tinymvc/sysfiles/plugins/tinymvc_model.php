@@ -48,6 +48,26 @@ class TinyMVC_Model
 	}
   }
 
+  function is_stored($data) {
+  	try
+  	{
+  		$this->db->select('*');
+  		$this->db->from($this->_table);
+
+  		foreach($data as $key=>$value)
+  		{
+  		 	$this->db->where($key, $value);
+  		}
+
+  		$this->db->query();
+  		return $this->db->next();
+  	}
+  	catch (Exception $e)
+  	{
+  		echo $e->getMessage();
+  	}
+  }
+
   function delete_all()
   {
   	$this->db->delete($this->_table);

@@ -13,32 +13,33 @@ if (class_exists('Active_Collector_Controller', false) === false)
 	{
 		private $api;
 
-		public function __construct($match_id)
+		public function __construct()
 		{
-			$this->api = new gw2_api($match_id);
+			parent::__construct();
+			$this->api = new gw2_api(MATCH_ID);
 			$this->main_loop(); // start the collector
 		}
 
 		/**
 		 * The main driver logic of the active collector
-		 *
 		**/
 		private function main_loop()
 		{
 			$tick_timer = 5.0;
-			$sync_data = $this->synchronize(); // initial synchronize
+		//	$sync_data = $this->synchronize(); // initial synchronize
 			$sync_data['new_week'] = TRUE; // assume a new week to store new match_details for
 			while (true)
 			{ // begin looping
-				$begin_time = microtime(true); //get the current time in microseconds; used to calculate processing time
-				$timeStamp = Date("Y-m-d H:i:s"); //make a unique timestamp to pass to functions that store data with timestamps
+				$begin_time = microtime(true); // get the current time in microseconds; used to calculate processing time
+				$timeStamp = Date("Y-m-d H:i:s"); // make a unique timestamp to pass to functions that store data with timestamps
 
-				$match = $api->get_match_data();
+				$match = $this->api->get_match_data();
 
 				if ( $sync_data['new_week'] == TRUE )
 				{
 					$this->store_match_details($match);
 				}
+
 				$this->store_capture_history($match, $tick_timer, $timeStamp);
 				$this->store_scores($match, $tick_timer, $timeStamp);
 
@@ -88,15 +89,16 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$current_match = $this->api->get_scores();
 
 				$current_score = $current_match->scores->red + $current_match->scores->blue + $current_match->scores->green;
-				$prev_score = $prev_match->scores->red + $prev_matches->scores->blue + $prev_matches->scores->green;
+				$prev_score = $prev_match->scores->red + $prev_match->scores->blue + $prev_match->scores->green;
+
+				echo $current_match->id . " | " . $current_score . " | " . $prev_score . "\n";
 
 				if ( $current_score >= ($prev_score + 200) )
 				{ // and a tick did occur
-					echo "sync complete\n";
 					break; // done syncing
 				}
 
-				$prev_matches = $current_matches;
+				$prev_match = $current_match;
 
 				usleep(1*SECONDS);
 			}
@@ -152,8 +154,13 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			echo "estimated yaks delivered\n";
 		}
-		private function store_match_details()
+		private function store_match_details($match)
 		{
+			$this->load->model("match_detail", "match_detail");
+			$this->match_detail->is_stored(array(
+				"match_id" => $match->id,
+				"start_time" => $match->start_time
+			));
 			echo "stored match details\n";
 			$this->store_server_linkings();
 		}
@@ -174,6 +181,7 @@ if ($collector_started === true) { // a hack to make this file load the framewor
 		echo "Invalid match specified: " . $argv[1] . "\nExiting.\n";
 		exit;
 	}
-	$tmvc->main('active_collector', null, $argv[1]); // start the active collector
+	DEFINE(MATCH_ID, $argv[1]);
+	$tmvc->main('active_collector', null); // start the active collector
 }
 ?>
