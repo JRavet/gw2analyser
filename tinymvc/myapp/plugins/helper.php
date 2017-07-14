@@ -25,6 +25,12 @@ class helper extends TinyMVC_Controller
 	{
 
 	}
+	/**
+	 * Calculates the number of weeks between a static date and the given time
+	 *
+	 * @param $start_time
+	 * @return void
+	**/
 	public function get_week_num($start_time)
 	{
 		$week = new DateTime($start_time);
@@ -37,6 +43,14 @@ class helper extends TinyMVC_Controller
 
 	}
 
+	/**
+	 * Writes a message to a log file. If the file or folder does not it exist, it is created
+	 *
+	 * @param $dir - directory to write to
+	 * @param $log_name - name of file to write to
+	 * @param $message - the fully formatted message to write to a file
+	 * @return void
+	**/
 	public function write_to_file($dir, $log_name, $message)
 	{
 		try
@@ -54,6 +68,14 @@ class helper extends TinyMVC_Controller
 		fclose($file);
 	}
 
+	/**
+	 * Saves a log-entry to a date-stamped and match-id-stamped location. Also outputs to console
+	 * Also generates an extra error-log for warnings and errors
+	 *
+	 * @param $code - int, the log code to retrieve the message for
+	 * @param $msg - optional, string. Additional message to add to end of log-code. Commas are replaced with semicolons
+	 * @return void
+	**/
 	public function log_message($code, $msg="")
 	{
 
