@@ -49,7 +49,7 @@ class TinyMVC_Model
   	}
   }
 
-  function is_stored($data) {
+  function find($data) {
   	try
   	{
   		$this->db->select('*');

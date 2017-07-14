@@ -47,7 +47,11 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				}
 
 				$this->store_capture_history($match, $tick_timer, $timeStamp);
-				$this->store_scores($match, $tick_timer, $timeStamp);
+
+				if ($tick_timer == 5)
+				{
+					$this->store_scores($match, $tick_timer, $timeStamp);
+				}
 
 				if ( $sync_data['new_week'] === TRUE )
 				{ // if new match-details were stored, don't do it again
@@ -135,13 +139,27 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			echo "guild claimed\n";
 		}
-		private function store_capture_history()
+		private function store_capture_history($match, $timeStamp)
 		{
 			$this->helper->get_server_owner();
-			$this->helper->estimate_yaks_delivered();
-			$this->store_claim_history();
-			$this->store_upgrade_history();
+
+			foreach($match->maps as $map)
+			{
+				foreach($map->objectives as $objective)
+				{
+					$this->store_claim_history($objective, $timeStamp, $claim_history_id);
+					$this->store_upgrade_history($objective, $timeStamp, $claim_history_id);
+					//if yaks == 140
+					$this->helper->estimate_yaks_delivered();
+					//update data for capture-history
+					$this->store_yak_history($objective, $timeStamp, $claim_history_id);
+				}
+			}
 			echo "stored activity data\n";
+		}
+		private function store_yak_history()
+		{
+
 		}
 		private function store_upgrade_history()
 		{
@@ -157,7 +175,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		**/
 		private function store_match_details($match)
 		{
-			$is_stored = $this->match_detail->is_stored(array(
+			$is_stored = $this->match_detail->find(array(
 				"match_id" => $match->id,
 				"start_time" => $match->start_time
 			));
