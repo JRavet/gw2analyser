@@ -19,8 +19,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			parent::__construct();
 			tmvc::instance()->controller = $this; // must set framework's controller to this
-			$this->api = new gw2_api(MATCH_ID);
-			$this->helper = new helper();
+			$this->helper = new helper(MATCH_ID);
+			$this->api = new gw2_api(MATCH_ID, $this->helper);
 			$this->match_detail = new match_detail();
 			$this->server_linking = new server_linking();
 			$this->main_loop(); // start the collector
@@ -31,6 +31,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		**/
 		private function main_loop()
 		{
+			$this->helper->log_message(0, "Starting main loop");
 			$tick_timer = 5.0;
 			$sync_data = $this->synchronize(); // initial synchronize
 			$sync_data['new_week'] = TRUE; // assume a new week to store new match_details for
@@ -80,6 +81,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION main_loop
 		private function synchronize($sync_data, $processing_time)
 		{
+			$this->helper->log_message(1, MATCH_ID);
 			if ($processing_time >= (30*SECONDS))
 			{ // if the processing time was over 30 seconds, no need to idle before syncing
 				$sync_data['sync_wait'] = FALSE; //just to ensure it doesn't wait extra time

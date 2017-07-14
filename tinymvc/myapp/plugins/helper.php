@@ -1,6 +1,17 @@
 <?php
 
-class helper extends TinyMVC_Controller {
+class helper extends TinyMVC_Controller
+{
+
+	private $log_code;
+	private $match_id;
+
+	public function __construct($match_id)
+	{
+		parent::__construct();
+		$this->log_code = new log_code();
+		$this->match_id = $match_id;
+	}
 
 	public function get_time_interval()
 	{
@@ -25,10 +36,43 @@ class helper extends TinyMVC_Controller {
 	{
 		echo "calculated ppt\n";
 	}
-	public function log_message()
+
+	public function write_to_file($dir, $log_name, $message)
 	{
-		echo "logged a message\n";
+		try
+		{
+			$file = fopen($dir . "/" . $log_name, "a"); // append to file
+			if ($file === FALSE) throw new Exception("File not found"); // if file did not exist, throw error
+		}
+		catch (Exception $e)
+		{
+			mkdir($dir, 0770, TRUE); // group & user get all perms; world gets none. recursively create all directories
+			$file = fopen($dir . "/" . $log_name, "a");
+		}
+
+		fwrite($file,$message);
+		fclose($file);
 	}
+
+	public function log_message($code, $msg="")
+	{
+		$details = $this->log_code->find(array("id"=>$code));
+
+		$message = date("Y-m-d H:i:s") . "," . $details['id'] . "," . $details['type'] . "," . $details['message'] . "," . $msg . "\n";
+
+		$dir = PATH_LOG . date('Y-m') . DS . $this->match_id;
+		$log_name = "log-" . date("d") . ".csv";
+		$this->write_to_file($dir, $log_name, $message);
+
+		if ($code >= 500 || $code == -1)
+		{ // if the code is a warning or worse, write to a special log
+			$log_name = "error-log-" . date("d") . ".csv";
+			$this->write_to_file($dir, $log_name, $message);
+		}
+
+		echo $message; // put message in console as well
+	}
+
 }
 
 ?>

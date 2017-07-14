@@ -3,10 +3,12 @@
 class gw2_api extends TinyMVC_Controller {
 
 	private $match_id;
+	private $helper;
 
-	function __construct($match_id=NULL)
+	function __construct($match_id, $helper)
 	{
 		$this->match_id = $match_id;
+		$this->helper = $helper;
 	}
 
 	/**
@@ -22,6 +24,7 @@ class gw2_api extends TinyMVC_Controller {
 		{ // if the api failed in returning data, try again
 			usleep(500000); // half-second
 			$match = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?id=' . $this->match_id));
+			$this->helper->log_message(501);
 		}
 
 		return $match;
