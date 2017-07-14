@@ -189,21 +189,21 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			{
 				foreach($map->objectives as $objective)
 				{
-					$claim_history_id = $this->capture_history->find(array(
+					$prev_capture_history = $this->capture_history->find(array(
 						"match_detail_id" => $match_detail_id,
 						"last_flipped" => $objective->last_flipped,
-					))['id'];
+					));
 
 					$yaks = $objective->yaks_delivered;
 
 					if ($yaks == 140) // api only reports up to 140
 					{
-						$yaks = $this->helper->estimate_yaks_delivered();
+						$yaks = $this->helper->estimate_yaks_delivered($prev_capture_history, $match_detail_id);
 					}
 
-					if ( !isset($claim_history_id) )
+					if ( !isset($prev_capture_history['id']) )
 					{ // no previous record for this set of data; store a new set
-						$claim_history_id = $this->capture_history->save(array(
+						$prev_capture_history = $this->capture_history->save(array(
 							"match_detail_id" => $match_detail_id,
 							"timeStamp" => $timeStamp,
 							"last_flipped" => $objective->last_flipped,
@@ -223,14 +223,14 @@ if (class_exists('Active_Collector_Controller', false) === false)
 								"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
 							),
 							array( // where
-								"id" => $claim_history_id
+								"id" => $prev_capture_history['id']
 							)
 						);
 					}
 
-					$this->store_claim_history($objective, $claim_history_id, $timeStamp);
-					$this->store_upgrade_history($objective->guild_upgrades, $claim_history_id, $timeStamp);
-					$this->store_yak_history($yaks, $claim_history_id, $timeStamp);
+					$this->store_claim_history($objective, $prev_capture_history['id'], $timeStamp);
+					$this->store_upgrade_history($objective->guild_upgrades, $prev_capture_history['id'], $timeStamp);
+					$this->store_yak_history($yaks, $prev_capture_history['id'], $timeStamp);
 				}
 			}
 
