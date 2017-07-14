@@ -15,6 +15,10 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private $helper;
 		private $match_detail, $server_linking; // models
 
+		/**
+		 * Constructor
+		 * Also starts the main loop
+		**/
 		public function __construct()
 		{
 			parent::__construct();
@@ -60,11 +64,18 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				}
 
 				$processing_time = (microtime(true) - $begin_time)*SECONDS;
+				$this->helper->log_message(4, 30*SECONDS - $processing_time);
 				$idle_time = ((30*SECONDS) - $processing_time);
 
-				if ( $tick_timer == 0.5 || $processing_time > (30*SECONDS) )
+				if ($processing_time > 30*SECONDS)
 				{
-					// TODO if processing_time > TIME, apply corrections but do not force resync
+					// fast-forward $tick_timer accordingly & wait diff
+					// wrapping around to the next interval if necessary
+					// if skipped 5min, store next data as score_data
+				}
+
+				if ( $tick_timer == 0.5 )
+				{
 					$sync_data = $this->synchronize($sync_data, $processing_time);
 					$idle_time = 1;
 					$tick_timer = 5.5;
@@ -89,6 +100,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			if ( $sync_data['sync_wait'] === TRUE && $processing_time < (25*SECONDS) )
 			{ // if there should be an initial delay, and the processing-time wasnt too long, idle for some time
+				$this->helper->log_message(4, 24*SECONDS - $processing_time);
 				usleep(24*SECONDS - $processing_time); // sleep for a combined (processing+idle) time of 25 seconds
 			}
 
@@ -96,12 +108,20 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			usleep(1*SECONDS); // wait 2 seconds so the score data just collected will be processing_timeerent
 
+			$log_counter = 0; // initialize to 0 so the first loop logs the attempt
+
 			while (TRUE)
 			{
 				$current_match = $this->api->get_scores();
 
 				$current_score = $current_match->scores->red + $current_match->scores->blue + $current_match->scores->green;
 				$prev_score = $prev_match->scores->red + $prev_match->scores->blue + $prev_match->scores->green;
+
+				if ($log_counter == 0)
+				{ // only show synchronization attempts every 10 times
+					$log_counter = 10;
+					$this->helper->log_message(0, "Synchronization in progress: prev_score=" . $prev_score . " | current_score=" . $current_score);
+				}
 
 				if ( $current_score >= ($prev_score + 200) )
 				{ // and a tick did occur
@@ -117,8 +137,11 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			if ($new_start_time != $sync_data["prev_start_time"])
 			{ // start-times differ = reset occurred, new matchups!
+				$this->helper->log_message(3, MATCH_ID);
 				$new_week = TRUE;
 			}
+
+			$this->helper->log_message(2, MATCH_ID);
 
 			return array(
 				"new_week" => $new_week,
@@ -128,21 +151,25 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION sychronize
 		private function store_scores()
 		{
-			echo "stored scores\n";
+			$this->helper->log_message(5, "scores");
+
 			$this->helper->calculate_ppt();
 			$this->store_skirmish_scores();
-		}
-
+			$this->helper->log_message(6, "scores");
+		} // END FUNCTION store_scores
 		private function store_skirmish_scores()
 		{
-			echo "stored skirmish scores\n";
-		}
+			$this->helper->log_message(5, "skirmish points");
+
+			$this->helper->log_message(6, "skirmish points");
+		} // END FUNCTION store_skirmish_scores
 		private function store_claim_history()
 		{
-			echo "guild claimed\n";
-		}
+
+		} // END FUNCTION store_claim_history
 		private function store_capture_history($match, $timeStamp)
 		{
+			$this->helper->log_message(5, "capture, claim, upgrade and yak history");
 			$this->helper->get_server_owner();
 
 			foreach($match->maps as $map)
@@ -152,21 +179,23 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					$this->store_claim_history($objective, $timeStamp, $claim_history_id);
 					$this->store_upgrade_history($objective, $timeStamp, $claim_history_id);
 					//if yaks == 140
-					$this->helper->estimate_yaks_delivered();
+					//yaks = $this->helper->estimate_yaks_delivered();
+					//
 					//update data for capture-history
 					$this->store_yak_history($objective, $timeStamp, $claim_history_id);
 				}
 			}
-			echo "stored activity data\n";
-		}
+
+			$this->helper->log_message(6, "capture, claim, upgrade and yak history");
+		} // END FUNCTION store_capture_history
 		private function store_yak_history()
 		{
 
-		}
+		} // END FUNCTION store_yak_history
 		private function store_upgrade_history()
 		{
-			echo "checked objective upgrades\n";
-		}
+
+		} // END FUNCTION store_upgrade_history
 
 		/**
 		 * Checks the database if the current match has already been stored or not
@@ -177,6 +206,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		**/
 		private function store_match_details($match)
 		{
+			$this->helper->log_message(5, "match details");
 			$is_stored = $this->match_detail->find(array(
 				"match_id" => $match->id,
 				"start_time" => $match->start_time
@@ -193,6 +223,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				// then store the server-linkings for this match-detail
 				$this->store_server_linkings($match, $match_detail_id);
 			}
+			$this->helper->log_message(6, "match details");
 		} // END FUNCTION store_match_details
 		/**
 		 * Stores all servers involved in the given match
@@ -204,6 +235,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		**/
 		private function store_server_linkings($match, $match_detail_id)
 		{
+			$this->helper->log_message(5, "server links");
 			$lead_worlds = json_decode(json_encode($match->worlds), true); // turns the object into an array
 			foreach ($match->all_worlds as $color=>$servers)
 			{ // loop through all worlds in the match by their color; each value is another array
@@ -224,9 +256,11 @@ if (class_exists('Active_Collector_Controller', false) === false)
 						"server_lead" => $lead,
 						"server_population" => $population
 					));
-				}
-			}
+				} // end foreach $servers
+			} // end foreach $match->all_worlds
+			$this->helper->log_message(6, "server links");
 		} // END FUNCTION store_server_linkings
+
 	} // END CLASS active collector
 	$collector_started = true; // a hack to make this file load the framework AND execute itself
 } // END if not-class-exists

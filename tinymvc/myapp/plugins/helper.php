@@ -15,15 +15,15 @@ class helper extends TinyMVC_Controller
 
 	public function get_time_interval()
 	{
-		echo "time itnerval\n";
+
 	}
 	public function get_server_owner()
 	{
-		echo "got server owner\n";
+
 	}
 	public function estimate_yaks_delivered()
 	{
-		echo "estimated yaks delivered\n";
+
 	}
 	public function get_week_num($start_time)
 	{
@@ -34,7 +34,7 @@ class helper extends TinyMVC_Controller
 	}
 	public function calculate_ppt()
 	{
-		echo "calculated ppt\n";
+
 	}
 
 	public function write_to_file($dir, $log_name, $message)
@@ -50,7 +50,7 @@ class helper extends TinyMVC_Controller
 			$file = fopen($dir . "/" . $log_name, "a");
 		}
 
-		fwrite($file,$message);
+		fwrite($file, $message);
 		fclose($file);
 	}
 
@@ -60,13 +60,13 @@ class helper extends TinyMVC_Controller
 
 		$message = date("Y-m-d H:i:s") . "," . $details['id'] . "," . $details['type'] . "," . $details['message'] . "," . $msg . "\n";
 
-		$dir = PATH_LOG . date('Y-m') . DS . $this->match_id;
-		$log_name = "log-" . date("d") . ".csv";
+		$dir = PATH_LOG . date('Y-m-d');
+		$log_name = MATCH_ID . ".csv";
 		$this->write_to_file($dir, $log_name, $message);
 
 		if ($code >= 500 || $code == -1)
 		{ // if the code is a warning or worse, write to a special log
-			$log_name = "error-log-" . date("d") . ".csv";
+			$log_name = "error-log-" . MATCH_ID . ".csv";
 			$this->write_to_file($dir, $log_name, $message);
 		}
 
