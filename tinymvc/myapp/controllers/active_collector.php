@@ -174,9 +174,10 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->helper->log_message(5, "capture, claim, upgrade and yak history");
 
 			$server_owners = array(
-				"red" => $this->server_linking->get_server_owner($match->id, $match->start_time, "red"),
-				"blue" => $this->server_linking->get_server_owner($match->id, $match->start_time, "blue"),
-				"green" => $this->server_linking->get_server_owner($match->id, $match->start_time, "green")
+				"Red" => $this->server_linking->get_server_owner($match->id, $match->start_time, "red"),
+				"Blue" => $this->server_linking->get_server_owner($match->id, $match->start_time, "blue"),
+				"Green" => $this->server_linking->get_server_owner($match->id, $match->start_time, "green"),
+				"Neutral" => 0
 			);
 
 			$match_detail_id = $this->match_detail->find(array(
@@ -188,20 +189,21 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			{
 				foreach($map->objectives as $objective)
 				{
-					$entry_exists = $this->capture_history->find(array(
+					$claim_history_id = $this->capture_history->find(array(
 						"match_detail_id" => $match_detail_id,
 						"last_flipped" => $objective->last_flipped,
 					))['id'];
 
 					$yaks = $objective->yaks_delivered;
+
 					if ($yaks == 140)
 					{
 						$yaks = $this->helper->estimate_yaks_delivered();
 					}
 
-					if ( !isset($entry_exists) )
-					{
-						$this->capture_history->save(array(
+					if ( !isset($claim_history_id) )
+					{ // no previous record for this set of data; store a new set
+						$claim_history_id = $this->capture_history->save(array(
 							"match_detail_id" => $match_detail_id,
 							"timeStamp" => $timeStamp,
 							"last_flipped" => $objective->last_flipped,
@@ -214,8 +216,11 @@ if (class_exists('Active_Collector_Controller', false) === false)
 						));
 					}
 					else
-					{
-						//update
+					{ // update duration_owned and the number of yaks -- all other data is already set
+						$this->capture_history->update(array(
+							"num_yaks" => $yaks,
+							"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
+						));
 					}
 
 					$this->store_claim_history($objective, $claim_history_id, $timeStamp);

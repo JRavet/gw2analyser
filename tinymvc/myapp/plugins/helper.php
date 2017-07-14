@@ -13,9 +13,21 @@ class helper extends TinyMVC_Controller
 		$this->match_id = $match_id;
 	}
 
-	public function calc_time_interval()
+	public function calc_time_interval($earlier_time, $later_time)
 	{
-		return 1;
+		try
+		{
+			$date1 = new DateTime($later_time);
+			$date2 = new DateTime($earlier_time);
+			$diff = date_diff($date1, $date2, TRUE);
+			$diff = ($diff->d*24 + $diff->h) . ":" . $diff->i . ":" . $diff->s; //manual formatting to time interval
+			return $diff;
+		}
+		catch (Exception $e)
+		{
+			$this->log_message(500, "Error calculating calc_time_interval; earlier_time=" . $earlier_time . " | later_time=" . $later_time);
+			return "00:00:00";
+		}
 	}
 	public function estimate_yaks_delivered()
 	{

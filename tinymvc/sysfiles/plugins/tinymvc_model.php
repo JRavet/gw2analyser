@@ -69,6 +69,12 @@ class TinyMVC_Model
   	}
   }
 
+  function update($data)
+  {
+    $this->db->update($this->_table, $data);
+
+  }
+
   function delete_all()
   {
   	$this->db->delete($this->_table);
