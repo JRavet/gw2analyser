@@ -12,11 +12,16 @@ if (class_exists('Active_Collector_Controller', false) === false)
 	class Active_Collector_Controller extends TinyMVC_Controller
 	{
 		private $api;
+		private $helper;
+		private $match_detail;
 
 		public function __construct()
 		{
 			parent::__construct();
+			tmvc::instance()->controller = $this; // must set framework's controller to this
 			$this->api = new gw2_api(MATCH_ID);
+			$this->helper = new helper();
+			$this->match_detail = new match_detail();
 			$this->main_loop(); // start the collector
 		}
 
@@ -119,13 +124,10 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private function store_scores()
 		{
 			echo "stored scores\n";
-			$this->calculate_ppt();
+			$this->helper->calculate_ppt();
 			$this->store_skirmish_scores();
 		}
-		private function calculate_ppt()
-		{
-			echo "calculated ppt\n";
-		}
+
 		private function store_skirmish_scores()
 		{
 			echo "stored skirmish scores\n";
@@ -136,8 +138,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		}
 		private function store_capture_history()
 		{
-			$this->get_server_owner();
-			$this->estimate_yaks_delivered();
+			$this->helper->get_server_owner();
+			$this->helper->estimate_yaks_delivered();
 			$this->store_claim_history();
 			$this->store_upgrade_history();
 			echo "stored activity data\n";
@@ -146,31 +148,35 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			echo "checked objective upgrades\n";
 		}
-		private function get_server_owner()
-		{
-			echo "got server owner\n";
-		}
-		private function estimate_yaks_delivered()
-		{
-			echo "estimated yaks delivered\n";
-		}
+		/**
+		 * Checks the database if the current match has already been stored or not
+		 * Stores the new match-detail data if it hasn't been already
+		 *
+		 * @param $match - the full match-data object
+		 * @return void
+		**/
 		private function store_match_details($match)
 		{
-			$this->load->model("match_detail", "match_detail");
-			$this->match_detail->is_stored(array(
+			$is_stored = $this->match_detail->is_stored(array(
 				"match_id" => $match->id,
 				"start_time" => $match->start_time
 			));
-			echo "stored match details\n";
-			$this->store_server_linkings();
+
+			if ( !is_array($is_stored) )
+			{ // if the data was not present in the DB, save it now
+				$this->match_detail->save(array(
+					"match_id" => $match->id,
+					"week_num" => $this->helper->get_week_num($match->start_time),
+					"start_time" => $match->start_time,
+					"end_time" => $match->end_time
+				));
+			}
+
+			$this->store_server_linkings($match);
 		}
-		private function store_server_linkings()
+		private function store_server_linkings($match)
 		{
 			echo "stored server linkings\n";
-		}
-		private function log_message()
-		{
-			echo "logged a message\n";
 		}
 	} // END CLASS active collector
 	$collector_started = true; // a hack to make this file load the framework AND execute itself

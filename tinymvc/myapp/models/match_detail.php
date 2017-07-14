@@ -9,6 +9,8 @@ PRIMARY KEY(id)
 */
 class match_detail extends TinyMVC_Model
 {
+	protected $_table = "match_detail";
+	protected $pk = "id";
 
 }
 

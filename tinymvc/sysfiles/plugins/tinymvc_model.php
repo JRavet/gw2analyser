@@ -56,11 +56,11 @@ class TinyMVC_Model
 
   		foreach($data as $key=>$value)
   		{
-  		 	$this->db->where($key, $value);
+  		 	$this->db->where("$key", "$value");
   		}
 
-  		$this->db->query();
-  		return $this->db->next();
+  		$data = $this->db->query_one();
+  		return $data;
   	}
   	catch (Exception $e)
   	{
