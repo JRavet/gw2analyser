@@ -196,14 +196,13 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 					$yaks = $objective->yaks_delivered;
 
-					if ($yaks == 140)
+					if ($yaks == 140) // api only reports up to 140
 					{
 						$yaks = $this->helper->estimate_yaks_delivered();
 					}
 
 					if ( !isset($claim_history_id) )
 					{ // no previous record for this set of data; store a new set
-
 						$claim_history_id = $this->capture_history->save(array(
 							"match_detail_id" => $match_detail_id,
 							"timeStamp" => $timeStamp,
@@ -219,11 +218,11 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					else
 					{ // update duration_owned and the number of yaks -- all other data is already set
 						$this->capture_history->update(
-							array( // where
+							array( // set
 								"num_yaks" => $yaks,
 								"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
 							),
-							array( // set
+							array( // where
 								"id" => $claim_history_id
 							)
 						);
