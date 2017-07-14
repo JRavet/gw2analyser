@@ -13,7 +13,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 	{
 		private $api;
 		private $helper;
-		private $match_detail, $server_linking; // models
+		private $match_detail, $server_linking, $capture_history; // models
 
 		/**
 		 * Constructor
@@ -27,6 +27,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->api = new gw2_api(MATCH_ID, $this->helper);
 			$this->match_detail = new match_detail();
 			$this->server_linking = new server_linking();
+			$this->capture_history = new capture_history();
 			$this->main_loop(); // start the collector
 		}
 
@@ -69,6 +70,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				if ($processing_time > 30*SECONDS)
 				{
+					// TODO
 					// fast-forward $tick_timer accordingly & wait diff
 					// wrapping around to the next interval if necessary
 					// if skipped 5min, store next data as score_data
@@ -92,6 +94,16 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION main_loop
 		private function synchronize($sync_data, $processing_time)
 		{
+
+			if ( TEST == true ) // TODO remove after done
+			{
+				return array(
+					"new_week" => true,
+					"prev_start_time" => '',
+					"sync_wait" => TRUE // always do an extra sync-delay after the initial no-wait sync
+				);
+			}
+
 			$this->helper->log_message(1, MATCH_ID);
 			if ($processing_time >= (30*SECONDS))
 			{ // if the processing time was over 30 seconds, no need to idle before syncing
@@ -157,39 +169,75 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			$this->helper->log_message(6, "skirmish points");
 		} // END FUNCTION store_skirmish_scores
-		private function store_claim_history()
-		{
-
-		} // END FUNCTION store_claim_history
-		private function store_capture_history($match, $timeStamp)
+		private function store_capture_history($match, $tick_timer, $timeStamp)
 		{
 			$this->helper->log_message(5, "capture, claim, upgrade and yak history");
-			$this->helper->get_server_owner();
+
+			$server_owners = array(
+				"red" => $this->server_linking->get_server_owner($match->id, $match->start_time, "red"),
+				"blue" => $this->server_linking->get_server_owner($match->id, $match->start_time, "blue"),
+				"green" => $this->server_linking->get_server_owner($match->id, $match->start_time, "green")
+			);
+
+			$match_detail_id = $this->match_detail->find(array(
+				"match_id" => $match->id,
+				"start_time" => $match->start_time
+			))['id'];
 
 			foreach($match->maps as $map)
 			{
 				foreach($map->objectives as $objective)
 				{
-					$this->store_claim_history($objective, $timeStamp, $claim_history_id);
-					$this->store_upgrade_history($objective, $timeStamp, $claim_history_id);
-					//if yaks == 140
-					//yaks = $this->helper->estimate_yaks_delivered();
-					//
-					//update data for capture-history
-					$this->store_yak_history($objective, $timeStamp, $claim_history_id);
+					$entry_exists = $this->capture_history->find(array(
+						"match_detail_id" => $match_detail_id,
+						"last_flipped" => $objective->last_flipped,
+					))['id'];
+
+					$yaks = $objective->yaks_delivered;
+					if ($yaks == 140)
+					{
+						$yaks = $this->helper->estimate_yaks_delivered();
+					}
+
+					if ( !isset($entry_exists) )
+					{
+						$this->capture_history->save(array(
+							"match_detail_id" => $match_detail_id,
+							"timeStamp" => $timeStamp,
+							"last_flipped" => $objective->last_flipped,
+							"obj_id" => $objective->id,
+							"owner_server" => $server_owners[$objective->owner],
+							"owner_color" => $objective->owner,
+							"tick_timer" => $tick_timer,
+							"num_yaks" => $yaks,
+							"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
+						));
+					}
+					else
+					{
+						//update
+					}
+
+					$this->store_claim_history($objective, $claim_history_id, $timeStamp);
+					$this->store_upgrade_history($objective->guild_upgrades, $claim_history_id, $timeStamp);
+					$this->store_yak_history($yaks, $claim_history_id, $timeStamp);
 				}
 			}
 
 			$this->helper->log_message(6, "capture, claim, upgrade and yak history");
 		} // END FUNCTION store_capture_history
-		private function store_yak_history()
+		private function store_claim_history()
 		{
 
-		} // END FUNCTION store_yak_history
+		} // END FUNCTION store_claim_history
 		private function store_upgrade_history()
 		{
 
 		} // END FUNCTION store_upgrade_history
+		private function store_yak_history()
+		{
+
+		} // END FUNCTION store_yak_history
 
 		/**
 		 * Checks the database if the current match has already been stored or not
@@ -263,6 +311,10 @@ if ($collector_started === true) { // a hack to make this file load the framewor
 	{
 		echo "Invalid match specified: " . $argv[1] . "\nExiting.\n";
 		exit;
+	}
+	if ( isset($argv[2]) )
+	{
+		DEFINE(TEST, true);
 	}
 	DEFINE(MATCH_ID, $argv[1]);
 	$tmvc->main('active_collector', null); // start the active collector

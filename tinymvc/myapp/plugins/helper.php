@@ -13,17 +13,13 @@ class helper extends TinyMVC_Controller
 		$this->match_id = $match_id;
 	}
 
-	public function get_time_interval()
+	public function calc_time_interval()
 	{
-
-	}
-	public function get_server_owner()
-	{
-
+		return 1;
 	}
 	public function estimate_yaks_delivered()
 	{
-
+		return 142;
 	}
 	/**
 	 * Calculates the number of weeks between a static date and the given time
