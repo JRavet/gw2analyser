@@ -69,8 +69,12 @@ class TinyMVC_Model
   	}
   }
 
-  function update($data)
+  function update($data, $where)
   {
+    foreach($where as $key=>$value)
+    {
+      $this->db->where($key,$value);
+    }
     $this->db->update($this->_table, $data);
   }
 
