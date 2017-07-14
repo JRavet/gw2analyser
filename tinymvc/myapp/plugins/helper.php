@@ -56,6 +56,9 @@ class helper extends TinyMVC_Controller
 
 	public function log_message($code, $msg="")
 	{
+
+		preg_replace(",", ";", $msg); // changes commas to semicolons so as to not break CSVs
+
 		$details = $this->log_code->find(array("id"=>$code));
 
 		$message = date("Y-m-d H:i:s") . "," . $details['id'] . "," . $details['type'] . "," . $details['message'] . "," . $msg . "\n";

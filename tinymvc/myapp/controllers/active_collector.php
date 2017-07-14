@@ -35,12 +35,12 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		**/
 		private function main_loop()
 		{
-			$this->helper->log_message(0, "Starting main loop");
 			$tick_timer = 5.0;
 			$sync_data = $this->synchronize(); // initial synchronize
 			$sync_data['new_week'] = TRUE; // assume a new week to store new match_details for
 			while (true)
 			{ // begin looping
+				$this->helper->log_message(0, "Starting loop; tick_timer=" . $tick_timer);
 				$begin_time = microtime(true); // get the current time in microseconds; used to calculate processing time
 				$timeStamp = Date("Y-m-d H:i:s"); // make a unique timestamp to pass to functions that store data with timestamps
 
@@ -54,7 +54,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$this->store_capture_history($match, $tick_timer, $timeStamp);
 
 				if ($tick_timer == 5)
-				{
+				{ // store scores after every point tick
 					$this->store_scores($match, $tick_timer, $timeStamp);
 				}
 
@@ -108,8 +108,6 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			usleep(1*SECONDS); // wait 2 seconds so the score data just collected will be processing_timeerent
 
-			$log_counter = 0; // initialize to 0 so the first loop logs the attempt
-
 			while (TRUE)
 			{
 				$current_match = $this->api->get_scores();
@@ -117,11 +115,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$current_score = $current_match->scores->red + $current_match->scores->blue + $current_match->scores->green;
 				$prev_score = $prev_match->scores->red + $prev_match->scores->blue + $prev_match->scores->green;
 
-				if ($log_counter == 0)
-				{ // only show synchronization attempts every 10 times
-					$log_counter = 10;
-					$this->helper->log_message(0, "Synchronization in progress: prev_score=" . $prev_score . " | current_score=" . $current_score);
-				}
+				$this->helper->log_message(0, "Synchronization in progress: prev_score=" . $prev_score . " | current_score=" . $current_score);
 
 				if ( $current_score >= ($prev_score + 200) )
 				{ // and a tick did occur
