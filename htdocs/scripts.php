@@ -29,8 +29,11 @@ if(!defined('DS'))
 if(!defined('TMVC_BASEDIR'))
   define('TMVC_BASEDIR',dirname(__FILE__) . DS . '..' . DS . 'tinymvc' . DS);
 
+if(!defined('PATH_LOG'))
+  define('PATH_LOG', TMVC_BASEDIR . ".." . DS . "logs" . DS);
 /* include main tmvc class */
 require(TMVC_BASEDIR . 'sysfiles' . DS . 'TinyMVC.php');
+
 
 /* instantiate */
 $tmvc = new tmvc();
