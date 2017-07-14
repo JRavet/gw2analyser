@@ -13,7 +13,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 	{
 		private $api;
 		private $helper;
-		private $match_detail;
+		private $match_detail, $server_linking;
 
 		public function __construct()
 		{
@@ -22,6 +22,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->api = new gw2_api(MATCH_ID);
 			$this->helper = new helper();
 			$this->match_detail = new match_detail();
+			$this->server_linking = new server_linking();
 			$this->main_loop(); // start the collector
 		}
 
@@ -148,6 +149,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			echo "checked objective upgrades\n";
 		}
+
 		/**
 		 * Checks the database if the current match has already been stored or not
 		 * Stores the new match-detail data if it hasn't been already
@@ -164,19 +166,41 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			if ( !is_array($is_stored) )
 			{ // if the data was not present in the DB, save it now
-				$this->match_detail->save(array(
+				$match_detail_id = $this->match_detail->save(array(
 					"match_id" => $match->id,
 					"week_num" => $this->helper->get_week_num($match->start_time),
 					"start_time" => $match->start_time,
 					"end_time" => $match->end_time
 				));
+				// then store the server-linkings for this match-detail
+				$this->store_server_linkings($match, $match_detail_id);
 			}
 
-			$this->store_server_linkings($match);
 		}
-		private function store_server_linkings($match)
+		private function store_server_linkings($match, $match_detail_id)
 		{
-			echo "stored server linkings\n";
+			$lead_worlds = json_decode(json_encode($match->worlds), true); // turns the object into an array
+			foreach ($match->all_worlds as $color=>$servers)
+			{ // loop through all worlds in the match by their color; each value is another array
+				foreach($servers as $server_id)
+				{ // loop through the array of worlds, singling out each server
+					$lead = 0; // assume server is not a leader
+					if ( in_array($server_id, $lead_worlds) )
+					{ // if this servers's id is in the list of leading worlds, set a bit to identify it as such
+						$lead = 1;
+					}
+
+					$population = $this->api->get_server_population($server_id);
+
+					$this->server_linking->save(array(
+						"match_detail_id" => $match_detail_id,
+						"server_id" => $server_id,
+						"server_color" => $color,
+						"server_lead" => $lead,
+						"server_population" => $population
+					));
+				}
+			}
 		}
 	} // END CLASS active collector
 	$collector_started = true; // a hack to make this file load the framework AND execute itself

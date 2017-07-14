@@ -27,6 +27,11 @@ class gw2_api extends TinyMVC_Controller {
 		return $match;
 	}
 
+	public function get_server_population($server_id)
+	{
+		return json_decode(file_get_contents("https://api.guildwars2.com/v2/worlds?ids=" . $server_id))[0]->population;
+	}
+
 	/**
 	 * Retrieves list of scores (NOT kills/deaths!)
 	 *

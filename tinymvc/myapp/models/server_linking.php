@@ -13,7 +13,8 @@ FOREIGN KEY(server_id) REFERENCES server_info(server_id)
 */
 class server_linking extends TinyMVC_Model
 {
-
+	protected $_table = "server_linking";
+	protected $pk = "id";
 }
 
 ?>

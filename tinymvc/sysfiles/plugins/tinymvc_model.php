@@ -40,12 +40,13 @@ class TinyMVC_Model
   function save($data) {
   	try
   	{
-		$this->db->insert($this->_table, $data);
-	}
-	catch (Exception $e)
-	{
-		echo $e->getMessage();
-	}
+		  return $this->db->insert($this->_table, $data);
+  	}
+  	catch (Exception $e)
+  	{
+  		echo $e->getMessage();
+      return -1;
+  	}
   }
 
   function is_stored($data) {
