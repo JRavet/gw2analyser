@@ -49,7 +49,7 @@ class TinyMVC_Model
   	}
   }
 
-  function find($data) {
+  function find($data, $order_by=null) {
   	try
   	{
   		$this->db->select('*');
@@ -59,6 +59,11 @@ class TinyMVC_Model
   		{
   		 	$this->db->where("$key", "$value");
   		}
+
+      foreach ($order_by as $col=>$direction)
+      {
+        $this->db->order_by($col, $direction);
+      }
 
   		$data = $this->db->query_one();
   		return $data;
