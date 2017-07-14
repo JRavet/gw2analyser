@@ -98,10 +98,10 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$sync_data['sync_wait'] = FALSE; //just to ensure it doesn't wait extra time
 			}
 
-			if ( $sync_data['sync_wait'] === TRUE && $processing_time < (25*SECONDS) )
+			if ( $sync_data['sync_wait'] === TRUE && $processing_time < (21*SECONDS) )
 			{ // if there should be an initial delay, and the processing-time wasnt too long, idle for some time
-				$this->helper->log_message(4, 24*SECONDS - $processing_time);
-				usleep(24*SECONDS - $processing_time); // sleep for a combined (processing+idle) time of 25 seconds
+				$this->helper->log_message(4, 20*SECONDS - $processing_time);
+				usleep(20*SECONDS - $processing_time); // sleep for a combined (processing+idle) time of 21 seconds
 			}
 
 			$prev_match = $this->api->get_scores();
