@@ -14,7 +14,8 @@ ON DELETE CASCADE
 */
 class guild_emblem extends TinyMVC_Model
 {
-
+	protected $_table = "guild_emblem";
+	protected $pk = "id";
 }
 
 ?>

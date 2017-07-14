@@ -12,16 +12,6 @@ class Guild extends TinyMVC_Model
 	protected $_table = "guild";
 	protected $pk = "guild_id";
 
-	public function store_guild($guild_obj)
-	{
-		$this->save(array(
-			'guild_id' => $guild_obj->guild_id,
-			'emblem_last_updated' => date('Y-m-d H:i:s'),
-			'name' => $guild_obj->name,
-			'tag' => $guild_obj->tag
-		));
-	}
-
 }
 
 ?>
