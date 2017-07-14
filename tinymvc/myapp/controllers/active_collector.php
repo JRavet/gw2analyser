@@ -13,7 +13,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 	{
 		private $api;
 		private $helper;
-		private $match_detail, $server_linking;
+		private $match_detail, $server_linking; // models
 
 		public function __construct()
 		{
@@ -32,7 +32,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private function main_loop()
 		{
 			$tick_timer = 5.0;
-		//	$sync_data = $this->synchronize(); // initial synchronize
+			$sync_data = $this->synchronize(); // initial synchronize
 			$sync_data['new_week'] = TRUE; // assume a new week to store new match_details for
 			while (true)
 			{ // begin looping
@@ -42,7 +42,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$match = $this->api->get_match_data();
 
 				if ( $sync_data['new_week'] == TRUE )
-				{
+				{ // if the match->start_times differed during sync, new matchups! Store 'em
 					$this->store_match_details($match);
 				}
 
@@ -73,22 +73,22 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					$tick_timer = 5;
 				}
 			} // end looping
-		}
+		} // END FUNCTION main_loop
 		private function synchronize($sync_data, $processing_time)
 		{
 			if ($processing_time >= (30*SECONDS))
-			{ //if the processing time was over 30 seconds, no need to idle before syncing
+			{ // if the processing time was over 30 seconds, no need to idle before syncing
 				$sync_data['sync_wait'] = FALSE; //just to ensure it doesn't wait extra time
 			}
 
 			if ( $sync_data['sync_wait'] === TRUE && $processing_time < (25*SECONDS) )
-			{ //if there should be an initial delay, and the processing-time wasnt too long, idle for some time
-				usleep(23*SECONDS - $processing_time); //sleep for a combined (processing+idle) time of 25 seconds
+			{ // if there should be an initial delay, and the processing-time wasnt too long, idle for some time
+				usleep(24*SECONDS - $processing_time); // sleep for a combined (processing+idle) time of 25 seconds
 			}
 
 			$prev_match = $this->api->get_scores();
 
-			usleep(2*SECONDS); // wait 2 seconds so the score data just collected will be processing_timeerent
+			usleep(1*SECONDS); // wait 2 seconds so the score data just collected will be processing_timeerent
 
 			while (TRUE)
 			{
@@ -97,14 +97,12 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$current_score = $current_match->scores->red + $current_match->scores->blue + $current_match->scores->green;
 				$prev_score = $prev_match->scores->red + $prev_match->scores->blue + $prev_match->scores->green;
 
-				echo $current_match->id . " | " . $current_score . " | " . $prev_score . "\n";
-
 				if ( $current_score >= ($prev_score + 200) )
 				{ // and a tick did occur
 					break; // done syncing
 				}
 
-				$prev_match = $current_match;
+				$prev_match = $current_match; // get ready to compare the next set of data
 
 				usleep(1*SECONDS);
 			}
@@ -112,7 +110,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$new_start_time = $current_match->start_time;
 
 			if ($new_start_time != $sync_data["prev_start_time"])
-			{
+			{ // start-times differ = reset occurred, new matchups!
 				$new_week = TRUE;
 			}
 
@@ -121,7 +119,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				"prev_start_time" => $new_start_time,
 				"sync_wait" => TRUE // always do an extra sync-delay after the initial no-wait sync
 			);
-		}
+		} // END FUNCTION sychronize
 		private function store_scores()
 		{
 			echo "stored scores\n";
@@ -175,8 +173,15 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				// then store the server-linkings for this match-detail
 				$this->store_server_linkings($match, $match_detail_id);
 			}
-
-		}
+		} // END FUNCTION store_match_details
+		/**
+		 * Stores all servers involved in the given match
+		 * Indicates what color they are and which server is the leader of that color, for a given match
+		 *
+		 * @param $match - full match-data object
+		 * @param $match_detail_id - internal id of the match-detail that was just stored
+		 * @return void
+		**/
 		private function store_server_linkings($match, $match_detail_id)
 		{
 			$lead_worlds = json_decode(json_encode($match->worlds), true); // turns the object into an array
@@ -201,7 +206,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					));
 				}
 			}
-		}
+		} // END FUNCTION store_server_linkings
 	} // END CLASS active collector
 	$collector_started = true; // a hack to make this file load the framework AND execute itself
 } // END if not-class-exists
