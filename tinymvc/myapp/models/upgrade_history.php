@@ -12,7 +12,8 @@ ON DELETE CASCADE
 */
 class upgrade_history extends TinyMVC_Model
 {
-
+	protected $_table = "upgrade_history";
+	protected $pk = "id";
 }
 
 ?>

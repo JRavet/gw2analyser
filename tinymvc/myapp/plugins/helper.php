@@ -51,6 +51,17 @@ class helper extends TinyMVC_Controller
 
 	}
 
+	public function objective_tier($yaks)
+	{
+		switch(true)
+		{
+			case $yaks >= 20 && $yaks < 60: return 1;
+			case $yaks >= 60 && $yaks < 140: return 2;
+			case $yaks >= 140: return 3;
+			default: return 0;
+		}
+	}
+
 	/**
 	 * Writes a message to a log file. If the file or folder does not it exist, it is created
 	 *

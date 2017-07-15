@@ -14,7 +14,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private $api;
 		private $helper;
 		private $match_detail, $server_linking, $capture_history,
-			$claim_history, $guild, $guild_emblem, $objective; // models
+			$claim_history, $upgrade_history, $guild, $guild_emblem, $objective; // models
 
 		/**
 		 * Constructor
@@ -30,6 +30,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->server_linking = new server_linking();
 			$this->capture_history = new capture_history();
 			$this->claim_history = new claim_history();
+			$this->upgrade_history = new upgrade_history();
 			$this->guild = new guild();
 			$this->guild_emblem = new guild_emblem();
 			$this->objective = new objective();
@@ -242,7 +243,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					}
 
 					$this->store_claim_history($objective, $prev_capture_history, $timeStamp);
-					$this->store_upgrade_history($objective->guild_upgrades, $prev_capture_history, $timeStamp);
+					$this->store_upgrade_history($objective, $prev_capture_history, $timeStamp);
 					$this->store_yak_history($yaks, $prev_capture_history, $timeStamp);
 				} // end foreach map->objective as objective
 			} // end foreach match->maps as map
@@ -329,13 +330,38 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				);
 			}
 		} // END FUNCTION store_claim_history
-		private function store_upgrade_history()
+		private function store_upgrade_history($objective, $capture_history, $timeStamp)
 		{
+			$upgrades = $objective->guild_upgrades;
+			$tier = $this->helper->objective_tier($objective->yaks_delivered);
+			$upgrades[] = $tier; // append any objective-tier upgrades to the list as well
+
+			foreach ($upgrades as $upgrade)
+			{ // see if an entry already exists for this capture_history and upgrade
+				$previous_upgrade = $this->upgrade_history->find(
+					array( // where
+						"capture_history_id" => $capture_history['id'],
+						"upgrade_id" => $upgrade
+					),
+					array( // order-by
+						"id" => "DESC"
+					)
+				);
+
+				if ( !isset($previous_upgrade['id']) && $upgrade != 0 )
+				{ // if the upgrade was not found in the tables, and it isn't tier 0, save it
+					$this->upgrade_history->save(array(
+						"timeStamp" => $timeStamp,
+						"capture_history_id" => $capture_history['id'],
+						"upgrade_id" => $upgrade
+					));
+				}
+			} // end foreach upgrades as upgrade
 
 		} // END FUNCTION store_upgrade_history
 		private function store_yak_history()
 		{
-
+			// every 10 yaks or so
 		} // END FUNCTION store_yak_history
 
 		/**
