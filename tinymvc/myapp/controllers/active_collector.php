@@ -106,6 +106,15 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION main_loop
 		private function synchronize($sync_data, $processing_time)
 		{
+			if (TEST_MODE === TRUE)
+			{
+				return array(
+					"new_week" => TRUE,
+					"prev_start_time" => NULL,
+					"sync_wait" => TRUE // always do an extra sync-delay after the initial no-wait sync
+				);
+			}
+
 			$this->helper->log_message(1, MATCH_ID);
 			if ($processing_time >= (30*SECONDS))
 			{ // if the processing time was over 30 seconds, no need to idle before syncing
@@ -278,7 +287,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 							array( // set
 								"num_yaks" => $yaks,
 								"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
-							),
+							), // TODO ^ optionally use prev_last_flipped vs objective->last_flipped? a little more precise
 							array( // where
 								"id" => $prev_capture_history['id']
 							)
@@ -350,18 +359,21 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				} // end if-guild-not-exists
 
-				$prev_claim_history['id'] = $this->claim_history->save(array(
-					"capture_history_id" => $capture_history['id'],
-					"claimed_by" => $objective->claimed_by, // below: if claimed_at is null, use current timeStamp
-					"claimed_at" => ( is_null($objective->claimed_at) ? $timeStamp : $objective->claimed_at )
-				));
+				if ( (is_null($objective->claimed_by) && !is_null($prev_claim_history['id']))
+					|| !is_null($objective->claimed_by) )
+				{ // only store null-claims if the objective was claimed prior
+					$prev_claim_history['id'] = $this->claim_history->save(array(
+						"capture_history_id" => $capture_history['id'],
+						"claimed_by" => $objective->claimed_by, // below: if claimed_at is null, use current timeStamp
+						"claimed_at" => ( is_null($objective->claimed_at) ? NULL : $objective->claimed_at )
+					));
+				}
 
 			} // end if-need-to-insert claim_history
 
 			// always update claim history - it either existed or was just created
-			if ( !is_null($objective->claimed_by) )
+			if ( !is_null($prev_claim_history['id']) )
 			{ // if the objective has any claim at all, update duration_claimed
-
 				$this->claim_history->update(
 					array( // set
 						"duration_claimed" => $this->helper->calc_time_interval($objective->claimed_at, $timeStamp)
@@ -491,6 +503,10 @@ if ($collector_started === true) { // a hack to make this file load the framewor
 	{
 		echo "Invalid match specified: " . $argv[1] . "\nExiting.\n";
 		exit;
+	}
+	if ( isset($argv[2]) )
+	{
+		DEFINE(TEST_MODE, TRUE);
 	}
 	DEFINE(MATCH_ID, $argv[1]);
 	$tmvc->main('active_collector', null); // start the active collector
