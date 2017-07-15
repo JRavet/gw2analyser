@@ -198,15 +198,15 @@ FOREIGN KEY (from_obj) REFERENCES objective(obj_id),
 FOREIGN KEY (to_obj) REFERENCES objective(obj_id)
 );
 
-CREATE USER 'gw2analyser'@'localhost' IDENTIFIED BY 'themirrorimage';
-GRANT SELECT
-ON Gw2Analyser.*
-TO 'gw2analyser'@'localhost';
-CREATE USER 'gw2datacollector'@'localhost' IDENTIFIED BY 'egamirrorimeht';
-GRANT SELECT, INSERT, UPDATE, DELETE
-ON Gw2Analyser.*
-TO 'gw2datacollector'@'localhost';
-CREATE USER 'gw2admin'@'localhost' IDENTIFIED BY 'J0rDa1n';
-GRANT SELECT, INSERT, UPDATE, CREATE, DROP, ALTER, DELETE
-ON Gw2Analyser.*
-TO 'gw2admin'@'localhost';
+-- CREATE USER 'gw2analyser'@'localhost' IDENTIFIED BY 'themirrorimage';
+-- GRANT SELECT
+-- ON Gw2Analyser.*
+-- TO 'gw2analyser'@'localhost';
+-- CREATE USER 'gw2datacollector'@'localhost' IDENTIFIED BY 'egamirrorimeht';
+-- GRANT SELECT, INSERT, UPDATE, DELETE
+-- ON Gw2Analyser.*
+-- TO 'gw2datacollector'@'localhost';
+-- CREATE USER 'gw2admin'@'localhost' IDENTIFIED BY 'J0rDa1n';
+-- GRANT SELECT, INSERT, UPDATE, CREATE, DROP, ALTER, DELETE
+-- ON Gw2Analyser.*
+-- TO 'gw2admin'@'localhost';
