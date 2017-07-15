@@ -13,7 +13,8 @@ ON DELETE CASCADE
 */
 class claim_history extends TinyMVC_Model
 {
-
+	protected $_table = "claim_history";
+	protected $pk = "id";
 }
 
 ?>
