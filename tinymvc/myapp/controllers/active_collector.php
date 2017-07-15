@@ -264,11 +264,6 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 					$yaks = $objective->yaks_delivered;
 
-					if ($yaks == 140) // api only reports up to 140
-					{
-						$yaks = $this->helper->estimate_yaks_delivered($prev_capture_history, $match_detail_id);
-					}
-
 					if ( !isset($prev_capture_history['id']) )
 					{ // no previous record for this set of data; store a new set
 						$prev_capture_history['id'] = $this->capture_history->save(array(
@@ -279,12 +274,16 @@ if (class_exists('Active_Collector_Controller', false) === false)
 							"owner_server" => $server_owners[$objective->owner],
 							"owner_color" => $objective->owner,
 							"tick_timer" => $tick_timer,
-							"num_yaks" => $yaks,
+							"num_yaks" => $yaks, // if $yaks == 140 from the api, the next run of code will update using our own calcs
 							"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
 						)); // also make an array storing only the id of the last_insert
 					}
 					else
 					{ // update duration_owned and the number of yaks -- all other data is already set
+						if ($yaks == 140) // api only reports up to 140
+						{ // when the api caps out the number of yaks, we use our own calculations
+							$yaks = $this->capture_history->estimate_yaks_delivered($prev_capture_history, $match_detail_id, $this->objective);
+						}
 						$this->capture_history->update(
 							array( // set
 								"num_yaks" => $yaks,

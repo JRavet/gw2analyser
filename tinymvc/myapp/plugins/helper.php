@@ -29,10 +29,6 @@ class helper extends TinyMVC_Controller
 			return "00:00:00";
 		}
 	}
-	public function estimate_yaks_delivered()
-	{
-		return 142;
-	}
 	/**
 	 * Calculates the number of weeks between a static date and the given time
 	 *
