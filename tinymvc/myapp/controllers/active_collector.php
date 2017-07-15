@@ -13,7 +13,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 	{
 		private $api;
 		private $helper;
-		private $match_detail, $server_linking, $capture_history; // models
+		private $match_detail, $server_linking, $capture_history,
+			$claim_history, $guild, $guild_emblem, $objective; // models
 
 		/**
 		 * Constructor
@@ -28,6 +29,10 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->match_detail = new match_detail();
 			$this->server_linking = new server_linking();
 			$this->capture_history = new capture_history();
+			$this->claim_history = new claim_history();
+			$this->guild = new guild();
+			$this->guild_emblem = new guild_emblem();
+			$this->objective = new objective();
 			$this->main_loop(); // start the collector
 		}
 
@@ -65,11 +70,11 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				}
 
 				$processing_time = (microtime(true) - $begin_time)*SECONDS;
-				$this->helper->log_message(4, 30*SECONDS - $processing_time);
 				$idle_time = ((30*SECONDS) - $processing_time);
 
 				if ($processing_time > 30*SECONDS)
 				{
+					$this->helper->log_message(500, "Too much time elapsed; processing_time=" . $processing_time);
 					// TODO
 					// fast-forward $tick_timer accordingly & wait diff
 					// wrapping around to the next interval if necessary
@@ -82,6 +87,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					$idle_time = 1;
 					$tick_timer = 5.5;
 				}
+
+				$this->helper->log_message(4, $idle_time);
 
 				usleep($idle_time);
 				$tick_timer -= 0.5;
@@ -189,10 +196,16 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			{
 				foreach($map->objectives as $objective)
 				{
-					$prev_capture_history = $this->capture_history->find(array(
-						"match_detail_id" => $match_detail_id,
-						"last_flipped" => $objective->last_flipped,
-					));
+					$prev_capture_history = $this->capture_history->find(
+						array( // where
+							"match_detail_id" => $match_detail_id,
+							"obj_id" => $objective->id,
+							"owner_color" => $objective->owner
+						),
+						array( // order by
+							"timeStamp" => "DESC"
+						)
+					);
 
 					$yaks = $objective->yaks_delivered;
 
@@ -203,7 +216,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 					if ( !isset($prev_capture_history['id']) )
 					{ // no previous record for this set of data; store a new set
-						$prev_capture_history = $this->capture_history->save(array(
+						$prev_capture_history['id'] = $this->capture_history->save(array(
 							"match_detail_id" => $match_detail_id,
 							"timeStamp" => $timeStamp,
 							"last_flipped" => $objective->last_flipped,
@@ -213,7 +226,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 							"tick_timer" => $tick_timer,
 							"num_yaks" => $yaks,
 							"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
-						));
+						)); // also make an array storing only the id of the last_insert
 					}
 					else
 					{ // update duration_owned and the number of yaks -- all other data is already set
@@ -228,17 +241,93 @@ if (class_exists('Active_Collector_Controller', false) === false)
 						);
 					}
 
-					$this->store_claim_history($objective, $prev_capture_history['id'], $timeStamp);
-					$this->store_upgrade_history($objective->guild_upgrades, $prev_capture_history['id'], $timeStamp);
-					$this->store_yak_history($yaks, $prev_capture_history['id'], $timeStamp);
-				}
-			}
+					$this->store_claim_history($objective, $prev_capture_history, $timeStamp);
+					$this->store_upgrade_history($objective->guild_upgrades, $prev_capture_history, $timeStamp);
+					$this->store_yak_history($yaks, $prev_capture_history, $timeStamp);
+				} // end foreach map->objective as objective
+			} // end foreach match->maps as map
 
 			$this->helper->log_message(6, "capture, claim, upgrade and yak history");
 		} // END FUNCTION store_capture_history
-		private function store_claim_history()
+		private function store_claim_history($objective, $capture_history, $timeStamp)
 		{
+			$prev_claim_history = $this->claim_history->find(
+				array( // where
+					"capture_history_id" => $capture_history['id']
+				),
+				array( // order-by
+					"id" => "DESC"
+				)
+			); // get the last known claim-history for the capture-history
 
+			if ( $objective->owner != $capture_history['owner_color']
+				|| $objective->claimed_by != $prev_claim_history['claimed_by'] )
+			{ // owner-color changed or the guild claiming it changed - store new claim history
+				// see if the claiming guild has been stored yet
+
+				$guild_exists = $this->guild->find(array(
+					"guild_id" => $objective->claimed_by
+				));
+				// check if the guild exists in the database
+
+				if ( is_null($guild_exists['guild_id']) )
+				{ // guild does not exist at all in db
+
+					$guild = $this->api->get_guild($objective->claimed_by);
+					// get the guild data from the api then save it
+
+					$this->guild->save(array(
+						"guild_id" => $guild->guild_id,
+						"name" => $guild->guild_name,
+						"tag" => $guild->tag,
+						"emblem_last_updated" => date("Y-m-d H:i:s")
+					));
+
+					// make shorthand name for the emblem
+					$emblem = $guild->emblem; // returned with the other guild data already
+					// save the emblem data
+
+					$this->guild_emblem->save(array(
+						"guild_id" => $guild->guild_id,
+						"background_id" => $emblem->background_id,
+						"foreground_id" => $emblem->foreground_id,
+						"flags" => implode("|", $emblem->flags),
+						"background_color_id" => $emblem->background_color_id,
+						"foreground_primary_color_id" => $emblem->foreground_primary_color_id,
+						"foreground_secondary_color_id" => $emblem->foreground_secondary_color_id
+					));
+
+				} // end if-guild-not-exists
+
+				$obj = $this->objective->find(array(
+					"obj_id" => $objective->id
+				)); // ensure the objective is a camp, tower, keep or castle before storing claim_history
+
+				if ( in_array( $obj['type'], array("Camp", "Tower", "Keep", "Castle") ) )
+				{ // only store claim-history for claimable objectives
+
+					$prev_claim_history['id'] = $this->claim_history->save(array(
+						"capture_history_id" => $capture_history['id'],
+						"claimed_by" => $objective->claimed_by, // below: if claimed_at is null, use current timeStamp
+						"claimed_at" => ( is_null($objective->claimed_at) ? $timeStamp : $objective->claimed_at )
+					));
+
+				}
+			} // end if-need-to-insert claim_history
+
+			// always update claim history - it either existed or was just created
+			if ( !is_null($objective->claimed_by) )
+			{ // if the objective has any claim at all, update duration_claimed
+
+				$this->claim_history->update(
+					array( // set
+						"duration_claimed" => $this->helper->calc_time_interval($objective->claimed_at, $timeStamp)
+					),
+					array( // where
+						"id" => $prev_claim_history['id']
+					)
+				);
+			}
 		} // END FUNCTION store_claim_history
 		private function store_upgrade_history()
 		{
