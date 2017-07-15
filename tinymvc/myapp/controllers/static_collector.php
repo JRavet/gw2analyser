@@ -45,7 +45,7 @@ if (class_exists('Static_Collector_Controller', false) === false)
 			if ($params == "-a" OR $params == "-g")
 			{
 				$this->load->model("guild");
-				$this->guild->store_guild((object)array(
+				$this->guild->save(array(
 					'guild_id' => '',
 					'emblem_last_updated' => 0,
 					'name' => '',
