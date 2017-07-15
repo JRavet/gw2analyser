@@ -74,7 +74,7 @@ class capture_history extends TinyMVC_Model
 		);
 		foreach($data as $yaks)
 		{
-			return ( isset($yaks['yaks']) ? $yaks['yaks'] : 0 );
+			return ( isset($yaks['yaks']) ? round($yaks['yaks']) : 0 );
 		}
 	}
 }

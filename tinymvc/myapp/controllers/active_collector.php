@@ -86,7 +86,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					// if skipped 5min, store next data as score_data
 				}
 
-				if ( $tick_timer == 0.5 )
+				if ( $tick_timer == 0.5 || $processing_time > 30*SECONDS ) // TODO remove latter portion of clause once above is complete
 				{
 					$sync_data = $this->synchronize($sync_data, $processing_time);
 					$idle_time = 1;
@@ -106,16 +106,6 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION main_loop
 		private function synchronize($sync_data, $processing_time)
 		{
-
-			if ( TEST == true ) // TODO remove after done
-			{
-				return array(
-					"new_week" => true,
-					"prev_start_time" => '',
-					"sync_wait" => TRUE // always do an extra sync-delay after the initial no-wait sync
-				);
-			}
-
 			$this->helper->log_message(1, MATCH_ID);
 			if ($processing_time >= (30*SECONDS))
 			{ // if the processing time was over 30 seconds, no need to idle before syncing
@@ -501,10 +491,6 @@ if ($collector_started === true) { // a hack to make this file load the framewor
 	{
 		echo "Invalid match specified: " . $argv[1] . "\nExiting.\n";
 		exit;
-	}
-	if ( isset($argv[2]) )
-	{
-		DEFINE(TEST, true);
 	}
 	DEFINE(MATCH_ID, $argv[1]);
 	$tmvc->main('active_collector', null); // start the active collector
