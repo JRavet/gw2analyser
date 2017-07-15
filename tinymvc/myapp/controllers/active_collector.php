@@ -15,7 +15,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private $helper;
 		private $match_detail, $server_linking, $capture_history,
 			$claim_history, $upgrade_history, $yak_history, $guild,
-			$guild_emblem, $objective; // models
+			$guild_emblem, $objective, $map_score; // models
 
 		/**
 		 * Constructor
@@ -36,6 +36,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->guild = new guild();
 			$this->guild_emblem = new guild_emblem();
 			$this->objective = new objective();
+			$this->map_score = new map_score();
 			$this->main_loop(); // start the collector
 		}
 
@@ -64,7 +65,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				if ($tick_timer == 5)
 				{ // store scores after every point tick
-					$this->store_scores($match, $tick_timer, $timeStamp);
+					$this->store_scores($match, $timeStamp);
 				}
 
 				if ( $sync_data['new_week'] === TRUE )
@@ -165,12 +166,41 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				"sync_wait" => TRUE // always do an extra sync-delay after the initial no-wait sync
 			);
 		} // END FUNCTION sychronize
-		private function store_scores()
+		private function store_scores($match, $timeStamp)
 		{
 			$this->helper->log_message(5, "scores");
 
-			$this->helper->calculate_ppt();
-			$this->store_skirmish_scores();
+			$match_detail_id = $this->match_detail->find(array(
+				"match_id" => $match->id,
+				"start_time" => $match->start_time
+			))['id'];
+
+			foreach($match->maps as $map)
+			{
+				$this->helper->calculate_ppt($map, "green");
+				$this->map_score->save(array(
+					"match_detail_id" => $match_detail_id,
+					"timeStamp" => $timeStamp,
+					"map_id" => $map->type,
+					"greenScore" => $map->scores->green,
+					"greenKills" => $map->kills->green,
+					"greenDeaths" => $map->deaths->green,
+					"green_ppt" => $this->helper->calculate_ppt($map->objectives, "Green"),
+					"blueScore" => $map->scores->blue,
+					"blueKills" => $map->kills->blue,
+					"blueDeaths" => $map->deaths->blue,
+					"blue_ppt" => $this->helper->calculate_ppt($map->objectives, "Blue"),
+					"redScore" => $map->scores->red,
+					"redKills" => $map->kills->red,
+					"redDeaths" => $map->deaths->red,
+					"red_ppt" => $this->helper->calculate_ppt($map->objectives, "Red")
+				));
+			}
+
+			if ($time == 2) // TODO - proper time calculations
+			{
+				$this->store_skirmish_scores();
+			}
 			$this->helper->log_message(6, "scores");
 		} // END FUNCTION store_scores
 		private function store_skirmish_scores()

@@ -46,9 +46,17 @@ class helper extends TinyMVC_Controller
 		$week = (int)(($week->days)/7);
 		return $week;
 	}
-	public function calculate_ppt()
+	public function calculate_ppt($objectives, $color)
 	{
-
+		$ppt = 0;
+		foreach($objectives as $objective)
+		{
+			if ($objective->owner == $color)
+			{
+				$ppt += $objective->points_tick;
+			}
+		}
+		return $ppt;
 	}
 
 	public function objective_tier($yaks)
@@ -60,6 +68,11 @@ class helper extends TinyMVC_Controller
 			case $yaks >= 140: return 3;
 			default: return 0;
 		}
+	}
+
+	public function clean_old_logs()
+	{
+		//TODO
 	}
 
 	/**

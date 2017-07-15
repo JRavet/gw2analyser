@@ -22,7 +22,8 @@ ON DELETE CASCADE
 */
 class map_score extends TinyMVC_Model
 {
-
+	protected $_table = "map_score";
+	protected $pk = "id";
 }
 
 ?>
