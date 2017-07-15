@@ -62,10 +62,11 @@ class TinyMVC_Model
 
       foreach ($order_by as $col=>$direction)
       {
-        $this->db->order_by($col, $direction);
+        $this->db->orderby($col . " " . $direction);
       }
 
-  		$data = $this->db->query_one();
+      $data = $this->db->query_one();
+
   		return $data;
   	}
   	catch (Exception $e)
