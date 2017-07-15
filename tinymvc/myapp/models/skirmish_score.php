@@ -13,7 +13,8 @@ ON DELETE CASCADE
 */
 class skirmish_score extends TinyMVC_Model
 {
-
+	protected $_table = "skirmish_score";
+	protected $pk = "id";
 }
 
 ?>

@@ -15,7 +15,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private $helper;
 		private $match_detail, $server_linking, $capture_history,
 			$claim_history, $upgrade_history, $yak_history, $guild,
-			$guild_emblem, $objective, $map_score; // models
+			$guild_emblem, $objective, $map_score, $skirmish_score; // models
 
 		/**
 		 * Constructor
@@ -37,6 +37,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->guild_emblem = new guild_emblem();
 			$this->objective = new objective();
 			$this->map_score = new map_score();
+			$this->skirmish_score = new skirmish_score();
 			$this->main_loop(); // start the collector
 		}
 
@@ -195,17 +196,38 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					"redDeaths" => $map->deaths->red,
 					"red_ppt" => $this->helper->calculate_ppt($map->objectives, "Red")
 				));
-			}
+			} // end foreach->map as map
 
-			if ($time == 2) // TODO - proper time calculations
-			{
-				$this->store_skirmish_scores();
-			}
+			$this->store_skirmish_scores($match, $match_detail_id, $timeStamp); // unconditionally call this function - it doesn't duplicate data
+
 			$this->helper->log_message(6, "scores");
 		} // END FUNCTION store_scores
-		private function store_skirmish_scores()
+		private function store_skirmish_scores($match, $match_detail_id, $timeStamp)
 		{
 			$this->helper->log_message(5, "skirmish points");
+
+			$skirmish_score_exists = $this->skirmish_score->find(array(
+				"match_detail_id" => $match_detail_id,
+				"red_skirmish_score" => $match->victory_points->red,
+				"blue_skirmish_score" => $match->victory_points->blue,
+				"green_skirmish_score" => $match->victory_points->green
+			));
+
+			if ( !isset($skirmish_score_exists['id']) )
+			{
+				$current_time = time(); // get the current time
+				$match_start = strtotime($match->start_time); // cast the match_start time to a time object
+				$skirmish_number = floor(($current_time - $match_start)/7200); // get the number of hours between now and match_start, divided by 2
+
+				$this->skirmish_score->save(array(
+					"match_detail_id" => $match_detail_id,
+					"skirmish_number" => $skirmish_number,
+					"timeStamp" => $timeStamp,
+					"red_skirmish_score" => $match->victory_points->red,
+					"blue_skirmish_score" => $match->victory_points->blue,
+					"green_skirmish_score" => $match->victory_points->green
+				));
+			}
 
 			$this->helper->log_message(6, "skirmish points");
 		} // END FUNCTION store_skirmish_scores
