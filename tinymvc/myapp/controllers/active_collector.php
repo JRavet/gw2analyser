@@ -79,18 +79,38 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				if ($processing_time > 30*SECONDS)
 				{
-					$this->helper->log_message(500, "Too much time elapsed; processing_time=" . $processing_time);
-					// TODO
-					// fast-forward $tick_timer accordingly & wait diff
-					// wrapping around to the next interval if necessary
-					// if skipped 5min, store next data as score_data
+					$segments_to_skip = floor( $processing_time / (15*SECONDS) );
+
+					$this->helper->log_message(500, "Too much time elapsed; processing_time=" . $processing_time
+						. "; fast-forwarding by " . $segments_to_skip . " 0.5-min intervals" );
+
+					$time_to_sleep = $processing_time % (15*SECONDS);
+
+					$skipped_5min = false;
+					for ($i = 0; $i < $segments_to_skip; $i++)
+					{
+						$tick_timer -= 0.5;
+						if ( $tick_timer <= 0 )
+						{ // wrap back to 5 minutes
+							$skipped_5min = true;
+							$tick_timer = 5;
+						}
+					}
+
+					if ($skipped_5min === true)
+					{ // if we would have skipped the score-taking, do it now
+						$this->store_scores( $this->api->get_match_data(), Date("Y-m-d H:i:s") );
+					}
+
+					$this->helper->log_message(4, $time_to_sleep*SECONDS);
+					usleep($time_to_sleep*SECONDS);
 				}
 
-				if ( $tick_timer == 0.5 || $processing_time > 30*SECONDS ) // TODO remove latter portion of clause once above is complete
-				{
+				if ( $tick_timer == 0.5 )
+				{ // time to resynchronize
 					$sync_data = $this->synchronize($sync_data, $processing_time);
-					$idle_time = 1;
-					$tick_timer = 5.5;
+					$idle_time = 1; // idle for virtually 0 seconds after resyncing
+					$tick_timer = 5.5; // 0.5 is subtracted after idling, yielding a new tick_timer of 5
 				}
 
 				$this->helper->log_message(4, $idle_time);
@@ -377,7 +397,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$this->claim_history->update(
 					array( // set
 						"duration_claimed" => $this->helper->calc_time_interval($objective->claimed_at, $timeStamp)
-					),
+					), // TODO duration_claimed could be calced with optional old vs new claimed_at for more accuracy
 					array( // where
 						"id" => $prev_claim_history['id']
 					)

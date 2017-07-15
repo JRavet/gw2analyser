@@ -73,7 +73,7 @@ class capture_history extends TinyMVC_Model
 			) yaks;"
 		);
 		foreach($data as $yaks)
-		{
+		{ // there is only 1 result, but it is inside an iterable object - extract it
 			return ( isset($yaks['yaks']) ? round($yaks['yaks']) : 0 );
 		}
 	}
