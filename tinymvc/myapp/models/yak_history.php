@@ -10,7 +10,8 @@ ON DELETE CASCADE
 */
 class yak_history extends TinyMVC_Model
 {
-
+	protected $_table = "yak_history";
+	protected $pk = "id";
 }
 
 ?>

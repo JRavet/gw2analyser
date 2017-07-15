@@ -14,7 +14,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private $api;
 		private $helper;
 		private $match_detail, $server_linking, $capture_history,
-			$claim_history, $upgrade_history, $guild, $guild_emblem, $objective; // models
+			$claim_history, $upgrade_history, $yak_history, $guild,
+			$guild_emblem, $objective; // models
 
 		/**
 		 * Constructor
@@ -31,6 +32,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->capture_history = new capture_history();
 			$this->claim_history = new claim_history();
 			$this->upgrade_history = new upgrade_history();
+			$this->yak_history = new yak_history();
 			$this->guild = new guild();
 			$this->guild_emblem = new guild_emblem();
 			$this->objective = new objective();
@@ -242,9 +244,16 @@ if (class_exists('Active_Collector_Controller', false) === false)
 						);
 					}
 
-					$this->store_claim_history($objective, $prev_capture_history, $timeStamp);
-					$this->store_upgrade_history($objective, $prev_capture_history, $timeStamp);
-					$this->store_yak_history($yaks, $prev_capture_history, $timeStamp);
+					$obj = $this->objective->find(array(
+						"obj_id" => $objective->id
+					));
+
+					if ( in_array( $obj['type'], array("Camp", "Tower", "Keep", "Castle") ) )
+					{ // only store following data for claimable objectives
+						$this->store_claim_history($objective, $prev_capture_history, $timeStamp);
+						$this->store_upgrade_history($objective, $prev_capture_history, $timeStamp);
+						$this->store_yak_history($yaks, $prev_capture_history, $timeStamp);
+					}
 				} // end foreach map->objective as objective
 			} // end foreach match->maps as map
 
@@ -300,20 +309,12 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				} // end if-guild-not-exists
 
-				$obj = $this->objective->find(array(
-					"obj_id" => $objective->id
-				)); // ensure the objective is a camp, tower, keep or castle before storing claim_history
+				$prev_claim_history['id'] = $this->claim_history->save(array(
+					"capture_history_id" => $capture_history['id'],
+					"claimed_by" => $objective->claimed_by, // below: if claimed_at is null, use current timeStamp
+					"claimed_at" => ( is_null($objective->claimed_at) ? $timeStamp : $objective->claimed_at )
+				));
 
-				if ( in_array( $obj['type'], array("Camp", "Tower", "Keep", "Castle") ) )
-				{ // only store claim-history for claimable objectives
-
-					$prev_claim_history['id'] = $this->claim_history->save(array(
-						"capture_history_id" => $capture_history['id'],
-						"claimed_by" => $objective->claimed_by, // below: if claimed_at is null, use current timeStamp
-						"claimed_at" => ( is_null($objective->claimed_at) ? $timeStamp : $objective->claimed_at )
-					));
-
-				}
 			} // end if-need-to-insert claim_history
 
 			// always update claim history - it either existed or was just created
@@ -331,7 +332,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			}
 		} // END FUNCTION store_claim_history
 		private function store_upgrade_history($objective, $capture_history, $timeStamp)
-		{
+		{ // TODO: currently does not account for on-off-on upgrades
 			$upgrades = $objective->guild_upgrades;
 			$tier = $this->helper->objective_tier($objective->yaks_delivered);
 			$upgrades[] = $tier; // append any objective-tier upgrades to the list as well
@@ -357,11 +358,24 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					));
 				}
 			} // end foreach upgrades as upgrade
-
 		} // END FUNCTION store_upgrade_history
-		private function store_yak_history()
+		private function store_yak_history($yaks, $capture_history, $timeStamp)
 		{
-			// every 10 yaks or so
+			$yaks = ( (int) substr($yaks, 0, -1) ) * 10; // 15 becomes 10, 143 becomes 140
+
+			$yaks_stored = $this->yak_history->find(array(
+				"capture_history_id" => $capture_history['id'],
+				"num_yaks" => $yaks
+			)); // see if this number of yaks has been stored for this capture-history yet
+
+			if ( !isset($yaks_stored['id']) && $yaks > 0 )
+			{ // if it isn't saved yet, save it now, only if it has had any yaks at all
+				$this->yak_history->save(array(
+					"capture_history_id" => $capture_history['id'],
+					"num_yaks" => $yaks,
+					"timeStamp" => $timeStamp
+				));
+			}
 		} // END FUNCTION store_yak_history
 
 		/**
