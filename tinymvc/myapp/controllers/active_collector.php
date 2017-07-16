@@ -171,7 +171,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				$prev_match = $current_match; // get ready to compare the next set of data
 
-				if ($total_time >= (29*SECONDS) && $sync_data['sync_wait'] === TRUE) 
+				if ($total_time >= (29*SECONDS) && $sync_data['first_sync'] === FALSE) 
 				{ // only if it isn't the very first sync, exit if more than ~30 seconds have passed
 					$this->helper->log_message(500, "Could not sync within 30 seconds");
 					$save_scores = false; // scores didn't sync properly - don't store
@@ -198,7 +198,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				"new_week" => $new_week,
 				"prev_start_time" => $new_start_time,
 				"sync_wait" => $sync_wait, // always do an extra sync-delay after the initial no-wait sync
-				"save_scores" => $save_scores
+				"save_scores" => $save_scores,
+				"first_sync" => FALSE
 			);
 		} // END FUNCTION sychronize
 		private function store_scores($match, $timeStamp)
