@@ -75,7 +75,7 @@ class TinyMVC_Model
   	}
   }
 
-  function find($data, $order_by=null) {
+  function find($data, $order_by=array()) {
     try
     {
       $this->db->select('*');
@@ -91,9 +91,7 @@ class TinyMVC_Model
         $this->db->orderby($col . " " . $direction);
       }
 
-      $data = $this->db->query_all();
-
-      return $data;
+      return $this->db->query_all();
     }
     catch (Exception $e)
     {
