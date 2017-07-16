@@ -122,7 +122,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION main_loop
 		private function synchronize($sync_data, $processing_time)
 		{
-			if (TEST_MODE === TRUE && $sync_data['sync_wait'] === TRUE)
+			if (TEST_MODE === TRUE)
 			{
 				return array(
 					"new_week" => TRUE,
@@ -206,7 +206,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			$this->helper->log_message(5, "scores");
 
-			$match_detail_id = $this->match_detail->find(array(
+			$match_detail_id = $this->match_detail->find_one(array(
 				"match_id" => $match->id,
 				"start_time" => $match->start_time
 			))['id'];
@@ -241,7 +241,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			$this->helper->log_message(5, "skirmish points");
 
-			$skirmish_score_exists = $this->skirmish_score->find(array(
+			$skirmish_score_exists = $this->skirmish_score->find_one(array(
 				"match_detail_id" => $match_detail_id,
 				"red_skirmish_score" => $match->victory_points->red,
 				"blue_skirmish_score" => $match->victory_points->blue,
@@ -277,7 +277,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				"Neutral" => 0
 			);
 
-			$match_detail_id = $this->match_detail->find(array(
+			$match_detail_id = $this->match_detail->find_one(array(
 				"match_id" => $match->id,
 				"start_time" => $match->start_time
 			))['id'];
@@ -286,7 +286,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			{
 				foreach($map->objectives as $objective)
 				{
-					$prev_capture_history = $this->capture_history->find(
+					$prev_capture_history = $this->capture_history->find_one(
 						array( // where
 							"match_detail_id" => $match_detail_id,
 							"obj_id" => $objective->id,
@@ -331,7 +331,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 						);
 					}
 
-					$obj = $this->objective->find(array(
+					$obj = $this->objective->find_one(array(
 						"obj_id" => $objective->id
 					));
 
@@ -348,7 +348,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION store_capture_history
 		private function store_claim_history($objective, $capture_history, $timeStamp)
 		{
-			$prev_claim_history = $this->claim_history->find(
+			$prev_claim_history = $this->claim_history->find_one(
 				array( // where
 					"capture_history_id" => $capture_history['id']
 				),
@@ -362,7 +362,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			{ // owner-color changed or the guild claiming it changed - store new claim history
 				// see if the claiming guild has been stored yet
 
-				$guild_exists = $this->guild->find(array(
+				$guild_exists = $this->guild->find_one(array(
 					"guild_id" => $objective->claimed_by
 				));
 				// check if the guild exists in the database
@@ -429,7 +429,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			foreach ($upgrades as $upgrade)
 			{ // see if an entry already exists for this capture_history and upgrade
-				$previous_upgrade = $this->upgrade_history->find(
+				$previous_upgrade = $this->upgrade_history->find_one(
 					array( // where
 						"capture_history_id" => $capture_history['id'],
 						"upgrade_id" => $upgrade
@@ -453,7 +453,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			$yaks = ( (int) substr($yaks, 0, -1) ) * 10; // 15 becomes 10, 143 becomes 140
 
-			$yaks_stored = $this->yak_history->find(array(
+			$yaks_stored = $this->yak_history->find_one(array(
 				"capture_history_id" => $capture_history['id'],
 				"num_yaks" => $yaks
 			)); // see if this number of yaks has been stored for this capture-history yet
@@ -478,7 +478,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private function store_match_details($match)
 		{
 			$this->helper->log_message(5, "match details");
-			$is_stored = $this->match_detail->find(array(
+			$is_stored = $this->match_detail->find_one(array(
 				"match_id" => $match->id,
 				"start_time" => $match->start_time
 			));

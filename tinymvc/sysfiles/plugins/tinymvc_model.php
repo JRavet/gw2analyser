@@ -49,7 +49,7 @@ class TinyMVC_Model
   	}
   }
 
-  function find($data, $order_by=null) {
+  function find_one($data, $order_by=null) {
   	try
   	{
   		$this->db->select('*');
@@ -73,6 +73,32 @@ class TinyMVC_Model
   	{
   		echo $e->getMessage();
   	}
+  }
+
+  function find($data, $order_by=null) {
+    try
+    {
+      $this->db->select('*');
+      $this->db->from($this->_table);
+
+      foreach($data as $key=>$value)
+      {
+        $this->db->where("$key", "$value");
+      }
+
+      foreach ($order_by as $col=>$direction)
+      {
+        $this->db->orderby($col . " " . $direction);
+      }
+
+      $data = $this->db->query_all();
+
+      return $data;
+    }
+    catch (Exception $e)
+    {
+      echo $e->getMessage();
+    }
   }
 
   function update($data, $where)

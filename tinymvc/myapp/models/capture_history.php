@@ -28,7 +28,7 @@ class capture_history extends TinyMVC_Model
 		$obj_id = $prev_capture_history['obj_id'];
 		$color = $prev_capture_history['owner_color'];
 		// get the corresponding objective from the database
-		$objective = $objective_model->find(array(
+		$objective = $objective_model->find_one(array(
 			"obj_id" => $obj_id
 		));
 
