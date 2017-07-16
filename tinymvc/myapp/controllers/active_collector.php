@@ -60,18 +60,15 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				if ( $sync_data['new_week'] == TRUE )
 				{ // if the match->start_times differed during sync, new matchups! Store 'em
 					$this->store_match_details($match);
+					$sync_data['new_week'] = FALSE;
 				}
 
 				$this->store_capture_history($match, $tick_timer, $timeStamp);
 
-				if ($tick_timer == 5)
+				if ( $sync_data['save_scores'] === true )
 				{ // store scores after every point tick
 					$this->store_scores($match, $timeStamp);
-				}
-
-				if ( $sync_data['new_week'] === TRUE )
-				{ // if new match-details were stored, don't do it again
-					$sync_data['new_week'] = FALSE;
+					$sync_data['save_scores'] = NULL; // not true, not false - prevents sync / scores
 				}
 
 				$processing_time = (microtime(true) - $begin_time)*SECONDS;
@@ -106,11 +103,10 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					usleep($time_to_sleep*SECONDS);
 				}
 
-				if ( $tick_timer == 0.5 )
-				{ // time to resynchronize
+				if ( $sync_data['save_scores'] === false || $tick_timer == 0.5)
+				{ // either the previous sync failed, or its time for a natural sync
 					$sync_data = $this->synchronize($sync_data, $processing_time);
 					$idle_time = 1; // idle for virtually 0 seconds after resyncing
-					$tick_timer = 5.5; // 0.5 is subtracted after idling, yielding a new tick_timer of 5
 				}
 
 				$this->helper->log_message(4, $idle_time);
@@ -126,34 +122,40 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION main_loop
 		private function synchronize($sync_data, $processing_time)
 		{
-			if (TEST_MODE === TRUE)
+			if (TEST_MODE === TRUE && $sync_data['sync_wait'] === TRUE)
 			{
 				return array(
 					"new_week" => TRUE,
 					"prev_start_time" => NULL,
-					"sync_wait" => TRUE // always do an extra sync-delay after the initial no-wait sync
+					"sync_wait" => TRUE, // always do an extra sync-delay after the initial no-wait sync
+					"save_scores" => true,
 				);
 			}
+			$begin_time = microtime(true);
+
+			$total_time = $processing_time; // get the number of seconds it took to process
+
 
 			$this->helper->log_message(1, MATCH_ID);
-			if ($processing_time >= (30*SECONDS))
-			{ // if the processing time was over 30 seconds, no need to idle before syncing
-				$sync_data['sync_wait'] = FALSE; //just to ensure it doesn't wait extra time
-			}
 
-			if ( $sync_data['sync_wait'] === TRUE && $processing_time < (21*SECONDS) )
+			if ( $sync_data['sync_wait'] === TRUE && $processing_time < (18*SECONDS) )
 			{ // if there should be an initial delay, and the processing-time wasnt too long, idle for some time
-				$this->helper->log_message(4, 20*SECONDS - $processing_time);
-				usleep(20*SECONDS - $processing_time); // sleep for a combined (processing+idle) time of 21 seconds
+				$this->helper->log_message(4, 17*SECONDS - $processing_time);
+
+				usleep(17*SECONDS - $processing_time); // sleep for a combined (processing+idle) time of 21 seconds
 			}
 
-			$prev_match = $this->api->get_scores();
+			$prev_match = $this->api->get_match_data();
 
 			usleep(1*SECONDS); // wait 2 seconds so the score data just collected will be processing_timeerent
 
+			$total_time += (microtime(true) - $begin_time)*SECONDS;
+
 			while (TRUE)
 			{
-				$current_match = $this->api->get_scores();
+				$loop_time = microtime(true);
+
+				$current_match = $this->api->get_match_data();
 
 				$current_score = $current_match->scores->red + $current_match->scores->blue + $current_match->scores->green;
 				$prev_score = $prev_match->scores->red + $prev_match->scores->blue + $prev_match->scores->green;
@@ -162,12 +164,24 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				if ( $current_score >= ($prev_score + 200) )
 				{ // and a tick did occur
+					$save_scores = true; // proper sync - scores ready
+					$sync_wait = TRUE;
 					break; // done syncing
 				}
 
 				$prev_match = $current_match; // get ready to compare the next set of data
 
+				if ($total_time >= (29*SECONDS) && $sync_data['sync_wait'] === TRUE) 
+				{ // only if it isn't the very first sync, exit if more than ~30 seconds have passed
+					$this->helper->log_message(500, "Could not sync within 30 seconds");
+					$save_scores = false; // scores didn't sync properly - don't store
+					$sync_wait = FALSE; // don't wait next attempted sync
+					break;
+				}
+
 				usleep(1*SECONDS);
+
+				$total_time += (microtime(true) - $loop_time)*SECONDS;
 			}
 
 			$new_start_time = $current_match->start_time;
@@ -183,7 +197,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			return array(
 				"new_week" => $new_week,
 				"prev_start_time" => $new_start_time,
-				"sync_wait" => TRUE // always do an extra sync-delay after the initial no-wait sync
+				"sync_wait" => $sync_wait, // always do an extra sync-delay after the initial no-wait sync
+				"save_scores" => $save_scores
 			);
 		} // END FUNCTION sychronize
 		private function store_scores($match, $timeStamp)
@@ -301,7 +316,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					{ // update duration_owned and the number of yaks -- all other data is already set
 						if ($yaks == 140) // api only reports up to 140
 						{ // when the api caps out the number of yaks, we use our own calculations
-							$yaks = $this->capture_history->estimate_yaks_delivered($prev_capture_history, $match_detail_id, $this->objective);
+							$yaks_est = $this->capture_history->estimate_yaks_delivered($prev_capture_history, $match_detail_id, $this->objective);
+							$yaks = ($yaks > $yaks_est) ? $yaks : $yaks_est; // choose whichever is higher
 						}
 						$this->capture_history->update(
 							array( // set
