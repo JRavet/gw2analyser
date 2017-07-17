@@ -55,7 +55,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$begin_time = microtime(true); // get the current time in microseconds; used to calculate processing time
 				$timeStamp = Date("Y-m-d H:i:s"); // make a unique timestamp to pass to functions that store data with timestamps
 
-				$match = $this->api->get_match_data();
+				$match = $this->api->get_scores();
 
 				if ( $sync_data['new_week'] == TRUE )
 				{ // if the match->start_times differed during sync, new matchups! Store 'em
@@ -324,7 +324,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 							array( // set
 								"num_yaks" => $yaks,
 								"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
-							), // TODO ^ optionally use prev_last_flipped vs objective->last_flipped? a little more precise
+							),
 							array( // where
 								"id" => $prev_capture_history['id']
 							)
@@ -414,7 +414,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$this->claim_history->update(
 					array( // set
 						"duration_claimed" => $this->helper->calc_time_interval($objective->claimed_at, $timeStamp)
-					), // TODO duration_claimed could be calced with optional old vs new claimed_at for more accuracy
+					),
 					array( // where
 						"id" => $prev_claim_history['id']
 					)
