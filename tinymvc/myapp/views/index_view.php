@@ -29,7 +29,7 @@
 					echo "<tr><td>".$c['type']."</td>";
 					foreach($c as $k=>$v)
 					{
-						if (preg_match("/capture_history_id|^id/i",$k)) {continue;}
+						if (preg_match("/type|capture_history_id|^id/i",$k)) {continue;}
 						echo "<td>$k=>$v</td>";
 					}
 					echo "</tr>";
