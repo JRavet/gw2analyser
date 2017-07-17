@@ -160,7 +160,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$current_score = $current_match->scores->red + $current_match->scores->blue + $current_match->scores->green;
 				$prev_score = $prev_match->scores->red + $prev_match->scores->blue + $prev_match->scores->green;
 
-				$this->helper->log_message(0, "Synchronization in progress: prev_score=" . $prev_score . " | current_score=" . $current_score);
+				// $this->helper->log_message(0, "Synchronization in progress: prev_score=" . $prev_score . " | current_score=" . $current_score);
 
 				if ( $current_score >= ($prev_score + 200) )
 				{ // and a tick did occur
