@@ -12,6 +12,15 @@ class yak_history extends TinyMVC_Model
 {
 	protected $_table = "yak_history";
 	protected $pk = "id";
+
+	public function find_readable($params)
+	{
+		$this->db->select("'Yak #' as type, $this->_table.*");
+		$this->db->from($this->_table);
+		foreach($params as $k=>$v) $this->db->where($k, $v);
+
+		return $this->db->query_all();
+	}
 }
 
 ?>

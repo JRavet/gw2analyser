@@ -77,6 +77,46 @@ class capture_history extends TinyMVC_Model
 			return ( isset($yaks['yaks']) ? round($yaks['yaks']) : 0 );
 		}
 	}
+
+	public function find_readable()
+	{
+		$this->db->select("ch.id, timeStamp, last_flipped, owner_color, si.name, o.name,
+			concat(o.compass_direction, ' ', o.type) as 'place', duration_owned");
+		$this->db->from($this->_table . " ch");
+		$this->db->join("objective o", "o.obj_id = ch.obj_id");
+		$this->db->join("server_info si", "si.server_id = ch.owner_server");
+
+		$results = array();
+
+		$claim_history = new claim_history();
+		$upgrade_history = new upgrade_history();
+		$yak_history = new yak_history();
+
+		foreach($this->db->query_all() as $row)
+		{
+			$claims = $claim_history->find_readable(array(
+				"capture_history_id" => $row['id']
+			));
+			$upgrades = $upgrade_history->find_readable(array(
+				"capture_history_id" => $row['id']
+			));
+			$yaks = $yak_history->find_readable(array(
+				"capture_history_id" => $row['id']
+			));
+			$details = array_merge($claims, $upgrades, $yaks);
+
+			usort($details, function($a, $b){
+				return $a['timeStamp'] > $b['timeStamp'];
+			});
+
+			$row['details'] = $details;
+
+
+			$results[] = $row;
+		}
+		return $results;
+	}
+
 }
 
 ?>

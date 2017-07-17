@@ -13,30 +13,15 @@ class Default_Controller extends TinyMVC_Controller
 {
 	public function index()
 	{
+		$this->load->model('capture_history');
+		$this->load->model('claim_history');
+		$this->load->model('upgrade_history');
+		$this->load->model('yak_history');
+
+		$data = $this->capture_history->find_readable(); // get all
+
+		$this->view->assign("data", $data);
 		$this->view->display('index_view');
-	}
-	private function _test()
-	{
-		$counter = 6;
-		while ($counter > 0) 
-		{
-			usleep(100000);
-			echo "$counter\n";
-			$counter--;
-		}
-		return "success _test\n";
-	}
-	public function test()
-	{
-		$counter = 6;
-		while ($counter > 0) 
-		{
-			usleep(100000);
-			echo "$counter\n";
-			$counter--;
-		}
-		echo $this->_test();
-		return "success test";
 	}
 }
 ?>
