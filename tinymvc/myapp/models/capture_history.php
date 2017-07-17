@@ -85,7 +85,7 @@ class capture_history extends TinyMVC_Model
 		$this->db->from($this->_table . " ch");
 		$this->db->join("objective o", "o.obj_id = ch.obj_id");
 		$this->db->join("server_info si", "si.server_id = ch.owner_server");
-		$this->db->orderby("ch.timeStamp");
+		$this->db->orderby("ch.timeStamp, ch.last_flipped");
 
 		$results = array();
 
@@ -95,6 +95,14 @@ class capture_history extends TinyMVC_Model
 
 		foreach($this->db->query_all() as $row)
 		{
+			switch ($row['map_type'])
+			{
+				case 'Center': $row['map_type'] = "EBG"; break;
+				case 'RedHome': $row['map_type'] = "RBL"; break;
+				case 'BlueHome': $row['map_type'] = "BBL"; break;
+				case 'GreenHome': $row['map_type'] = "GBL"; break;
+				default: $row['map_type'] = "UNKN"; break;
+			}
 			$claims = $claim_history->find_readable(array(
 				"capture_history_id" => $row['id']
 			));
