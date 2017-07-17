@@ -85,6 +85,7 @@ class capture_history extends TinyMVC_Model
 		$this->db->from($this->_table . " ch");
 		$this->db->join("objective o", "o.obj_id = ch.obj_id");
 		$this->db->join("server_info si", "si.server_id = ch.owner_server");
+		$this->db->orderby("ch.timeStamp");
 
 		$results = array();
 
