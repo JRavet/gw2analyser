@@ -162,7 +162,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				// $this->helper->log_message(0, "Synchronization in progress: prev_score=" . $prev_score . " | current_score=" . $current_score);
 
-				if ( $current_score >= ($prev_score + 200) )
+				if ( $current_score >= ($prev_score + 250) )
 				{ // and a tick did occur
 					$save_scores = true; // proper sync - scores ready
 					$sync_wait = TRUE;
@@ -290,7 +290,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 						array( // where
 							"match_detail_id" => $match_detail_id,
 							"obj_id" => $objective->id,
-							"owner_color" => $objective->owner
+							"last_flipped" => $objective->last_flipped
 						),
 						array( // order by
 							"timeStamp" => "DESC"
