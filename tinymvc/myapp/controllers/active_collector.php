@@ -77,12 +77,12 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				if ($processing_time > 30*SECONDS)
 				{
-					$segments_to_skip = floor( $processing_time / (15*SECONDS) );
+					$segments_to_skip = floor( $processing_time / (30*SECONDS) );
 
 					$this->helper->log_message(500, "Too much time elapsed; processing_time=" . $processing_time
 						. "; fast-forwarding by " . $segments_to_skip . " 0.5-min intervals" );
 
-					$time_to_sleep = $processing_time % (15*SECONDS);
+					$time_to_sleep = 30 - (($processing_time/SECONDS) % 30);
 
 					$skipped_5min = false;
 					for ($i = 0; $i < $segments_to_skip; $i++)
