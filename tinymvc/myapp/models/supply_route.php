@@ -79,7 +79,7 @@ class supply_route extends TinyMVC_Model
 			#BEGIN N CAMP
 				array('from_obj' => '1099-99', 'to_obj' => '1099-104', 'estimated_travel_time' => 4.25), #TO NET
 				array('from_obj' => '1099-99', 'to_obj' => '1099-102', 'estimated_travel_time' => 3), #TO NWT
-				array('from_obj' => '1099-99', 'to_obj' => '1099-113', 'estimated_travel_time' => 1), #TO EARTH
+				array('from_obj' => '1099-99', 'to_obj' => '1099-113', 'estimated_travel_time' => 2), #TO EARTH
 			#END N CAMP
 			#BEGIN NE CAMP
 				array('from_obj' => '1099-109', 'to_obj' => '1099-114', 'estimated_travel_time' => 2), #TO AIR
