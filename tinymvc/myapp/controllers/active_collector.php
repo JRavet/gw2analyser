@@ -46,6 +46,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		**/
 		private function main_loop()
 		{
+			$match_detail_id = null; // since this is only set once a week, store it in memory so we don't query DB for it all the time
 			$tick_timer = 5.0;
 			$sync_data = $this->synchronize(); // initial synchronize
 			$sync_data['new_week'] = TRUE; // assume a new week to store new match_details for
@@ -55,19 +56,19 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$begin_time = microtime(true); // get the current time in microseconds; used to calculate processing time
 				$timeStamp = Date("Y-m-d H:i:s"); // make a unique timestamp to pass to functions that store data with timestamps
 
-				$match = $this->api->get_scores();
+				$match = $this->api->get_match_data();
 
 				if ( $sync_data['new_week'] == TRUE )
 				{ // if the match->start_times differed during sync, new matchups! Store 'em
-					$this->store_match_details($match);
+					$match_detail_id = $this->store_match_details($match);
 					$sync_data['new_week'] = FALSE;
 				}
 
-				$this->store_capture_history($match, $tick_timer, $timeStamp);
+				$this->store_capture_history($match, $tick_timer, $timeStamp, $match_detail_id);
 
 				if ( $sync_data['save_scores'] === true )
 				{ // store scores after every point tick
-					$this->store_scores($match, $timeStamp);
+					$this->store_scores($match, $timeStamp, $match_detail_id);
 					$sync_data['save_scores'] = NULL; // not true, not false - prevents sync / scores
 				}
 
@@ -96,7 +97,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 					if ($skipped_5min === true)
 					{ // if we would have skipped the score-taking, do it now
-						$this->store_scores( $this->api->get_match_data(), Date("Y-m-d H:i:s") );
+						$this->store_scores( $this->api->get_match_data(), Date("Y-m-d H:i:s"), $match_detail_id );
 					}
 
 					$this->helper->log_message(4, $time_to_sleep*SECONDS);
@@ -202,14 +203,9 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				"first_sync" => FALSE
 			);
 		} // END FUNCTION sychronize
-		private function store_scores($match, $timeStamp)
+		private function store_scores($match, $timeStamp, $match_detail_id)
 		{
 			$this->helper->log_message(5, "scores");
-
-			$match_detail_id = $this->match_detail->find_one(array(
-				"match_id" => $match->id,
-				"start_time" => $match->start_time
-			))['id'];
 
 			foreach($match->maps as $map)
 			{
@@ -266,21 +262,16 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			$this->helper->log_message(6, "skirmish points");
 		} // END FUNCTION store_skirmish_scores
-		private function store_capture_history($match, $tick_timer, $timeStamp)
+		private function store_capture_history($match, $tick_timer, $timeStamp, $match_detail_id)
 		{
 			$this->helper->log_message(5, "capture, claim, upgrade and yak history");
 
 			$server_owners = array(
-				"Red" => $this->server_linking->get_server_owner($match->id, $match->start_time, "red"),
-				"Blue" => $this->server_linking->get_server_owner($match->id, $match->start_time, "blue"),
-				"Green" => $this->server_linking->get_server_owner($match->id, $match->start_time, "green"),
+				"Red" => $this->server_linking->get_server_owner($match_detail_id, "red"),
+				"Blue" => $this->server_linking->get_server_owner($match_detail_id, "blue"),
+				"Green" => $this->server_linking->get_server_owner($match_detail_id, "green"),
 				"Neutral" => 0
 			);
-
-			$match_detail_id = $this->match_detail->find_one(array(
-				"match_id" => $match->id,
-				"start_time" => $match->start_time
-			))['id'];
 
 			foreach($match->maps as $map)
 			{
@@ -478,10 +469,13 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private function store_match_details($match)
 		{
 			$this->helper->log_message(5, "match details");
+
 			$is_stored = $this->match_detail->find_one(array(
 				"match_id" => $match->id,
 				"start_time" => $match->start_time
 			));
+
+			$match_detail_id = $is_stored['id'];
 
 			if ( !is_array($is_stored) )
 			{ // if the data was not present in the DB, save it now
@@ -495,6 +489,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$this->store_server_linkings($match, $match_detail_id);
 			}
 			$this->helper->log_message(6, "match details");
+			return $match_detail_id;
 		} // END FUNCTION store_match_details
 		/**
 		 * Stores all servers involved in the given match
