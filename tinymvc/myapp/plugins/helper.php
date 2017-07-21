@@ -6,11 +6,55 @@ class helper extends TinyMVC_Controller
 	private $log_code;
 	private $match_id;
 
-	public function __construct($match_id)
-	{
+	public function __construct($match_id=null)
+	{ // match_id is only required by the active collector
 		parent::__construct();
 		$this->log_code = new log_code();
 		$this->match_id = $match_id;
+	}
+
+	public function get_css()
+	{ // quick hack
+		$css_names = array(
+			'css/bootstrap.min.css',
+			'css/bootstrap-responsive.min.css',
+			'css/uniform.css',
+			'css/select2.css',
+			'css/matrix-style.css',
+			'css/matrix-media.css',
+			'font-awesome/css/font-awesome.css'
+		);
+
+		$css_code = "";
+		foreach ($css_names as $css_file)
+		{
+			$css_code .= file_get_contents($css_file);
+		}
+
+		return $css_code;
+	}
+
+	public function get_js()
+	{ // quick hack
+
+		$js_names = array(
+			"js/jquery.min.js", 
+			"js/jquery.ui.custom.js", 
+			"js/bootstrap.min.js", 
+			"js/jquery.uniform.js", 
+			"js/select2.min.js", 
+			"js/jquery.dataTables.min.js", 
+			"js/matrix.js", 
+			"js/matrix.tables.js",
+		);
+
+		$js_code = "";
+		foreach ($js_names as $js_file)
+		{
+			$js_code .= file_get_contents($js_file);
+		}
+
+		return $js_code;
 	}
 
 	public function calc_time_interval($earlier_time, $later_time)

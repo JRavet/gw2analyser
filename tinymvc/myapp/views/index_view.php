@@ -3,8 +3,12 @@
 	<head>
 		<title>Welcome to TinyMVC!</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+		<style>
+		<?=$css?>
+		</style>
 	</head>
 	<body>
+	<br/>
 		<?php
 			echo "<table><tr>";
 			foreach ($data[0] as $key=>$value)
@@ -38,6 +42,9 @@
 			echo "</table>";
 		?>
 	</body>
+	<script>
+	<?=$js?>
+	</script>
 </html>
 
 
