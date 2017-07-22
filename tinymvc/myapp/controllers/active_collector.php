@@ -185,6 +185,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				$total_time += (microtime(true) - $loop_time)*SECONDS;
 			}
 
+			$this->helper->log_message(4, 30*SECONDS - $total_time);
 			usleep(30*SECONDS - $total_time); // sleep the remainder of time
 
 			$new_start_time = $current_match->start_time;
