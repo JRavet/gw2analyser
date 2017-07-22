@@ -19,12 +19,16 @@ class gw2_api extends TinyMVC_Controller {
 	public function get_match_data()
 	{
 		$match = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?id=' . $this->match_id));
-
+		$delay = 0;
 		while ( is_null($match) || !isset($match->start_time) )
 		{ // if the api failed in returning data, try again
-			usleep(500000); // half-second
+			usleep(500000 + ($delay*1000000)); // half-second
 			$match = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?id=' . $this->match_id));
 			$this->helper->log_message(501);
+			if ($delay < 2)
+			{ // allow a delay up to 2.5 seconds, for a total of 3 seconds
+				$delay += 0.5; // increase delay by a half second
+			}
 		}
 
 		return $match;

@@ -172,7 +172,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				$prev_match = $current_match; // get ready to compare the next set of data
 
-				if ($total_time >= (29*SECONDS) && $sync_data['first_sync'] === FALSE) 
+				if ($total_time >= (25*SECONDS) && $sync_data['first_sync'] === FALSE) 
 				{ // only if it isn't the very first sync, exit if more than ~30 seconds have passed
 					$this->helper->log_message(500, "Could not sync within 30 seconds");
 					$save_scores = false; // scores didn't sync properly - don't store
@@ -184,6 +184,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				$total_time += (microtime(true) - $loop_time)*SECONDS;
 			}
+
+			usleep(30*SECONDS - $total_time); // sleep the remainder of time
 
 			$new_start_time = $current_match->start_time;
 
