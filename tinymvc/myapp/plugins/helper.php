@@ -22,7 +22,8 @@ class helper extends TinyMVC_Controller
 			'css/select2.css',
 			'css/matrix-style.css',
 			'css/matrix-media.css',
-			'font-awesome/css/font-awesome.css'
+			'font-awesome/css/font-awesome.css',
+			'css/override.css'
 		);
 
 		$css_code = "";

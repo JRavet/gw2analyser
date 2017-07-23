@@ -10,7 +10,7 @@
 	<body>
 	<br/>
 		<?php
-			echo "<table><tr>";
+			echo "<table class=' table-bordered'><tr>";
 			foreach ($data[0] as $key=>$value)
 			{
 				if (preg_match("/details|id/i",$key)) continue;
