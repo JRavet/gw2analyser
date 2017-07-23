@@ -31,3 +31,6 @@
 	- most common objective-type claimed
 	- # of claims by objective-type
 
+- history analyser idea: view hand-picked matchups
+	- utilize match-detail-analyser, having checkboxes on that page; each checkbox is a match_detail_id
+		- pass match_detail_id to any other analyser to view all of those matchups' data
