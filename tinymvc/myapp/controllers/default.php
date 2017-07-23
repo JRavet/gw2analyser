@@ -22,9 +22,7 @@ class Default_Controller extends TinyMVC_Controller
 		$data = $this->capture_history->find_readable(); // get all
 
 		$this->view->assign("data", $data);
-		$this->view->assign("js", $helper->get_js());
-		$this->view->assign("css", $helper->get_css());
-		$this->view->display('index_view');
+		$this->view->display('history_view');
 	}
 }
 ?>
