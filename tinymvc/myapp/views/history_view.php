@@ -84,7 +84,7 @@
 		</div>
 
 		</form>
-		<div id="content">
+
 			<table class="table">
 				<th class="span2"> Last Flipped </th>
 				<th class="span1"> Name </th>
@@ -114,7 +114,7 @@
 				<span class="span2"> <?= $ch['name'] ?> </span>
 				<span class="span2"> <?= $ch['place'] ?> </span>
 				<span class="span2"> <?= $ch['map_type'] ?> </span>
-				<span class="span3"> <?= $ch['duration_owned'] ?> </span>
+				<span class="span2"> <?= $ch['duration_owned'] ?> </span>
 				</tr>
 				</div></a>
 				<div class="collapse" id="collapse<?=$ch['id']?>">
@@ -142,7 +142,6 @@
 				</div>
 				</div>
 			<?php }	?>
-		</div>
 	</div>
 </div>
 <!--
