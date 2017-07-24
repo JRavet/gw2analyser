@@ -1,4 +1,5 @@
 <?php include "includes/header.php" ?>
+<title> History Analyser </title>
 <div class="container-fluid">
 	<div class="widget-content nopadding">
 		<form action="#" method="POST">
