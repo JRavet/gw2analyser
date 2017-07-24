@@ -85,12 +85,13 @@
 
 		</form>
 
-			<table class="table">
-				<th class="span2"> Last Flipped </th>
-				<th class="span1"> Name </th>
+			<table class="table table-bordered">
+				<th class="span3"> Last Flipped </th>
+				<th class="span2"> Name </th>
 				<th class="span1"> Type </th>
 				<th class="span1"> Map </th>
-				<th class="span3"> Duration Held </th>
+				<th class="span2"> Server </th>
+				<th class="span4"> Duration Held </th>
 			</table>
 			<?php
 			foreach($data as $ch) {
@@ -112,9 +113,10 @@
 					}?>">
 				<span class="span3"> <?= $ch['last_flipped'] ?> </span>
 				<span class="span2"> <?= $ch['name'] ?> </span>
-				<span class="span2"> <?= $ch['place'] ?> </span>
-				<span class="span2"> <?= $ch['map_type'] ?> </span>
-				<span class="span2"> <?= $ch['duration_owned'] ?> </span>
+				<span class="span1"> <?= $ch['place'] ?> </span>
+				<span class="span1"> <?= $ch['map_type'] ?> </span>
+				<span class="span2"> <?= $ch['server_owner'] ?> </span>
+				<span class="span3"> <?= $ch['duration_owned'] ?> </span>
 				</tr>
 				</div></a>
 				<div class="collapse" id="collapse<?=$ch['id']?>">
