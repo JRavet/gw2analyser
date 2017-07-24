@@ -98,7 +98,12 @@
 			foreach($data as $ch) {
 				if (preg_match("/Ruins|Spawn/i",$ch['place'])) continue; ?>
 
-				<tr style="Background-color: <?=$ch["owner_color"]?>">
+				<tr style="Background-color: <?switch ($ch["owner_color"]){
+						case "Red": echo "#ff8c95"; break;
+						case "Blue": echo "#8c8fff"; break;
+						case "Green": echo "#8cff9f"; break;
+						default: echo "light-grey"; break;
+					}?>">
 				<?php
 				foreach($ch as $key=>$value) {
 					if (preg_match("/details|id/i",$key)) continue; ?>

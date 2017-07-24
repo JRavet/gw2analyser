@@ -12,4 +12,4 @@
 		<link rel="stylesheet" href="../css/matrix-media.css" />
 		<link href="../font-awesome/css/font-awesome.css" rel="stylesheet" />
 	</head>
-	<body>
+	<body style="background-color: #b2b2b2">
