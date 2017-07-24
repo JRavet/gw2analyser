@@ -84,34 +84,43 @@
 		</div>
 
 		</form>
-		<table class='table table-bordered data-table'>
-				<tr>
-			<?php
-			foreach ($data[0] as $key=>$value) {
-				if (preg_match("/details|id/i",$key)) continue; ?>
-				<th><?=$key?></th>
-			<?php
-			}
-			?>
-				</tr>
+		<div id="content">
+			<table class="table">
+				<th class="span2"> Last Flipped </th>
+				<th class="span1"> Name </th>
+				<th class="span1"> Type </th>
+				<th class="span1"> Map </th>
+				<th class="span3"> Duration Held </th>
+			</table>
 			<?php
 			foreach($data as $ch) {
 				if (preg_match("/Ruins|Spawn/i",$ch['place'])) continue; ?>
 
+				<a href="#collapse<?=$ch['id']?>" data-toggle="collapse"> 
+				<div class="widget-title" style="Background-color: <?switch ($ch["owner_color"]){
+						case "Red": echo "#ff8c95"; break;
+						case "Blue": echo "#8c8fff"; break;
+						case "Green": echo "#8cff9f"; break;
+						default: echo "light-grey"; break;
+					}?>">
+				<span class="icon"><i class="icon-arrow-down"></i></span>
 				<tr style="Background-color: <?switch ($ch["owner_color"]){
 						case "Red": echo "#ff8c95"; break;
 						case "Blue": echo "#8c8fff"; break;
 						case "Green": echo "#8cff9f"; break;
 						default: echo "light-grey"; break;
 					}?>">
-				<?php
-				foreach($ch as $key=>$value) {
-					if (preg_match("/details|id/i",$key)) continue; ?>
-					<td><?=$value?></td>
-				<?php
-				}
-				?>
+				<span class="span3"> <?= $ch['last_flipped'] ?> </span>
+				<span class="span2"> <?= $ch['name'] ?> </span>
+				<span class="span2"> <?= $ch['place'] ?> </span>
+				<span class="span2"> <?= $ch['map_type'] ?> </span>
+				<span class="span3"> <?= $ch['duration_owned'] ?> </span>
 				</tr>
+				</div></a>
+				<div class="collapse" id="collapse<?=$ch['id']?>">
+					<div class="widget-content">
+					<table class="table table-bordered data-table">
+					<th class="span2"> Type </th> <th class="span4"> Timestamp </th> <th class="span4"> Name </th> <th class="span2"> Duration Claimed </th>
 				<?php
 				foreach($ch['details'] as $c)
 				{
@@ -122,16 +131,18 @@
 					foreach($c as $k=>$v)
 					{
 						if (preg_match("/type|capture_history_id|^id/i",$k)) continue; ?>
-						<td><?=$k .'=>'. $v?></td>
+						<td><?=$v?></td>
 					<?php
 					}
 					?>
 					</tr>
 					<?php
-				}
-			}
-			?>
-			</table>
+				} ?>
+				</table>
+				</div>
+				</div>
+			<?php }	?>
+		</div>
 	</div>
 </div>
 <!--
