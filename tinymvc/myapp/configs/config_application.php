@@ -11,8 +11,8 @@
 
  
 /* URL routing, use preg_replace() compatible syntax */
-$config['routing']['search'] =  array();
-$config['routing']['replace'] = array();
+$config['routing']['search'] =  array("/index.php/");
+$config['routing']['replace'] = array("");
  
 /* set this to force controller and method instead of using URL params */
 $config['root_controller'] = null;

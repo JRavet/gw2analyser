@@ -11,7 +11,7 @@
 
 class Default_Controller extends TinyMVC_Controller
 {
-	public function match_detail_view()
+	public function index()
 	{
 		$this->load->model('match_detail');
 		$data = $this->match_detail->find_readable(); // get all

@@ -1,4 +1,4 @@
-<?php include "includes/header.php" ?>
+<?php include "static/includes/header.php" ?>
 <title> History Analyser </title>
 <div class="container-fluid">
 	<div class="widget-content nopadding">
@@ -182,4 +182,4 @@ inconclusive
 	</div>
 </div> -->
 
-<?php include "includes/footer.php" ?>
+<?php include "static/includes/footer.php" ?>

@@ -122,7 +122,7 @@ class TinyMVC_View
     try {
       include($_tmvc_filepath);
     } catch (Exception $e) {
-      throw new Exception("Unknown file '$_tmvc_filepath'");      
+      throw new Exception("Unknown file '$_tmvc_filepath' <br/>" . $e->getMessage());      
     }
   }
 
