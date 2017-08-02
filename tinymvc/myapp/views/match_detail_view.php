@@ -45,25 +45,26 @@
 
 		</form>
 
-			<table>
-			<th></th>
-			<th>Start Time</th>
-			<th>End Time</th>
-			<th>Red Servers</th>
-			<th>Blue Servers</th>
-			<th>Green Servers</th>
+			<table class="table table-bordered table-striped with-check">
+				<th><input type="checkbox" id="title-table-checkbox" name="title-table-checkbox" /></th>
+				<th>Start Time</th>
+				<th>End Time</th>
+				<th>Red Servers</th>
+				<th>Blue Servers</th>
+				<th>Green Servers</th>
 			<?php foreach($data as $a) { ?>
 					<tr>
-						<td><input type="hidden" value='<?=$a['id']?>'></td>
+
+						<td><input type="checkbox" value='<?=$a['id']?>'></td>
 						<td><?=$a['start_time']?></td>
-						<td><?=$a['end_time']?></td>
+						<td class="label label-important"><?=$a['end_time']?></td>
 						<td><?=$a['red_servers']?></td>
 						<td><?=$a['blue_servers']?></td>
 						<td><?=$a['green_servers']?></td>
 					</tr>
 				<?php } ?>
 			</table>
-			<input type="submit" value="Set search parameters for all pages">
+			<input type="submit" class="btn" value="Set search parameters for all pages">
 
 	</div>
 </div>
