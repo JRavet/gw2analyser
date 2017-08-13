@@ -13,8 +13,10 @@
 		<link href="../static/font-awesome/css/font-awesome.css" rel="stylesheet" />
 	</head>
 	<body style="background-color: white">
-	<div id="user-nav" class="navbar">
+	<div id="user-nav" style="background-color: grey" class="navbar">
 	  <ul class="nav">
-	        <li style="margin-left:85%"><a href="login.html"><i class="icon-key"></i> Log Out</a></li>
+	        <li><a href="login.html"><i class="icon-key"></i> Log Out</a></li>
 	  </ul>
 	</div>
+	</br>
+	</br>
