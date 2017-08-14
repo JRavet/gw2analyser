@@ -16,7 +16,7 @@
 	<div id="user-nav" class="navbar">
 	  <ul class="nav">
 
-		 	<li class="dropdown" id="table-analyser-dropdown" ><a title="" href="#" data-toggle="dropdown" data-target="#table-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Tables</span><b class="caret"></b></a>
+			<li class="dropdown" id="table-analyser-dropdown" ><a href="#" data-toggle="dropdown" data-target="#table-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Tables</span><b class="caret"></b></a>
 			  <ul class="dropdown-menu">
 				<li><a href="#">Capture History</a></li>
 				<li class="divider"></li>
@@ -26,7 +26,7 @@
 			  </ul>
 			</li>
 
-			<li class="dropdown" id="graphical-analyser-dropdown" ><a title="" href="#" data-toggle="dropdown" data-target="#graphical-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Charts</span><b class="caret"></b></a>
+			<li class="dropdown" id="graphical-analyser-dropdown" ><a href="#" data-toggle="dropdown" data-target="#graphical-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Charts</span><b class="caret"></b></a>
 			  <ul class="dropdown-menu">
 				<li><a href="#">Score Graphs</a></li>
 				<li class="divider"></li>
@@ -34,13 +34,17 @@
 			  </ul>
 			</li>
 
-			<li class="dropdown" id="user-profile" ><a title="" href="#" data-toggle="dropdown" data-target="#user-profile" class="dropdown-toggle"><span class="text"><?=$username?></span><b class="caret"></b></a>
-		      <ul class="dropdown-menu">
-		        <li><a href="#"><i class="icon-user"></i>Preferences</a></li>
-		        <li class="divider"></li>
-		        <li><a href="#"><i class="icon-key"></i> Log Out</a></li>
-		      </ul>
-    		</li>
+			<?php if (isset($username)) { ?>
+				<li class="dropdown" id="user-profile" ><a href="#" data-toggle="dropdown" data-target="#user-profile" class="dropdown-toggle"><span class="text"><?=$username?></span><b class="caret"></b></a>
+				  <ul class="dropdown-menu">
+					<li><a href="#"><i class="icon-user"></i>Preferences</a></li>
+					<li class="divider"></li>
+					<li><a href="#"><i class="icon-key"></i> Log Out</a></li>
+				  </ul>
+				</li>
+			<?php } else { ?>
+				<li><a href="#">Log in</a></li>
+			<?php } ?>
 	  </ul>
 	</div>
 	</br>

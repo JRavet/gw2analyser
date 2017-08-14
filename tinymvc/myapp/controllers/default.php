@@ -15,7 +15,7 @@ class Default_Controller extends TinyMVC_Controller
 	{
 		$this->load->model('match_detail');
 		$data = $this->match_detail->find_readable(); // get all
-		$this->view->assign("username","-.-");
+		// $this->view->assign("username","-.-");
 		$this->view->assign("data", $data);
 		$this->view->display('match_detail_view');
 	}
