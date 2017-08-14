@@ -13,9 +13,25 @@
 		<link href="../static/font-awesome/css/font-awesome.css" rel="stylesheet" />
 	</head>
 	<body style="background-color: white">
-	<div id="user-nav" style="background-color: grey" class="navbar">
+	<div id="user-nav" class="navbar">
 	  <ul class="nav">
-	        <li><a href="login.html"><i class="icon-key"></i> Log Out</a></li>
+	        <li><a href="login.html">Log Out</a></li>
+		 	<li  class="dropdown" id="table-analyser-dropdown" ><a title="" href="#" data-toggle="dropdown" data-target="#table-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Tables</span><b class="caret"></b></a>
+		      <ul class="dropdown-menu">
+		        <li><a href="#">Capture History</a></li>
+		        <li class="divider"></li>
+		        <li><a href="#">Guild History</a></li>
+		        <li class="divider"></li>
+		        <li><a href="#">Match History</a></li>
+		      </ul>
+		    </li>
+		     <li  class="dropdown" id="graphical-analyser-dropdown" ><a title="" href="#" data-toggle="dropdown" data-target="#graphical-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Charts</span><b class="caret"></b></a>
+		      <ul class="dropdown-menu">
+		        <li><a href="#">Score Graphs</a></li>
+		        <li class="divider"></li>
+		        <li><a href="#">Historical Map</a></li>
+		      </ul>
+		    </li>
 	  </ul>
 	</div>
 	</br>
