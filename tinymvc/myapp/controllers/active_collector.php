@@ -104,7 +104,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					usleep($time_to_sleep*SECONDS);
 				}
 
-				if ( $sync_data['save_scores'] === false || $tick_timer == 0.5)
+				if ( $tick_timer == 0.5 || true ) // $sync_data['save_scores'] === false ) // TODO temp hack - always resync due to API issues
 				{ // either the previous sync failed, or its time for a natural sync
 					$sync_data = $this->synchronize($sync_data, $processing_time);
 					$idle_time = 1; // idle for virtually 0 seconds after resyncing
