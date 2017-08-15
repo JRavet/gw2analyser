@@ -126,6 +126,7 @@ class helper extends TinyMVC_Controller
 	**/
 	public function write_to_file($dir, $log_name, $message)
 	{
+		return; // TODO - commented out for now
 		try
 		{
 			$file = fopen($dir . "/" . $log_name, "a"); // append to file
