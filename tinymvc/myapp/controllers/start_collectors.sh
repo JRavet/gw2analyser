@@ -22,3 +22,5 @@ if [[ $1 != '-k' ]]; then # if the user wanted to just kill all screens, don't o
 	screen -dmS EUt4 php active_collector.php "2-4"
 	screen -dmS EUt5 php active_collector.php "2-5"
 fi
+
+screen -ls # show list of screens to user to show outcome
