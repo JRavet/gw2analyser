@@ -47,10 +47,10 @@
 
 			<table class="table table-bordered table-striped" style="width:800px">
 				<th>Guild Name [Tag]</th>
-				<th># of claims [EBG]</th>
-				<th># of claims [RBL]</th>
-				<th># of claims [BBL]</th>
-				<th># of claims [GBL]</th>
+				<th>Claims in EBG</th>
+				<th>Claims in RBL</th>
+				<th>Claims in BBL</th>
+				<th>Claims in GBL</th>
 			<?php foreach($data as $a) { ?>
 					<tr>
 						<td><?=$a['guild_name']?></td>
