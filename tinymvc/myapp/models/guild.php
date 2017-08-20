@@ -12,7 +12,16 @@ class Guild extends TinyMVC_Model
 	protected $_table = "guild";
 	protected $pk = "guild_id";
 
-	public function getSummaryList($where=array())
+	/**
+	 * Gets a set of summary stats for all guilds under the $params search filters
+	 *
+	 * @param $params - array
+	 *			- where=>array("column"=>"value")
+	 *			- orderby=>"values"
+	 *			- join=>array("table"=>"t1.col = t2.col")
+	 * @return array() of guild stats for any number of selected guilds
+	 */
+	public function getSummaryList($params=array())
 	{
 		$this->db->select("g.guild_id as 'id',
 		concat(g.name, ' [', g.tag, ']') as guild_name,
@@ -35,9 +44,7 @@ class Guild extends TinyMVC_Model
 		$this->db->groupby("ch.claimed_by");
 		$this->db->limit(50); // TODO arbitrary testing limit
 
-		foreach ($where as $k=>$v) {
-			$this->db->where("$k", "$v");
-		}
+		$this->append_query($params);
 
 		return $this->db->query_all();
 	}

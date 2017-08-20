@@ -75,6 +75,22 @@ class TinyMVC_Model
   	}
   }
 
+  function append_query($params) {
+    if (isset($params['orderby'])) {
+      $this->db->orderby($params['orderby']);
+    }
+    if (isset($params['where'])) {
+      foreach ($params['where'] as $k=>$v) {
+        $this->db->where("$k", "$v");
+      }
+    }
+    if (isset($params['join'])) {
+      foreach ($params['join'] as $k=>$v) {
+        $this->db->join($k, $v);
+      }
+    }
+  }
+
   function find($data, $order_by=array()) {
     try
     {
