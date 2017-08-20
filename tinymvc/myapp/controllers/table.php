@@ -14,9 +14,12 @@ class Table_Controller extends TinyMVC_Controller
 	public function match_details()
 	{
 		$this->load->model('match_detail');
-		$data = $this->match_detail->find_readable(); // get all
 
-		$this->view->assign("data", $data);
+		if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
+			$data = $this->match_detail->find_readable(); // get all
+			$this->view->assign("data", $data);
+		}
+
 		$this->view->display('match_detail_view');
 	}
 	public function capture_history()
