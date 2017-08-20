@@ -104,6 +104,18 @@ class TinyMVC_View
     return $this->_view($filepath,$view_vars);
   }
 
+  /**
+	* form_submitted
+	*
+	* determine if a form was submitted
+	*
+	* @return boolean
+   */
+  public function form_submitted()
+  {
+    return ($_SERVER['REQUEST_METHOD'] == 'POST');
+  }
+
 	/**
 	 * _view
 	 *

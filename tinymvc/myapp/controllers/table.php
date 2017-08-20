@@ -15,7 +15,7 @@ class Table_Controller extends TinyMVC_Controller
 	{
 		$this->load->model('match_detail');
 
-		if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
+		if ( $this->view->form_submitted() ) {
 			$data = $this->match_detail->find_readable(); // get all
 			$this->view->assign("data", $data);
 		}
