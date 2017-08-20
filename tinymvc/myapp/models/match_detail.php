@@ -12,7 +12,7 @@ class match_detail extends TinyMVC_Model
 	protected $_table = "match_detail";
 	protected $pk = "id";
 
-	public function find_readable()
+	public function find()
 	{
 		$data = $this->db->pdo->query("
 			SELECT md.id, md.start_time, md.end_time,

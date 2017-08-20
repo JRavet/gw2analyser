@@ -15,7 +15,7 @@ class upgrade_history extends TinyMVC_Model
 	protected $_table = "upgrade_history";
 	protected $pk = "id";
 
-	public function find_readable($params)
+	public function find($params)
 	{
 		$this->db->select("'upgrade' as type, timeStamp, name");
 		$this->db->from($this->_table . " uh");

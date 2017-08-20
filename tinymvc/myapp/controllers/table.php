@@ -16,16 +16,17 @@ class Table_Controller extends TinyMVC_Controller
 		$this->load->model('match_detail');
 
 		if ( $this->view->form_submitted() ) {
-			$data = $this->match_detail->find_readable(); // get all
+			$data = $this->match_detail->find(); // get all
 			$this->view->assign("data", $data);
 		}
 
 		$this->view->display('match_detail_view');
 	}
+
 	public function capture_history()
 	{
 		$this->load->model('capture_history');
-		$data = $this->capture_history->find_readable(); // get all
+		$data = $this->capture_history->find(); // get all
 
 		$this->view->assign("data", $data);
 		$this->view->display('capture_history_view');
@@ -35,7 +36,7 @@ class Table_Controller extends TinyMVC_Controller
 	{
 		$this->load->model("guild");
 
-		$data = $this->guild->getStats();
+		$data = $this->guild->getSummaryList();
 
 		$this->view->assign("data", $data);
 		$this->view->display("guild_history_view");

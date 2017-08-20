@@ -16,7 +16,7 @@ class claim_history extends TinyMVC_Model
 	protected $_table = "claim_history";
 	protected $pk = "id";
 
-	public function find_readable($params)
+	public function find($params)
 	{
 		$this->db->select("'Claim' as type, claimed_at as timeStamp,
 			concat(g.name, ' ', '[', g.tag, ']') as 'guild', duration_claimed");
