@@ -45,22 +45,47 @@
 
 		</form>
 
-			<table class="table table-bordered table-striped" style="width:800px">
-				<th>Guild Name [Tag]</th>
-				<th>Claims in EBG</th>
-				<th>Claims in RBL</th>
-				<th>Claims in BBL</th>
-				<th>Claims in GBL</th>
-			<?php foreach($data as $a) { ?>
-					<tr>
-						<td><?=$a['guild_name']?></td>
-						<td><?=$a['claims_EBG']?> (<?=number_format($a['claims_EBG']/$a['claims_total']*100, 2)?>%)</td>
-						<td><?=$a['claims_RBL']?> (<?=number_format($a['claims_RBL']/$a['claims_total']*100, 2)?>%)</td>
-						<td><?=$a['claims_BBL']?> (<?=number_format($a['claims_BBL']/$a['claims_total']*100, 2)?>%)</td>
-						<td><?=$a['claims_GBL']?> (<?=number_format($a['claims_GBL']/$a['claims_total']*100, 2)?>%)</td>
-					</tr>
-				<?php } ?>
-			</table>
+			<? foreach($data as $a) { ?>
+				<a href="#collapse<?=$a['id']?>" data-toggle="collapse">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-arrow-down"></i></span>
+					<span class="span12"><?=$a['guild_name']?></span>
+				</div>
+			<div class="collapse" id="collapse<?=$a['id']?>">
+				<div class="widget-content">
+					<table class="table table-bordered table-striped">
+						<thead>
+							<th>Claims in EBG</th>
+							<th>Claims in RBL</th>
+							<th>Claims in BBL</th>
+							<th>Claims in GBL</th>
+							<th>Total Claim Duration</th>
+							<th>Average Claim Duration</th>
+							<th>Max Claim Duration</th>
+							<th>Camps Claimed</th>
+							<th>Towers Claimed</th>
+							<th>Keeps Claimed</th>
+							<th>Castles Claimed</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td><?=$a['claims_EBG']?> (<?=number_format($a['claims_EBG']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['claims_RBL']?> (<?=number_format($a['claims_RBL']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['claims_BBL']?> (<?=number_format($a['claims_BBL']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['claims_GBL']?> (<?=number_format($a['claims_GBL']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['total_claim_duration']?></td>
+								<td><?=$a['avg_claim_duration']?></td>
+								<td><?=$a['max_claim_duration']?></td>
+								<td><?=$a['camps_claimed']?> (<?=number_format($a['camps_claimed']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['towers_claimed']?> (<?=number_format($a['towers_claimed']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['keeps_claimed']?> (<?=number_format($a['keeps_claimed']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['castles_claimed']?> (<?=number_format($a['castles_claimed']/$a['claims_total']*100, 2)?>%)</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<? } ?>
 			<input type="submit" class="btn" value="Set search parameters for all pages">
 
 	</div>
