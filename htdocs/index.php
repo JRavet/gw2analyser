@@ -36,6 +36,6 @@ require(TMVC_BASEDIR . 'sysfiles' . DS . 'TinyMVC.php');
 $tmvc = new tmvc();
 
 /* tally-ho! */
-$tmvc->main();
+$tmvc->main("table", "match_details");
 
 ?>
