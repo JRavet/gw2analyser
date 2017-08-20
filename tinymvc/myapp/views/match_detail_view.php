@@ -52,19 +52,17 @@
 				<th>Red Servers</th>
 				<th>Blue Servers</th>
 				<th>Green Servers</th>
-			<?php if ( isset($data) ) {
-				foreach($data as $a) { ?>
-					<tr>
+			<?php foreach($data as $a) { ?>
+				<tr>
 
-						<td><input type="checkbox" value='<?=$a['id']?>'></td>
-						<td><?=$a['start_time']?></td>
-						<td class="label label-important"><?=$a['end_time']?></td>
-						<td><?=$a['red_servers']?></td>
-						<td><?=$a['blue_servers']?></td>
-						<td><?=$a['green_servers']?></td>
-					</tr>
-				<?php } 
-				} ?>
+					<td><input type="checkbox" value='<?=$a['id']?>'></td>
+					<td><?=$a['start_time']?></td>
+					<td class="label label-important"><?=$a['end_time']?></td>
+					<td><?=$a['red_servers']?></td>
+					<td><?=$a['blue_servers']?></td>
+					<td><?=$a['green_servers']?></td>
+				</tr>
+			<?php } ?>
 			</table>
 			<form method="POST" action="/table/match_details">
 			<input type="submit" class="btn" value="Set search parameters for all pages">

@@ -19,7 +19,7 @@ error_reporting(E_ALL);
 
 /* define to 0 if you want errors/exceptions handled externally */
 if(!defined('TMVC_ERROR_HANDLING'))
-	define('TMVC_ERROR_HANDLING',1);
+	define('TMVC_ERROR_HANDLING', 0);
 
 /* directory separator alias */
 if(!defined('DS'))
