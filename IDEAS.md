@@ -22,14 +22,13 @@
 	- only when logged in
 	- store entry into user_notes
 - Guild analyser
-	- % of claims by map
-	- # of claims of map
 	- average claim duration
 	- maximum claim duration
 	- total claim duration
 	- # of tactics slotted
 	- most common objective-type claimed
 	- # of claims by objective-type
+	- also display # / % of claims on home BL, determined by each weeks' color
 
 - history analyser idea: view hand-picked matchups
 	- utilize match-detail-analyser, having checkboxes on that page; each checkbox is a match_detail_id
