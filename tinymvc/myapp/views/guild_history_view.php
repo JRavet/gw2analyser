@@ -69,6 +69,18 @@
 							</tr>
 						</tbody>
 						<thead>
+							<th>Home BL Claims</th>
+							<th>Enemy BL Claims</th>
+							<th>Claims under 30 minutes</th>
+							<th>Claims over 3 hours</th>
+						</thead>
+						<tbody>
+							<td><?=$a['claims_home']?> (<?=number_format($a['claims_home']/$a['claims_total']*100, 2)?>%)</td>
+							<td><?=$a['claims_enemy']?> (<?=number_format($a['claims_enemy']/$a['claims_total']*100, 2)?>%)</td>
+							<td><?=$a['claims_under_30min']?> (<?=number_format($a['claims_under_30min']/$a['claims_total']*100, 2)?>%)</td>
+							<td><?=$a['claims_over_3hours']?> (<?=number_format($a['claims_over_3hours']/$a['claims_total']*100, 2)?>%)</td>
+						</tbody>
+						<thead>
 							<th>Camps Claimed</th>
 							<th>Towers Claimed</th>
 							<th>Keeps Claimed</th>
