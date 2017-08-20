@@ -12,9 +12,10 @@ class Guild extends TinyMVC_Model
 	protected $_table = "guild";
 	protected $pk = "guild_id";
 
-	public function getStats($where=array())
+	public function getSummaryList($where=array())
 	{
-		$this->db->select("concat(g.name, ' [', g.tag, ']') as guild_name,
+		$this->db->select("g.guild_id as 'id',
+		concat(g.name, ' [', g.tag, ']') as guild_name,
 		COUNT(CASE WHEN o.map_type='Center' THEN 1 END) AS claims_EBG,
 		COUNT(CASE WHEN o.map_type='RedHome' THEN 1 END) AS claims_RBL,
 		COUNT(CASE WHEN o.map_type='BlueHome' THEN 1 END) AS claims_BBL,
