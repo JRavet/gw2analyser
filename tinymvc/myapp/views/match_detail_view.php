@@ -47,6 +47,7 @@
 
 			<table class="table table-bordered table-striped with-check">
 				<th><input type="checkbox" id="title-table-checkbox" name="title-table-checkbox" /></th>
+				<th>Tier and region</th>
 				<th>Start Time</th>
 				<th>End Time</th>
 				<th>Red Servers</th>
@@ -56,11 +57,12 @@
 				<tr>
 
 					<td><input type="checkbox" value='<?=$a['id']?>'></td>
+					<td><?=$a['match_id']?></td>
 					<td><?=$a['start_time']?></td>
-					<td class="label label-important"><?=$a['end_time']?></td>
-					<td><?=$a['red_servers']?></td>
-					<td><?=$a['blue_servers']?></td>
-					<td><?=$a['green_servers']?></td>
+					<td><?=$a['end_time']?></td>
+					<td><?=$a['red_servers']?><br/><?=$a['red_skirmish_score']?></td>
+					<td><?=$a['blue_servers']?><br/><?=$a['blue_skirmish_score']?></td>
+					<td><?=$a['green_servers']?><br/><?=$a['green_skirmish_score']?></td>
 				</tr>
 			<?php } ?>
 			</table>

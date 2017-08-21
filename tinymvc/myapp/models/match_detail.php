@@ -15,7 +15,10 @@ class match_detail extends TinyMVC_Model
 	public function find()
 	{
 		$data = $this->db->pdo->query("
-			SELECT md.id, md.start_time, md.end_time,
+			SELECT md.id, md.start_time, md.end_time, md.match_id,
+			max(red_skirmish_score) as red_skirmish_score,
+			max(blue_skirmish_score) as blue_skirmish_score,
+			max(green_skirmish_score) as green_skirmish_score,
 				(SELECT GROUP_CONCAT(name SEPARATOR ', ') as red_servers
 					FROM server_linking sl
 					LEFT JOIN server_info si on si.server_id = sl.server_id
@@ -32,7 +35,9 @@ class match_detail extends TinyMVC_Model
 					WHERE server_color = 'Green' AND md.id = sl.match_detail_id
 				) green_servers
 			FROM match_detail md
-			ORDER BY md.start_time DESC;"
+			LEFT JOIN skirmish_score sc on sc.match_detail_id = md.id
+			GROUP BY md.id
+			ORDER BY md.start_time DESC, md.match_id;"
 		);
 
 		return $data;
