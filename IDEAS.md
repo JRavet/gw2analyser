@@ -21,15 +21,11 @@
 - feedback button on main site
 	- only when logged in
 	- store entry into user_notes
-- Guild analyser
-	- average claim duration
-	- maximum claim duration
-	- total claim duration
-	- # of tactics slotted
-	- most common objective-type claimed
-	- # of claims by objective-type
-	- also display # / % of claims on home BL, determined by each weeks' color
 
 - history analyser idea: view hand-picked matchups
 	- utilize match-detail-analyser, having checkboxes on that page; each checkbox is a match_detail_id
 		- pass match_detail_id to any other analyser to view all of those matchups' data
+
+- match_details page
+	- add bronze/silver/gold borders to 1st/2nd/3rd based on skirmish scores
+	- add new page for matchup predictions (using current matches; retrofit later for back-in-time)
