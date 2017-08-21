@@ -78,7 +78,7 @@ class capture_history extends TinyMVC_Model
 		}
 	}
 
-	public function find()
+	public function getList()
 	{
 		$this->db->select("ch.id, timeStamp, last_flipped, owner_color, si.name, o.name,
 			concat(o.compass_direction, ' ', o.type) as 'place', o.map_type, duration_owned, si.name as server_owner");
@@ -104,13 +104,13 @@ class capture_history extends TinyMVC_Model
 				case 'GreenHome': $row['map_type'] = "GBL"; break;
 				default: $row['map_type'] = "UNKN"; break;
 			}
-			$claims = $claim_history->find(array(
+			$claims = $claim_history->getByCaptureId(array(
 				"capture_history_id" => $row['id']
 			));
-			$upgrades = $upgrade_history->find(array(
+			$upgrades = $upgrade_history->getByCaptureId(array(
 				"capture_history_id" => $row['id']
 			));
-			$yaks = $yak_history->find(array(
+			$yaks = $yak_history->getByCaptureId(array(
 				"capture_history_id" => $row['id']
 			));
 			$details = array_merge($claims, $upgrades, $yaks);

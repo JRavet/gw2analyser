@@ -46,7 +46,12 @@ class Guild extends TinyMVC_Model
 		$this->db->join("capture_history cah", "cah.id = ch.capture_history_id");
 		$this->db->join("objective o", "o.obj_id = cah.obj_id");
 		$this->db->groupby("ch.claimed_by");
+		$this->db->orderby("COUNT(*) DESC");
 		$this->db->limit(50); // TODO arbitrary testing limit
+		// TODO: # of upgrades slotted (dont include tiers)
+		// TODO: most claimed objective
+		// TODO: table of servers guild has claims on
+		// TODO-TODO: attempt to determine actual server across different linkings / transfers
 
 		$this->append_query($params);
 

@@ -16,7 +16,7 @@ class Table_Controller extends TinyMVC_Controller
 		$this->load->model('match_detail');
 
 		if ( $this->view->form_submitted() ) {
-			$data = $this->match_detail->find(); // get all
+			$data = $this->match_detail->getList(); // get all
 			$this->view->assign("data", $data);
 		}
 
@@ -26,7 +26,7 @@ class Table_Controller extends TinyMVC_Controller
 	public function capture_history()
 	{
 		$this->load->model('capture_history');
-		$data = $this->capture_history->find(); // get all
+		$data = $this->capture_history->getList(); // get all
 
 		$this->view->assign("data", $data);
 		$this->view->display('capture_history_view');
