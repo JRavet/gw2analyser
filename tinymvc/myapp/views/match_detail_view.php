@@ -57,7 +57,7 @@
 				<tr>
 
 					<td><input type="checkbox" value='<?=$a['id']?>'></td>
-					<td><?=$a['match_id']?></td>
+					<td><?=preg_replace(array("/1\-/","/2\-/"), array("NA Tier ","EU Tier "), $a['match_id'])?></td>
 					<td><?=$a['start_time']?></td>
 					<td><?=$a['end_time']?></td>
 					<td><?=$a['red_servers']?><br/><?=$a['red_skirmish_score']?></td>
