@@ -51,6 +51,7 @@
 					<span class="icon"><i class="icon-arrow-down"></i></span>
 					<span class="span12"><?=$a['guild_name']?> - <?=$a['claims_total']?> total claims</span>
 				</div>
+				</a>
 			<div class="collapse" id="collapse<?=$a['id']?>">
 				<div class="widget-content">
 					<table class="table table-bordered table-striped">
