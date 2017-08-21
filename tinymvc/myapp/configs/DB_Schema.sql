@@ -198,6 +198,26 @@ FOREIGN KEY (from_obj) REFERENCES objective(obj_id),
 FOREIGN KEY (to_obj) REFERENCES objective(obj_id)
 );
 
+CREATE TABLE user
+(
+id int(11) unsigned AUTO_INCREMENT,
+name varchar(64),
+password varchar(41),
+email varchar(64),
+PRIMARY KEY (id)
+);
+
+CREATE TABLE user_preference
+(
+id int(11) unsigned AUTO_INCREMENT,
+user_id int(11) unsigned,
+preference varchar(64),
+value varchar(64),
+PRIMARY KEY (id),
+FOREIGN KEY (user_id) REFERENCES user(id)
+ON DELETE CASCADE
+);
+
 -- CREATE USER 'gw2analyser'@'localhost' IDENTIFIED BY 'themirrorimage';
 -- GRANT SELECT
 -- ON Gw2Analyser.*
