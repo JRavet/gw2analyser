@@ -35,7 +35,6 @@ class Table_Controller extends TinyMVC_Controller
 	public function guild_history()
 	{
 		$this->load->model("guild");
-
 		$data = $this->guild->getSummaryList();
 
 		$this->view->assign("data", $data);

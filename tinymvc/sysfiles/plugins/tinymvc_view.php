@@ -69,13 +69,10 @@ class TinyMVC_View
   public function display($_tmvc_filename,$view_vars=null)
   {
   	$prefs = new User_Preference();
-  	if ( isset($_SESSION['user_id']) ) {
-	  	$bgColors = $prefs->getBgColors($_SESSION['user_id']);
-	} else {
-		$bgColors = array("#ffffff", "#bbbbbb"); // default: white and gray
-	}
-  	$this->assign("bgColor1", $bgColors[0]);
-  	$this->assign("bgColor2", $bgColors[1]);
+	$bgColors = $prefs->getBgColors($_SESSION['user_id']);
+		// default bgColors set by $prefs if user isnt logged in
+  	$this->assign("bgColor1", $bgColors[0]['value']);
+  	$this->assign("bgColor2", $bgColors[1]['value']);
     return $this->_view("{$_tmvc_filename}.php",$view_vars);
   }  
 

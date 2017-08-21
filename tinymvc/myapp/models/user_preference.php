@@ -15,11 +15,19 @@ class user_preference extends TinyMVC_Model
 
 	public function getBgColors($user_id)
 	{
-		$this->db->select("value");
-		$this->db->from($this->_table);
-		$this->db->where("user_id", $user_id);
-		$this->db->orwhere("preference","bgColor1");
-		$this->db->where("preference","bgColor2");
+		if ( isset($user_id) ) { // user logged in, get prefers
+			$this->db->select("value");
+			$this->db->from($this->_table);
+			$this->db->where("user_id", $user_id);
+			$this->db->in("preference", array("bgColor1","bgColor2"));
+
+			$prefs = $this->db->query_all();
+			if ( !empty($prefs) ) {
+				return $prefs;
+			}
+		}
+		// user not logged in, or prefs were empty - use defaults
+		return array(array("value"=>"white"), array("value"=>"gray"));
 	}
 }
 
