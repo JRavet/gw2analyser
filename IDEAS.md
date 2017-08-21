@@ -30,3 +30,8 @@
 	- add bronze/silver/gold borders to 1st/2nd/3rd based on skirmish scores
 	- maybe highlight the current weeks' matches somehow
 	- add new page for matchup predictions (using current matches; retrofit later for back-in-time)
+
+- guild analyser page
+	add some button along the lines of "Add guild" - enter name, queries DB for match. none found = query API
+		none found? show message to user
+		one found? store and display message to user, open page for note-taking
