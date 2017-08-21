@@ -28,4 +28,5 @@
 
 - match_details page
 	- add bronze/silver/gold borders to 1st/2nd/3rd based on skirmish scores
+	- maybe highlight the current weeks' matches somehow
 	- add new page for matchup predictions (using current matches; retrofit later for back-in-time)
