@@ -27,7 +27,7 @@ if(!defined('DS'))
 
 /* set the base directory */
 if(!defined('TMVC_BASEDIR'))
-  define('TMVC_BASEDIR',dirname(__FILE__) . DS . '..' . DS . 'tinymvc' . DS);
+  define('TMVC_BASEDIR',dirname(__FILE__) . DS . 'tinymvc' . DS);
 
 /* include main tmvc class */
 require(TMVC_BASEDIR . 'sysfiles' . DS . 'TinyMVC.php');
