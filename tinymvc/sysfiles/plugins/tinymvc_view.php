@@ -68,6 +68,7 @@ class TinyMVC_View
 	 */    
   public function display($_tmvc_filename,$view_vars=null)
   {
+  	session_start();
   	$prefs = new User_Preference($_SESSION['user_id']);
 	$colorScheme = $prefs->getColorScheme();
 		// default bgColors set by $prefs if user isnt logged in
