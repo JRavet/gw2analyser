@@ -167,6 +167,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				{ // and a tick did occur
 					$save_scores = true; // proper sync - scores ready
 					$sync_wait = TRUE;
+					$total_time = 30*SECONDS - 1; // don't wait after a proper sync
 					break; // done syncing
 				}
 
