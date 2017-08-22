@@ -177,6 +177,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					$this->helper->log_message(500, "Could not sync within 30 seconds");
 					$save_scores = false; // scores didn't sync properly - don't store
 					$sync_wait = FALSE; // don't wait next attempted sync
+					$total_time += (microtime(true) - $loop_time)*SECONDS;
 					break;
 				}
 
