@@ -1,5 +1,5 @@
 <?php
-require_once("../../../htdocs/scripts.php"); // load the framework
+require_once("../../../scripts.php"); // load the framework
 //
 DEFINE('SECONDS', 1000000); // number of microseconds in a second
 date_default_timezone_set("UTC"); // set all timestamps' formats to universal time

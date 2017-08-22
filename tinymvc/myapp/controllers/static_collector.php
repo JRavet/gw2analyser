@@ -1,5 +1,5 @@
 <?php
-require_once("../../../htdocs/scripts.php");
+require_once("../../../scripts.php");
 $collector_started = false; // a hack to make this file load the framework AND execute itself
 if (class_exists('Static_Collector_Controller', false) === false)
 { // only create the class once; necessary because calling this file will ...
