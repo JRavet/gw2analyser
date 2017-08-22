@@ -13,21 +13,42 @@ class user_preference extends TinyMVC_Model
 	protected $_table = "user_preference";
 	protected $pk = "id";
 
-	public function getBgColors($user_id)
-	{
-		if ( isset($user_id) ) { // user logged in, get prefers
-			$this->db->select("value");
-			$this->db->from($this->_table);
-			$this->db->where("user_id", $user_id);
-			$this->db->in("preference", array("bgColor1","bgColor2"));
+	private $user_id = -1;
 
-			$prefs = $this->db->query_all();
-			if ( !empty($prefs) ) {
-				return $prefs;
+	public function __construct($user_id=null) {
+		parent::__construct();
+		$this->user_id = $user_id;
+	}
+
+	public function getColorScheme()
+	{
+		$defaults = array(
+			"bgColor1"    => "white",
+			"bgColor2"    => "gray",
+			"redServer"   => "#ff8c95",
+			"blueServer"  => "#8c8fff",
+			"greenServer" => "#8cff9f"
+		);
+		if ( isset($this->user_id) ) { // user logged in, get prefs
+
+			$this->db->select("preference, value");
+			$this->db->from($this->_table);
+			$this->db->where("user_id", $this->user_id);
+			$this->db->in("preference", array("bgColor1","bgColor2", "redServer", "blueServer", "greenServer"));
+
+			$result = $this->db->query_all();
+
+			$colorScheme = array();
+			foreach ($result as $color) {
+				$colorScheme[$color['preference']] = $color['value'];
 			}
+
+			$colorScheme = array_unique(array_merge($defaults,$colorScheme)); // colorScheme overwrites defaults
+
+			return $colorScheme;
 		}
-		// user not logged in, or prefs were empty - use defaults
-		return array(array("value"=>"white"), array("value"=>"gray"));
+		// user not logged in
+		return $defaults;
 	}
 }
 
