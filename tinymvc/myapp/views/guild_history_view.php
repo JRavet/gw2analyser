@@ -109,6 +109,30 @@
 								<td><?=$a['upgrades_done']?></td>
 							</tr>
 						</tbody>
+						<thead>
+							<th>Most Claimed Objective</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td><?=$a['most_claimed']['objective']?> (<?=$a['most_claimed']['claims']?> claims)</td>
+							</tr>
+						</tbody>
+					</table>
+					<br/>
+					<table style="width:600px" class="table table-bordered table-striped">
+						<thead>
+							<th>Server</th>
+							<th>Claims</th>
+							<th>Most Recent Claim</th>
+						</thead>
+						<tbody>
+						<?php foreach($a['servers'] as $s) { ?>
+							<tr>
+								<td><?=$s['server']?></td>
+								<td><?=$s['server_claims']?> (<?=number_format($s['server_claims']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$s['last_claim']?></td>
+						<?php } ?>
+						</tbody>
 					</table>
 				</div>
 			</div>

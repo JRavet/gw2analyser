@@ -12,6 +12,31 @@ class Guild extends TinyMVC_Model
 	protected $_table = "guild";
 	protected $pk = "guild_id";
 
+	public function getServerClaims($guild_id) {
+		$this->db->select("s.name as 'server', count(*) as 'server_claims', max(ch.claimed_at) as 'last_claim'");
+		$this->db->from("server_info s");
+		$this->db->join("capture_history cah", "cah.owner_server = s.server_id");
+		$this->db->join("claim_history ch", "ch.capture_history_id = cah.id");
+		$this->db->join("guild g", "g.guild_id = ch.claimed_by");
+		$this->db->where("g.guild_id", $guild_id);
+		$this->db->orderby("COUNT(*) DESC");
+		$this->db->groupby('ch.claimed_by');
+		return $this->db->query_all();
+	}
+
+	public function getMostClaimedObjective($guild_id) {
+		$this->db->select("o.name as 'objective', count(*) as 'claims'");
+		$this->db->from("objective o");
+		$this->db->join("capture_history cah", "cah.obj_id = o.obj_id");
+		$this->db->join("claim_history ch", "ch.capture_history_id = cah.id");
+		$this->db->join("guild g", "g.guild_id = ch.claimed_by");
+		$this->db->where("g.guild_id", $guild_id);
+		$this->db->orderby("COUNT(*) DESC");
+		$this->db->limit(1);
+		$this->db->groupby('cah.obj_id');
+		return $this->db->query_one();
+	}
+
 	/**
 	 * Gets a set of summary stats for all guilds under the $params search filters
 	 *
@@ -47,15 +72,17 @@ class Guild extends TinyMVC_Model
 		$this->db->join("objective o", "o.obj_id = cah.obj_id");
 		$this->db->groupby("ch.claimed_by");
 		$this->db->orderby("COUNT(*) DESC");
-		$this->db->limit(50); // TODO arbitrary testing limit
-		// TODO: # of upgrades slotted (dont include tiers)
-		// TODO: most claimed objective
-		// TODO: table of servers guild has claims on
-		// TODO-TODO: attempt to determine actual server across different linkings / transfers
-
 		$this->append_query($params);
+		$this->db->limit(100); // TODO arbitrary testing limit
+		// TODO: 4) # of upgrades slotted (dont include tiers)
+		$results = array();
+		foreach($this->db->query_all() as $row) {
+			$row['servers'] = $this->getServerClaims($row['id']);
+			$row['most_claimed'] = $this->getMostClaimedObjective($row['id']);
+			$results[] = $row;
+		}
 
-		return $this->db->query_all();
+		return $results;
 	}
 
 }
