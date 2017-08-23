@@ -2,46 +2,28 @@
 <title> Guild Analyser </title>
 <div class="container-fluid">
 	<div class="widget-content nopadding">
-		<form action="#" method="POST">
+		<form action="/table/guild_history" method="POST">
 
 		<div class="row-fluid">
 			<div class="control-group">
 				<div class="controls span3">
 				<label class="control-label"> Match Tier </label>
-					<select>
+					<select id="matchid" name="matchid">
 						<option value="1-1">NA Tier 1</option>
 						<option value="1-2">NA Tier 2</option>
 						<option value="1-3">NA Tier 3</option>
 						<option value="1-4">NA Tier 4</option>
+						<option value="2-1">EU Tier 1</option>
+						<option value="2-2">EU Tier 2</option>
+						<option value="2-3">EU Tier 3</option>
+						<option value="2-4">EU Tier 4</option>
+						<option value="2-5">EU Tier 5</option>
 					</select>
 				</div>
 			</div>
 		</div>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-					<label class="control-label"> Server Owner </label>
-					<select>
-						<option value="Maguuma"> Maguuma </option>
-						<option value="Northern Shiverpeaks"> Northern Shiverpeaks </option>
-						<option value="..."> ... </option>
-					</select>
-				</div>
-			</div>
-		</div>
-
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span12">
-					<label class="control-label"> Match Start Date </label>
-					<div data-date="" class="input-append date datepicker">
-						<input value="07-21-2017" data-date-format="mm-dd-yyyy" class="span10" type="text">
-						<span class="add-on"><i class="icon-th"></i></span>
-					</div>
-				</div>
-			</div>
-		</div>
+		<input type="submit" value="Filter">
 
 		</form>
 
@@ -76,10 +58,12 @@
 							<th>Claims over 3 hours</th>
 						</thead>
 						<tbody>
-							<td><?=$a['claims_home']?> (<?=number_format($a['claims_home']/$a['claims_total']*100, 2)?>%)</td>
-							<td><?=$a['claims_enemy']?> (<?=number_format($a['claims_enemy']/$a['claims_total']*100, 2)?>%)</td>
-							<td><?=$a['claims_under_30min']?> (<?=number_format($a['claims_under_30min']/$a['claims_total']*100, 2)?>%)</td>
-							<td><?=$a['claims_over_3hours']?> (<?=number_format($a['claims_over_3hours']/$a['claims_total']*100, 2)?>%)</td>
+							<tr>
+								<td><?=$a['claims_home']?> (<?=number_format($a['claims_home']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['claims_enemy']?> (<?=number_format($a['claims_enemy']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['claims_under_30min']?> (<?=number_format($a['claims_under_30min']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$a['claims_over_3hours']?> (<?=number_format($a['claims_over_3hours']/$a['claims_total']*100, 2)?>%)</td>
+							</tr>
 						</tbody>
 						<thead>
 							<th>Camps Claimed</th>

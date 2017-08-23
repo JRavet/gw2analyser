@@ -32,12 +32,23 @@ class Table_Controller extends TinyMVC_Controller
 		$this->view->display('capture_history_view');
 	}
 
-	public function guild_history()
+	public function guild_history($test='')
 	{
 		$this->load->model("guild");
-		$data = $this->guild->getSummaryList();
 
-		$this->view->assign("data", $data);
+		if ($this->view->form_submitted()) {
+
+			$data = $this->view->getData();
+			$params = array(
+				"where" => array(
+					"md.match_id" => $data['matchid']
+				)
+			);
+
+			$guildStats = $this->guild->getSummaryList($params);
+			$this->view->assign("data", $guildStats);
+		}
+
 		$this->view->display("guild_history_view");
 	}
 }
