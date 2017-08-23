@@ -20,7 +20,7 @@ class Guild extends TinyMVC_Model
 		$this->db->join("guild g", "g.guild_id = ch.claimed_by");
 		$this->db->where("g.guild_id", $guild_id);
 		$this->db->orderby("COUNT(*) DESC");
-		$this->db->groupby('ch.claimed_by');
+		$this->db->groupby('cah.owner_server');
 		return $this->db->query_all();
 	}
 
