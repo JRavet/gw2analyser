@@ -38,6 +38,18 @@ class Guild extends TinyMVC_Model
 		return $this->db->query_one();
 	}
 
+	public function getNumberTacticsSlotted($guild_id) {
+		$this->db->select("COUNT(*) as 'tactics_slotted'");
+		$this->db->from("claim_history ch");
+		$this->db->join("capture_history cah", "cah.id = ch.capture_history_id");
+		$this->db->join("upgrade_history uh", "uh.capture_history_id = cah.id");
+		$this->db->join("guild g", "g.guild_id = ch.claimed_by");
+		$this->db->notIn("uh.id", array(1,2,3));
+		$this->db->where("g.guild_id", $guild_id);
+		$this->db->groupby('ch.claimed_by');
+		return $this->db->query_one();
+	}
+
 	/**
 	 * Gets a set of summary stats for all guilds under the $params search filters
 	 *
@@ -80,6 +92,7 @@ class Guild extends TinyMVC_Model
 		foreach($this->db->query_all() as $row) {
 			$row['servers'] = $this->getServerClaims($row['id']);
 			$row['most_claimed'] = $this->getMostClaimedObjective($row['id']);
+			$row['tactics_slotted'] = $this->getNumberTacticsSlotted($row['id'])['tactics_slotted'];
 			$results[] = $row;
 		}
 

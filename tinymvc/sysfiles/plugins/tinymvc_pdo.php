@@ -238,6 +238,11 @@ class TinyMVC_PDO
     $this->_in($field,$elements,$list,'AND');
   }
 
+  function notIn($field,$elements,$list=false)
+  {
+    $this->_in($field,$elements,$list,'AND', "NOT");
+  }
+
 	/**
 	 * orin
 	 *
@@ -260,7 +265,7 @@ class TinyMVC_PDO
 	 * @access	public
 	 * @param   string $clause
 	 */    
-  private function _in($field,$elements,$list=false,$prefix='AND')
+  private function _in($field,$elements,$list=false,$prefix='AND',$not='')
   { 
     if(!$list)
     {
@@ -271,10 +276,10 @@ class TinyMVC_PDO
       foreach($elements as $idx => $element)
         $elements[$idx] = $this->pdo->quote($element);
       
-      $clause = sprintf("{$field} IN (%s)", implode(',',$elements));
+      $clause = sprintf("{$field} {$not} IN (%s)", implode(',',$elements));
     }
     else
-      $clause = sprintf("{$field} IN (%s)", $elements);
+      $clause = sprintf("{$field} {$not} IN (%s)", $elements);
     
     $this->_where($clause,array(),$prefix);
   }  

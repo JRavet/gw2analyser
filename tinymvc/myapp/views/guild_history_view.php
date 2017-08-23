@@ -99,14 +99,14 @@
 							<th>Total Claim Duration</th>
 							<th>Average Claim Duration</th>
 							<th>Longest Claim Duration</th>
-							<th>Upgrades Done</th>
+							<th>Tactics Slotted</th>
 						</thead>
 						<tbody>
 							<tr>
 								<td><?=$a['total_claim_duration']?></td>
 								<td><?=$a['avg_claim_duration']?></td>
 								<td><?=$a['max_claim_duration']?></td>
-								<td><?=$a['upgrades_done']?></td>
+								<td><?=$a['tactics_slotted']?></td>
 							</tr>
 						</tbody>
 						<thead>
