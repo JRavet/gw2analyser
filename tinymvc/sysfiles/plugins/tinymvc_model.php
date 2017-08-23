@@ -81,7 +81,7 @@ class TinyMVC_Model
     }
     if (isset($params['where'])) {
       foreach ($params['where'] as $k=>$v) {
-        $this->db->where("$k", "$v");
+        if ( isset($v) ) $this->db->where("$k", "$v");
       }
     }
     if (isset($params['join'])) {
