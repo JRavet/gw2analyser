@@ -92,6 +92,9 @@ class tmvc
     /* set path_info */
     $this->path_info = !empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :
 	    (!empty($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '');
+    if ( !isset($this->path_info) ) {
+      $this->path_info = $_SERVER['REQUEST_URI'];
+    }
     
     /* internal error handling */
     $this->setupErrorHandling();
