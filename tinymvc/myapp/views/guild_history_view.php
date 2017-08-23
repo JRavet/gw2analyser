@@ -114,7 +114,11 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td><?=$a['most_claimed']['objective']?> (<?=$a['most_claimed']['claims']?> claims)</td>
+								<?php $o = $a['most_claimed']; ?>
+								<td><?=$o['objective']?> (<?=$o['dir']?> <?=$o['type']?> on 
+									<?=preg_replace(array("/Center/","/RedHome/","/BlueHome/","/GreenHome/"),
+											array("EB","RBL","BBL","GBL"),$o['map'])?>)
+								- <?=$a['most_claimed']['claims']?> claims</td>
 							</tr>
 						</tbody>
 					</table>

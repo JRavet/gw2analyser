@@ -25,7 +25,8 @@ class Guild extends TinyMVC_Model
 	}
 
 	public function getMostClaimedObjective($guild_id) {
-		$this->db->select("o.name as 'objective', count(*) as 'claims'");
+		$this->db->select("o.name as 'objective', o.type as 'type', o.compass_direction as 'dir',
+		count(*) as 'claims', o.map_type as 'map'");
 		$this->db->from("objective o");
 		$this->db->join("capture_history cah", "cah.obj_id = o.obj_id");
 		$this->db->join("claim_history ch", "ch.capture_history_id = cah.id");
