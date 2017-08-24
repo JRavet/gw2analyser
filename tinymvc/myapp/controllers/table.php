@@ -36,6 +36,7 @@ class Table_Controller extends TinyMVC_Controller
 	{
 		$this->load->model("guild");
 		$this->load->model("server_info");
+		$this->load->model("match_detail");
 
 		if ($this->view->form_submitted()) {
 
@@ -59,6 +60,7 @@ class Table_Controller extends TinyMVC_Controller
 		}
 
 		$this->view->assign("srv", $this->server_info->getFormList());
+		$this->view->assign("matches", $this->match_detail->getFormList());
 		$this->view->display("guild_history_view");
 	}
 }

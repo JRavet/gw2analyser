@@ -43,6 +43,21 @@ class match_detail extends TinyMVC_Model
 		return $data;
 
 	}
+
+	public function getFormList()
+	{
+		return array(
+			"NA Tier 1" => "1-1",
+			"NA Tier 2" => "1-2",
+			"NA Tier 3" => "1-3",
+			"NA Tier 4" => "1-4",
+			"EU Tier 1" => "2-1",
+			"EU Tier 2" => "2-2",
+			"EU Tier 3" => "2-3",
+			"EU Tier 4" => "2-4",
+			"EU Tier 5" => "2-5",
+		);
+	}
 }
 
 ?>

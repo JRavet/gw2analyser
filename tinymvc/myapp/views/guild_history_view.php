@@ -10,15 +10,9 @@
 				<label class="control-label"> Match Tier </label>
 					<select id="matchid" name="matchid">
 						<option value="NULL">All</option>
-						<option <?=$formData['matchid'] == "1-1" ? 'selected' : ''?> value="1-1">NA Tier 1</option>
-						<option <?=$formData['matchid'] == "1-2" ? 'selected' : ''?> value="1-2">NA Tier 2</option>
-						<option <?=$formData['matchid'] == "1-3" ? 'selected' : ''?> value="1-3">NA Tier 3</option>
-						<option <?=$formData['matchid'] == "1-4" ? 'selected' : ''?> value="1-4">NA Tier 4</option>
-						<option <?=$formData['matchid'] == "2-1" ? 'selected' : ''?> value="2-1">EU Tier 1</option>
-						<option <?=$formData['matchid'] == "2-2" ? 'selected' : ''?> value="2-2">EU Tier 2</option>
-						<option <?=$formData['matchid'] == "2-3" ? 'selected' : ''?> value="2-3">EU Tier 3</option>
-						<option <?=$formData['matchid'] == "2-4" ? 'selected' : ''?> value="2-4">EU Tier 4</option>
-						<option <?=$formData['matchid'] == "2-5" ? 'selected' : ''?> value="2-5">EU Tier 5</option>
+						<?php foreach($matches as $k=>$v) { ?>
+							<option <?=$formData['matchid'] == $v ? 'selected' : ''?> value="<?=$v?>"><?=$k?></option>
+						<?php } ?>
 					</select>
 				</div>
 			</div>
