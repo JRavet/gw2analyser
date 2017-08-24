@@ -25,6 +25,15 @@ class server_info extends TinyMVC_Model
 		}
 
 	}
+
+	public function getFormList()
+	{
+		$this->db->select('server_id as "id", name');
+		$this->db->from($this->_table);
+		$this->db->orderby('server_id ASC');
+		$this->db->notin('name', array('Neutral'));
+		return $this->db->query_all();
+	}
 }
 
 ?>

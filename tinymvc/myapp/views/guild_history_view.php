@@ -3,21 +3,36 @@
 <div class="container-fluid">
 	<div class="widget-content nopadding">
 		<form action="/table/guild_history" method="POST">
-
+<?php print_r($formData); ?>
 		<div class="row-fluid">
 			<div class="control-group">
 				<div class="controls span3">
 				<label class="control-label"> Match Tier </label>
 					<select id="matchid" name="matchid">
-						<option value="1-1">NA Tier 1</option>
-						<option value="1-2">NA Tier 2</option>
-						<option value="1-3">NA Tier 3</option>
-						<option value="1-4">NA Tier 4</option>
-						<option value="2-1">EU Tier 1</option>
-						<option value="2-2">EU Tier 2</option>
-						<option value="2-3">EU Tier 3</option>
-						<option value="2-4">EU Tier 4</option>
-						<option value="2-5">EU Tier 5</option>
+						<option value="NULL">All</option>
+						<option <?=$formData['matchid'] == "1-1" ? 'selected' : ''?> value="1-1">NA Tier 1</option>
+						<option <?=$formData['matchid'] == "1-2" ? 'selected' : ''?> value="1-2">NA Tier 2</option>
+						<option <?=$formData['matchid'] == "1-3" ? 'selected' : ''?> value="1-3">NA Tier 3</option>
+						<option <?=$formData['matchid'] == "1-4" ? 'selected' : ''?> value="1-4">NA Tier 4</option>
+						<option <?=$formData['matchid'] == "2-1" ? 'selected' : ''?> value="2-1">EU Tier 1</option>
+						<option <?=$formData['matchid'] == "2-2" ? 'selected' : ''?> value="2-2">EU Tier 2</option>
+						<option <?=$formData['matchid'] == "2-3" ? 'selected' : ''?> value="2-3">EU Tier 3</option>
+						<option <?=$formData['matchid'] == "2-4" ? 'selected' : ''?> value="2-4">EU Tier 4</option>
+						<option <?=$formData['matchid'] == "2-5" ? 'selected' : ''?> value="2-5">EU Tier 5</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="control-group">
+				<div class="controls span3">
+				<label class="control-label"> Owner Server </label>
+					<select id="serverid" name="serverid">
+						<option value="NULL">All</option>
+						<?php foreach($srv as $s) { ?>
+							<option <?=$formData['serverid'] == $s['id'] ? 'selected' : ''?> value="<?=$s['id']?>"><?=$s['name']?></option>
+						<?php } ?>
 					</select>
 				</div>
 			</div>
