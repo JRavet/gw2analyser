@@ -3,7 +3,7 @@
 <div class="container-fluid">
 	<div class="widget-content nopadding">
 		<form action="/table/guild_history" method="POST">
-<?php print_r($formData); ?>
+
 		<div class="row-fluid">
 			<div class="control-group">
 				<div class="controls span3">
