@@ -11,7 +11,7 @@
 
 class Table_Controller extends TinyMVC_Controller
 {
-	public function match_details()
+	public function match_history()
 	{
 		$this->load->model('match_detail');
 
@@ -20,7 +20,7 @@ class Table_Controller extends TinyMVC_Controller
 			$this->view->assign("data", $data);
 		}
 
-		$this->view->display('match_detail_view');
+		$this->view->display('match_history_view');
 	}
 
 	public function capture_history()

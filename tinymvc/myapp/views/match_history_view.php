@@ -66,7 +66,7 @@
 				</tr>
 			<?php } ?>
 			</table>
-			<form method="POST" action="/table/match_details">
+			<form method="POST" action="/table/match_history">
 			<input type="submit" class="btn" value="Set search parameters for all pages">
 			</form>
 
