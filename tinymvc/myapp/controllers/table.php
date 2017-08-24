@@ -50,7 +50,8 @@ class Table_Controller extends TinyMVC_Controller
 			$params = array(
 				"where" => array(
 					"md.match_id" => $data['matchid'],
-					"cah.owner_server" => $data['serverid']
+					"g.guild_id" => $data['guildname']
+					//"cah.owner_server" => $data['serverid'] // TODO: nginx doesnt like this
 				)
 			);
 
@@ -60,6 +61,7 @@ class Table_Controller extends TinyMVC_Controller
 		}
 
 		$this->view->assign("srv", $this->server_info->getFormList());
+		$this->view->assign("guildNames", $this->guild->getFormList());
 		$this->view->assign("matches", $this->match_detail->getFormList());
 		$this->view->display("guild_history_view");
 	}

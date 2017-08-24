@@ -32,6 +32,20 @@
 			</div>
 		</div>
 
+		<div class="row-fluid">
+			<div class="control-group">
+				<div class="controls span3">
+				<label class="control-label"> Guild </label>
+					<select id="guildname" name="guildname">
+						<option value="NULL">All</option>
+						<?php foreach($guildNames as $g) { ?>
+							<option <?=$formData['guildname'] == $g['id'] ? 'selected' : ''?> value="<?=$g['id']?>"><?=$g['name']?></option>
+						<?php } ?>
+					</select>
+				</div>
+			</div>
+		</div>
+
 		<input type="submit" value="Filter">
 
 		</form>

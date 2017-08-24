@@ -106,6 +106,15 @@ class Guild extends TinyMVC_Model
 		return $results;
 	}
 
+	public function getFormList()
+	{
+		$this->db->select("concat(g.name, ' [', g.tag, ']') as 'name', g.guild_id as 'id'");
+		$this->db->from($this->_table . " g");
+		$this->db->notin("g.name", array(""));
+		$this->db->orderby("g.name");
+		return $this->db->query_all();
+	}
+
 }
 
 ?>
