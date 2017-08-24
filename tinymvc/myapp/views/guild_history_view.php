@@ -50,13 +50,13 @@
 
 		</form>
 
-			<? foreach($data as $a) { ?>
-				<a href="#collapse<?=$a['id']?>" data-toggle="collapse">
+		<? foreach($data as $a) { ?>
+			<a href="#collapse<?=$a['id']?>" data-toggle="collapse">
 				<div class="widget-title">
 					<span class="icon"><i class="icon-arrow-down"></i></span>
 					<span class="span12"><?=$a['guild_name']?> - <?=$a['claims_total']?> total claims</span>
 				</div>
-				</a>
+			</a>
 			<div class="collapse" id="collapse<?=$a['id']?>">
 				<div class="widget-content">
 					<table class="table table-bordered table-striped">
@@ -147,9 +147,7 @@
 					</table>
 				</div>
 			</div>
-			<? } ?>
-			<input type="submit" class="btn" value="Set search parameters for all pages">
-
+		<? } ?>
 	</div>
 </div>
 <!--
