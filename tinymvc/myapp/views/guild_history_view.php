@@ -38,8 +38,8 @@
 				<label class="control-label"> Guild </label>
 					<select id="guildname" name="guildname">
 						<option value="NULL">All</option>
-						<?php foreach($guildNames as $g) { ?>
-							<option <?=$formData['guildname'] == $g['id'] ? 'selected' : ''?> value="<?=$g['id']?>"><?=$g['name']?></option>
+						<?php foreach($guildNames as $g) { // using query data to show list of guilds in filter-select ?>
+							<option <?=$formData['guildname'] == $g['id'] ? 'selected' : ''?> value="<?=$g['id']?>"><?=$g['guild_name']?></option>
 						<?php } ?>
 					</select>
 				</div>

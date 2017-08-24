@@ -91,7 +91,7 @@ class Guild extends TinyMVC_Model
 		$this->db->join("objective o", "o.obj_id = cah.obj_id");
 		$this->db->join("match_detail md", "md.id = cah.match_detail_id");
 		$this->db->groupby("ch.claimed_by");
-		$this->db->orderby("COUNT(*) DESC"); // TODO - obsolete when data tables set up
+		$this->db->orderby("COUNT(*) DESC, g.name ASC");
 		$this->append_query($params);
 		$this->db->limit(100); // TODO arbitrary testing limit
 
@@ -106,12 +106,18 @@ class Guild extends TinyMVC_Model
 		return $results;
 	}
 
-	public function getFormList()
+	public function getFormList($params=array())
 	{
-		$this->db->select("concat(g.name, ' [', g.tag, ']') as 'name', g.guild_id as 'id'");
+		$this->db->select("concat(g.name, ' [', g.tag, ']') as 'guild_name', g.guild_id as 'id'");
 		$this->db->from($this->_table . " g");
-		$this->db->notin("g.name", array(""));
-		$this->db->orderby("g.name");
+		$this->db->join("claim_history ch", "ch.claimed_by = g.guild_id");
+		$this->db->join("capture_history cah", "cah.id = ch.capture_history_id");
+		$this->db->join("objective o", "o.obj_id = cah.obj_id");
+		$this->db->join("match_detail md", "md.id = cah.match_detail_id");
+		$this->db->notin("g.name", array("")); // exclude the blank guild
+		$this->append_query($params);
+		$this->db->groupby("ch.claimed_by");
+		$this->db->orderby("COUNT(*) DESC, g.name ASC");
 		return $this->db->query_all();
 	}
 

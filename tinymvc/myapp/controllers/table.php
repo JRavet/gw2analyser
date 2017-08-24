@@ -57,11 +57,14 @@ class Table_Controller extends TinyMVC_Controller
 
 			$guildStats = $this->guild->getSummaryList($params);
 			$this->view->assign("data", $guildStats);
+			$this->view->assign("guildNames", $guildStats); // also use query data for guild-name-select list
 			$this->view->assign("formData", $data);
 		}
 
 		$this->view->assign("srv", $this->server_info->getFormList());
-		$this->view->assign("guildNames", $this->guild->getFormList());
+		if ( !isset($guildStats) ) { // only if the list wasn't populated - list all guild names
+			$this->view->assign("guildNames", $this->guild->getFormList());
+		}
 		$this->view->assign("matches", $this->match_detail->getFormList());
 		$this->view->display("guild_history_view");
 	}

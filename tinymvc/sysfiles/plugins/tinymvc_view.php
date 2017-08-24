@@ -122,7 +122,7 @@ class TinyMVC_View
    */
   public function form_submitted()
   {
-    return ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET');
+    return ($_SERVER['REQUEST_METHOD'] === 'POST');
   }
 
   public function getData() {
