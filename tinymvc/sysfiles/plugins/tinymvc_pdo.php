@@ -158,7 +158,7 @@ class TinyMVC_PDO
     if(empty($clause))
       throw new Exception(sprintf("where cannot be empty"));
   
-    if(!preg_match('![=<>]!',$clause))
+    if(!preg_match('![=<>LIKE]!',$clause))
      $clause .= '=';  
   
     if(strpos($clause,'?')===false)
@@ -256,7 +256,6 @@ class TinyMVC_PDO
     $this->_in($field,$elements,$list,'OR');
   }
 
-  
 	/**
 	 * _in
 	 *
