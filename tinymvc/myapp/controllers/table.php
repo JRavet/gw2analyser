@@ -32,7 +32,7 @@ class Table_Controller extends TinyMVC_Controller
 		$this->view->display('capture_history_view');
 	}
 
-	public function guild_history($test='')
+	public function guild_history()
 	{
 		$this->load->model("guild");
 		$this->load->model("server_info");
@@ -47,11 +47,12 @@ class Table_Controller extends TinyMVC_Controller
 					unset($data[$k]);
 				}
 			}
+
 			$params = array(
 				"where" => array(
-					"md.match_id" => $data['matchid'],
-					"g.guild_id" => $data['guildname']
-					//"cah.owner_server" => $data['serverid'] // TODO: nginx doesnt like this
+					"md.match_id LIKE" => $data['matchid'],
+					"g.guild_id" => $data['guildname'],
+					"cah.owner_server" => $data['serverid'], // TODO: nginx doesnt like this
 				)
 			);
 
