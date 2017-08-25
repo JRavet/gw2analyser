@@ -4,51 +4,52 @@
 	<div class="widget-content nopadding">
 		<form action="/table/guild_history" method="POST">
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-				<label class="control-label"> Match Tier </label>
-					<select id="matchid" name="matchid">
-						<option value="NULL">All</option>
-						<?php foreach($matches as $k=>$v) { ?>
-							<option <?=$formData['matchid'] == $v ? 'selected' : ''?> value="<?=$v?>"><?=$k?></option>
-						<?php } ?>
-					</select>
+			<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span3">
+					<label class="control-label"> Match Tier </label>
+						<select id="matchid" name="matchid">
+							<option value="NULL">All</option>
+							<?php foreach($matches as $k=>$v) { ?>
+								<option <?=$formData['matchid'] == $v ? 'selected' : ''?> value="<?=$v?>"><?=$k?></option>
+							<?php } ?>
+						</select>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-				<label class="control-label"> Owner Server </label>
-					<select id="serverid" name="serverid">
-						<option value="NULL">All</option>
-						<?php foreach($srv as $s) { ?>
-							<option <?=$formData['serverid'] == $s['id'] ? 'selected' : ''?> value="<?=$s['id']?>"><?=$s['name']?></option>
-						<?php } ?>
-					</select>
+			<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span3">
+					<label class="control-label"> Owner Server </label>
+						<select id="serverid" name="serverid">
+							<option value="NULL">All</option>
+							<?php foreach($srv as $s) { ?>
+								<option <?=$formData['serverid'] == $s['id'] ? 'selected' : ''?> value="<?=$s['id']?>"><?=$s['name']?></option>
+							<?php } ?>
+						</select>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-				<label class="control-label"> Guild </label>
-					<select id="guildname" name="guildname">
-						<option value="NULL">All</option>
-						<?php foreach($guildNames as $g) { // using query data to show list of guilds in filter-select ?>
-							<option <?=$formData['guildname'] == $g['id'] ? 'selected' : ''?> value="<?=$g['id']?>"><?=$g['guild_name']?></option>
-						<?php } ?>
-					</select>
+			<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span3">
+					<label class="control-label"> Guild </label>
+						<select id="guildname" name="guildname">
+							<option value="NULL">All</option>
+							<?php foreach($guildNames as $g) { // using query data to show list of guilds in filter-select ?>
+								<option <?=$formData['guildname'] == $g['id'] ? 'selected' : ''?> value="<?=$g['id']?>"><?=$g['guild_name']?></option>
+							<?php } ?>
+						</select>
+					</div>
 				</div>
 			</div>
-		</div>
-
-		<input type="submit" value="Filter">
-
+			<input type="submit" value="Filter">
+			<a class="btn" style="margin-top:5px" href="/table/guild_history">Reset Filter</a>
 		</form>
+
+		<br/>
 
 		<? foreach($data as $a) { ?>
 			<a href="#collapse<?=$a['id']?>" data-toggle="collapse">
