@@ -13,16 +13,16 @@ class Guild extends TinyMVC_Model
 	protected $pk = "guild_id";
 
 	public function getServerClaims($guild_id, $params) {
-		$this->db->select("s.name as 'server', count(*) as 'server_claims', max(ch.claimed_at) as 'last_claim'");
+		$this->db->select("s.name as 'server', count(*) as 'server_claims', max(ch.claimed_at) as 'last_claim',
+			(SELECT COUNT(*) FROM guild g LEFT JOIN claim_history ch ON ch.claimed_by = g.guild_id WHERE g.guild_id = \"$guild_id\") as 'claims_total'"
+		);
 		$this->db->from("server_info s");
 		$this->db->join("capture_history cah", "cah.owner_server = s.server_id");
 		$this->db->join("claim_history ch", "ch.capture_history_id = cah.id");
 		$this->db->join("guild g", "g.guild_id = ch.claimed_by");
-		$this->db->join("match_detail md", "md.id = cah.match_detail_id");
 		$this->db->where("g.guild_id", $guild_id);
 		$this->db->orderby("COUNT(*) DESC");
 		$this->db->groupby('cah.owner_server');
-		$this->append_query($params);
 		return $this->db->query_all();
 	}
 

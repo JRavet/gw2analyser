@@ -52,7 +52,7 @@ class Table_Controller extends TinyMVC_Controller
 				"where" => array(
 					"md.match_id LIKE" => $data['matchid'],
 					"g.guild_id" => $data['guildname'],
-					"cah.owner_server" => $data['serverid'], // TODO: nginx doesnt like this
+					"cah.owner_server" => $data['serverid'],
 				)
 			);
 

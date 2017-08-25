@@ -117,6 +117,8 @@
 								<td><?=$a['tactics_slotted']?></td>
 							</tr>
 						</tbody>
+					</table>
+					<table class="table table-bordered" style="width:600px">
 						<thead>
 							<th>Most Claimed Objective</th>
 						</thead>
@@ -141,7 +143,7 @@
 						<?php foreach($a['servers'] as $s) { ?>
 							<tr>
 								<td><?=$s['server']?></td>
-								<td><?=$s['server_claims']?> (<?=number_format($s['server_claims']/$a['claims_total']*100, 2)?>%)</td>
+								<td><?=$s['server_claims']?> (<?=number_format($s['server_claims']/$s['claims_total']*100, 2)?>%)</td>
 								<td><?=$s['last_claim']?></td>
 						<?php } ?>
 						</tbody>
