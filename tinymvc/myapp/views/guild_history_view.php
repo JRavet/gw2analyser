@@ -37,12 +37,12 @@
 					<div class="controls span12">
 						<label class="control-label"> Claim date-range </label>
 						<div data-date="" class="input-append date datepicker">
-							<input value="<?=$formData['startDate']?>" data-date-format="mm/dd/yyyy" class="datepicker" name="startDate" type="text">
+							<input value="<?=$formData['startDate']?>" data-date-format="mm/dd/yyyy" name="startDate" type="text">
 							<span class="add-on"><i class="icon-th"></i></span>
 						</div>
 						-
 						<div data-date="" class="input-append date datepicker">
-							<input value="<?=$formData['endDate']?>" data-date-format="mm/dd/yyyy" class="datepicker" name="endDate" type="text">
+							<input value="<?=$formData['endDate']?>" data-date-format="mm/dd/yyyy" name="endDate" type="text">
 							<span class="add-on"><i class="icon-th"></i></span>
 						</div>
 					</div>

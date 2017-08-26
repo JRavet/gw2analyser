@@ -49,8 +49,8 @@ class Table_Controller extends TinyMVC_Controller
 			}
 
 			$specialKeys = array(
-				"startDate" => array("key" => "DATE(ch.claimed_at) >=", "val" => date("Y-m-d", $data['startDate'])),
-				"endDate" => array("key" => "DATE(ch.claimed_at) <", "val" => date("Y-m-d", $data['endDate'])),
+				"startDate" => array("key" => "DATE(ch.claimed_at) >=", "val" => date("Y-m-d", strtotime($data['startDate']))),
+				"endDate" => array("key" => "DATE(ch.claimed_at) <", "val" => date("Y-m-d", strtotime($data['endDate']))),
 			); // keys which need to ensure there is data for
 
 			$params = array(
@@ -58,16 +58,14 @@ class Table_Controller extends TinyMVC_Controller
 					"md.match_id LIKE" => $data['matchid'],
 					"g.guild_id" => $data['guildname'],
 					"cah.owner_server" => $data['serverid'],
-					"DATE(ch.claimed_at) >=" => date("Y-m-d", $data['startDate']),
-					"DATE(ch.claimed_at) <=" => date("Y-m-d", $data['endDate']),
-					"HOUR(ch.claimed_at) >=" => $data['startTime'],
-					"HOUR(ch.claimed_at) <" => $data['endTime'],
+					"TIME(ch.claimed_at) >=" => $data['startTime'],
+					"TIME(ch.claimed_at) <" => $data['endTime'],
 				)
 			);
 
-			foreach($specialKeys as $k=>$v) {
-				if ( isset($data[$k]) ) {
-					array_push($params["where"], $v['key'], $v['val']);
+			foreach($specialKeys as $k=>$v) { // special empty-checks for these keys and values
+				if ( isset($data[$k]) && $data[$k] != "") {
+					$params["where"][$v['key']] = $v['val'];
 				}
 			}
 
