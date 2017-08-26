@@ -13,12 +13,11 @@
 		<link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet" />
 		<link href="/static/css/override.css" rel="stylesheet" />
 	</head>
-	<body>
+	<body style="background-color:<?=$bgColor1?>">
 	<div class="row">
 		<div class="span3"></div>
 		<div class="navbar span6">
-		  <ul class="nav">
-
+			<ul class="nav">
 				<li class="dropdown br bb bl" id="table-analyser-dropdown" ><a href="#" data-toggle="dropdown" data-target="#table-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Tables</span><b class="caret"></b></a>
 				  <ul class="dropdown-menu">
 					<li><a href="/table/capture_history">Capture History</a></li>
@@ -48,7 +47,7 @@
 				<?php } else { ?>
 					<li class="br bb"><a href="#">NOT AVAILABLE Log in</a></li>
 				<?php } ?>
-		  </ul>
+			</ul>
 		</div>
 		<div class="span3"></div>
 	</div>
