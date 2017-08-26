@@ -50,7 +50,7 @@ class Table_Controller extends TinyMVC_Controller
 
 			$specialKeys = array(
 				"startDate" => array("key" => "DATE(ch.claimed_at) >=", "val" => date("Y-m-d", strtotime($data['startDate']))),
-				"endDate" => array("key" => "DATE(ch.claimed_at) <", "val" => date("Y-m-d", strtotime($data['endDate']))),
+				"endDate" => array("key" => "DATE(ch.claimed_at) <=", "val" => date("Y-m-d", strtotime($data['endDate']))),
 			); // keys which need to ensure there is data for
 
 			$params = array(
@@ -59,7 +59,7 @@ class Table_Controller extends TinyMVC_Controller
 					"g.guild_id" => $data['guildname'],
 					"cah.owner_server" => $data['serverid'],
 					"TIME(ch.claimed_at) >=" => $data['startTime'],
-					"TIME(ch.claimed_at) <" => $data['endTime'],
+					"TIME(ch.claimed_at) <=" => $data['endTime'],
 				)
 			);
 
