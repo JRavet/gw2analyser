@@ -3,7 +3,7 @@
 <div class="container-fluid">
 	<div class="widget-content nopadding">
 		<form action="/table/guild_history" method="POST">
-
+			<!-- Match region and tier -->
 			<div class="row-fluid">
 				<div class="control-group">
 					<div class="controls span3">
@@ -17,7 +17,7 @@
 					</div>
 				</div>
 			</div>
-
+			<!-- Server -->
 			<div class="row-fluid">
 				<div class="control-group">
 					<div class="controls span3">
@@ -31,7 +31,33 @@
 					</div>
 				</div>
 			</div>
+			<!-- Date and Time span -->
+			<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span12">
+						<label class="control-label"> Claim date-range </label>
+						<div data-date="" class="input-append date datepicker">
+							<input value="<?=$formData['startDate']?>" data-date-format="mm/dd/yyyy" class="datepicker" name="startDate" type="text">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+						-
+						<div data-date="" class="input-append date datepicker">
+							<input value="<?=$formData['endDate']?>" data-date-format="mm/dd/yyyy" class="datepicker" name="endDate" type="text">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+					</div>
+				</div>
 
+				<div class="control-group">
+					<div class="controls span12">
+						<label class="control-label"> Claim time-range </label>
+						<input placeholder="HH:MM:SS" value="<?=$formData['startTime']?>" name="startTime" class="span3" type="text">
+						-
+						<input placeholder="HH:MM:SS" value="<?=$formData['endTime']?>" name="endTime" class="span3" type="text">
+					</div>
+				</div>
+			</div>
+			<!-- Guild name -->
 			<div class="row-fluid">
 				<div class="control-group">
 					<div class="controls span3">
@@ -45,12 +71,15 @@
 					</div>
 				</div>
 			</div>
+
 			<input type="submit" value="Filter">
 			<a class="btn" style="margin-top:5px" href="/table/guild_history">Reset Filter</a>
 		</form>
-
-		<br/>
-
+	</div>
+</div>
+<br/>
+<div>
+	<div>
 		<? foreach($data as $a) { ?>
 			<a href="#collapse<?=$a['id']?>" data-toggle="collapse">
 				<div class="widget-title">
