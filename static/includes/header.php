@@ -3,22 +3,23 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-		<link rel="stylesheet" href="../static/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="../static/css/bootstrap-responsive.min.css" />
-		<link rel="stylesheet" href="../static/css/datepicker.css" />
-		<link rel="stylesheet" href="../static/css/uniform.css" />
-		<link rel="stylesheet" href="../static/css/select2.css" />
-		<link rel="stylesheet" href="../static/css/matrix-style.css" />
-		<link rel="stylesheet" href="../static/css/matrix-media.css" />
-		<link href="../static/font-awesome/css/font-awesome.css" rel="stylesheet" />
+		<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" href="/static/css/datepicker.css" />
+		<link rel="stylesheet" href="/static/css/uniform.css" />
+		<link rel="stylesheet" href="/static/css/select2.css" />
+		<link rel="stylesheet" href="/static/css/matrix-style.css" />
+		<link rel="stylesheet" href="/static/css/matrix-media.css" />
+		<link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet" />
+		<link href="/static/css/override.css" rel="stylesheet" />
 	</head>
-	<body style="background-color: white">
+	<body>
 	<div class="row">
 		<div class="span3"></div>
 		<div class="navbar span6">
 		  <ul class="nav">
 
-				<li class="dropdown" id="table-analyser-dropdown" ><a href="#" data-toggle="dropdown" data-target="#table-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Tables</span><b class="caret"></b></a>
+				<li class="dropdown br bb bl" id="table-analyser-dropdown" ><a href="#" data-toggle="dropdown" data-target="#table-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Tables</span><b class="caret"></b></a>
 				  <ul class="dropdown-menu">
 					<li><a href="/table/capture_history">Capture History</a></li>
 					<li class="divider"></li>
@@ -28,7 +29,7 @@
 				  </ul>
 				</li>
 
-				<li class="dropdown" id="graphical-analyser-dropdown" ><a href="#" data-toggle="dropdown" data-target="#graphical-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Charts</span><b class="caret"></b></a>
+				<li class="dropdown br bb" id="graphical-analyser-dropdown" ><a href="#" data-toggle="dropdown" data-target="#graphical-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Charts</span><b class="caret"></b></a>
 				  <ul class="dropdown-menu">
 					<li><a href="#">NOT AVAILABLE Score Graphs</a></li>
 					<li class="divider"></li>
@@ -37,7 +38,7 @@
 				</li>
 
 				<?php if (isset($username)) { ?>
-					<li class="dropdown" id="user-profile" ><a href="#" data-toggle="dropdown" data-target="#user-profile" class="dropdown-toggle"><span class="text"><?=$username?></span><b class="caret"></b></a>
+					<li class="dropdown br bb" id="user-profile"><a href="#" data-toggle="dropdown" data-target="#user-profile" class="dropdown-toggle"><span class="text"><?=$username?></span><b class="caret"></b></a>
 					  <ul class="dropdown-menu">
 						<li><a href="#"><i class="icon-user"></i>NOT AVAILABLE Preferences</a></li>
 						<li class="divider"></li>
@@ -45,7 +46,7 @@
 					  </ul>
 					</li>
 				<?php } else { ?>
-					<li><a href="#">NOT AVAILABLE Log in</a></li>
+					<li class="br bb"><a href="#">NOT AVAILABLE Log in</a></li>
 				<?php } ?>
 		  </ul>
 		</div>

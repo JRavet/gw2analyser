@@ -1,4 +1,12 @@
 body {
 	background-color: white;
-	color: #d3d3d3 ;
+}
+.bl {
+	border-left: 2px inset black;
+}
+.br {
+	border-right: 2px inset black;
+}
+.bb {
+	border-bottom: 2px inset black;
 }
