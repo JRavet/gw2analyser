@@ -1,14 +1,5 @@
 <?php
 
-/**
- * default.php
- *
- * default application controller
- *
- * @package		TinyMVC
- * @author		Monte Ohrt
- */
-
 class Table_Controller extends TinyMVC_Controller
 {
 	public function match_history()
