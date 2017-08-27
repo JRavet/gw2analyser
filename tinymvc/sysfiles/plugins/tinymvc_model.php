@@ -89,6 +89,11 @@ class TinyMVC_Model
         $this->db->join($k, $v);
       }
     }
+    if (isset($params['wherein'])) {
+      foreach ($params['wherein'] as $k=>$v) {
+        if ( isset($v) && !empty($v) ) $this->db->in($k, (array)$v);
+      }
+    }
   }
 
   function find($data, $order_by=array()) {

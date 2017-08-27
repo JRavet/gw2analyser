@@ -67,10 +67,13 @@ class Table_Controller extends TinyMVC_Controller
 			$params = array(
 				"where" => array(
 					"md.match_id LIKE" => $data['matchid'],
-					"concat(g.name, ' [', g.tag, ']')" => $data['guildname'],
+					"concat(g.name, ' [', g.tag, ']') LIKE" => "%" . $data['guildname'] . "%",
 					"cah.owner_server" => $data['serverid'],
 					"TIME(ch.claimed_at) >=" => $data['startTime'],
 					"TIME(ch.claimed_at) <=" => $data['endTime']
+				),
+				"wherein" => array(
+					"DAYOFWEEK(ch.claimed_at)" => $data['weekday']
 				)
 			);
 

@@ -31,7 +31,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- Date and Time span -->
+			<!-- Date span -->
 			<div class="row-fluid">
 				<div class="control-group">
 					<div class="controls span12">
@@ -47,14 +47,33 @@
 						</div>
 					</div>
 				</div>
+			</div>
 
+			<!-- Weekday selection -->
+			<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span12">
+						<label class="control-label"> Days </label>
+						<input type="checkbox" name="weekday[]" <?=in_array(1, $formData['weekday']) ? 'checked' : ''?> value="1">Sunday
+						<input type="checkbox" name="weekday[]" <?=in_array(2, $formData['weekday']) ? 'checked' : ''?> value="2">Monday
+						<input type="checkbox" name="weekday[]" <?=in_array(3, $formData['weekday']) ? 'checked' : ''?> value="3">Tuesday
+						<input type="checkbox" name="weekday[]" <?=in_array(4, $formData['weekday']) ? 'checked' : ''?> value="4">Wednesday
+						<input type="checkbox" name="weekday[]" <?=in_array(5, $formData['weekday']) ? 'checked' : ''?> value="5">Thursday
+						<input type="checkbox" name="weekday[]" <?=in_array(6, $formData['weekday']) ? 'checked' : ''?> value="6">Friday
+						<input type="checkbox" name="weekday[]" <?=in_array(7, $formData['weekday']) ? 'checked' : ''?> value="7">Saturday
+					</div>
+				</div>
+			</div>
+
+			<!-- Time span -->
+			<div class="row-fluid">
 				<div class="control-group">
 					<div class="controls span12">
 						<label class="control-label"> Claim time-range </label>
-						<input name="startTime" class="span3" data-provide="typeahead" data-items="<?=count($timeList)?>" type="text"
+						<input autocomplete="off" name="startTime" class="span3" data-provide="typeahead" data-items="<?=count($timeList)?>" type="text"
 						data-source='[<?= '"' . implode($timeList,'","') . '"'?>]' value="<?=$formData['startTime']?>">
 						-
-						<input name="endTime" class="span3" data-provide="typeahead" data-items="<?=count($timeList)?>" type="text"
+						<input autocomplete="off" name="endTime" class="span3" data-provide="typeahead" data-items="<?=count($timeList)?>" type="text"
 						data-source='[<?= '"' . implode($timeList,'","') . '"'?>]' value="<?=$formData['endTime']?>">
 					</div>
 				</div>
@@ -64,7 +83,7 @@
 				<div class="control-group">
 					<div class="controls span3">
 					<label class="control-label"> Guild </label>
-							<input name="guildname" type="text" data-provide="typeahead" data-items"<?=count($guildNames)?>" value="<?=$formData['guildname']?>"
+							<input autocomplete="off" name="guildname" type="text" data-provide="typeahead" data-items"<?=count($guildNames)?>" value="<?=$formData['guildname']?>"
 							data-source='[<?='"' . implode(array_map(function($el){return $el['guild_name']; }, $guildNames),'","') . '"'?>]'>
 					</div>
 				</div>
