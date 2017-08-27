@@ -12,7 +12,14 @@ class Guild extends TinyMVC_Model
 	protected $_table = "guild";
 	protected $pk = "guild_id";
 
-	public function getServerClaims($guild_id, $params) {
+	/**
+	 * Finds all servers that a guild has claims on, regardless of any filters
+	 * 		to give a true representation of the servers a guild has been on
+	 *
+	 * @param guild_id - the 30-character hex string of a guild
+	 * @return array(server, server_claims, last_claim, claims_total)
+	 */
+	public function getServerClaims($guild_id) {
 		$this->db->select("s.name as 'server', count(*) as 'server_claims', max(ch.claimed_at) as 'last_claim',
 			(SELECT COUNT(*) FROM guild g LEFT JOIN claim_history ch ON ch.claimed_by = g.guild_id WHERE g.guild_id = \"$guild_id\") as 'claims_total'"
 		);
@@ -26,6 +33,13 @@ class Guild extends TinyMVC_Model
 		return $this->db->query_all();
 	}
 
+	/**
+	 * Gets the most-claimed objective for a guild within the specified filter
+	 *
+	 * @param guild_id - the 30-character hex string of a guild
+	 * @param params - filter parameters
+	 * @return a single array of (objective, type, dir, claims, map)
+	 */
 	public function getMostClaimedObjective($guild_id, $params) {
 		$this->db->select("o.name as 'objective', o.type as 'type', o.compass_direction as 'dir',
 		count(*) as 'claims', o.map_type as 'map'");
@@ -42,6 +56,13 @@ class Guild extends TinyMVC_Model
 		return $this->db->query_one();
 	}
 
+	/**
+	 * Gets the number of tactics slotted into all of the guilds' claimed objectives within the filter results
+	 *
+	 * @param guild_id - the 30-character hex string of a guild
+	 * @param params - filter parameters
+	 * @return a single array of (tactics_slotted)
+	 */
 	public function getNumberTacticsSlotted($guild_id, $params) {
 		$this->db->select("COUNT(*) as 'tactics_slotted'");
 		$this->db->from("claim_history ch");
@@ -59,8 +80,9 @@ class Guild extends TinyMVC_Model
 	/**
 	 * Gets a set of summary stats for all guilds under the $params search filters
 	 *
-	 * @param $params - array
+	 * @param $params - array of filter-inputs
 	 *			- where=>array("column"=>"value")
+	 *			- wherein=>array("column"=>"value")
 	 *			- orderby=>"values"
 	 *			- join=>array("table"=>"t1.col = t2.col")
 	 * @return array() of guild stats for any number of selected guilds
@@ -97,7 +119,7 @@ class Guild extends TinyMVC_Model
 
 		$results = array();
 		foreach($this->db->query_all() as $row) {
-			$row['servers'] = $this->getServerClaims($row['id'], $params);
+			$row['servers'] = $this->getServerClaims($row['id']);
 			$row['most_claimed'] = $this->getMostClaimedObjective($row['id'], $params);
 			$row['tactics_slotted'] = $this->getNumberTacticsSlotted($row['id'], $params)['tactics_slotted'];
 			$results[] = $row;
@@ -106,9 +128,15 @@ class Guild extends TinyMVC_Model
 		return $results;
 	}
 
+	/**
+	 * Gets a list of all guild names in the database, potentially within the filter results
+	 *
+	 * @param params - array of filter-inputs
+	 * @return a list of guild_names for a typeahad input
+	 */
 	public function getFormList($params=array())
 	{
-		$this->db->select("concat(g.name, ' [', g.tag, ']') as 'guild_name', g.guild_id as 'id'");
+		$this->db->select("concat(g.name, ' [', g.tag, ']') as 'guild_name'");
 		$this->db->from($this->_table . " g");
 		$this->db->join("claim_history ch", "ch.claimed_by = g.guild_id");
 		$this->db->join("capture_history cah", "cah.id = ch.capture_history_id");

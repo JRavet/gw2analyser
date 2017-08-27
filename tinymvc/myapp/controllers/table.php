@@ -89,7 +89,7 @@ class Table_Controller extends TinyMVC_Controller
 			$this->view->assign("formData", $data);
 		} else { // fresh page-load
 			$data = array( // setting some default values for fields
-				// "startDate" => date('m/d/Y', strtotime('last Friday')+1), 
+				// "startDate" => date('m/d/Y', strtotime('last Friday')), 
 				// "endDate" => date('m/d/Y', strtotime('next Friday')),
 				"startTime" => "00:00:00",
 				"endTime" => "24:00:00",
