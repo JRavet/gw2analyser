@@ -52,12 +52,6 @@ class Table_Controller extends TinyMVC_Controller
 
 			$data = $this->view->getData();
 
-			foreach($data as $k=>$v) {
-				if ($v == "NULL" || !isset($v) || $v == "") {
-					unset($data[$k]);
-				}
-			}
-
 			$specialKeys = array(
 				"startDate" => array("key" => "DATE(ch.claimed_at) >=", "val" => date("Y-m-d", strtotime($data['startDate']))),
 				"endDate" => array("key" => "DATE(ch.claimed_at) <=", "val" => date("Y-m-d", strtotime($data['endDate']))),
