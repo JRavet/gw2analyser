@@ -64,12 +64,8 @@
 				<div class="control-group">
 					<div class="controls span3">
 					<label class="control-label"> Guild </label>
-						<select id="guildname" name="guildname">
-							<option value="NULL">All</option>
-							<?php foreach($guildNames as $g) { // using query data to show list of guilds in filter-select ?>
-								<option <?=$formData['guildname'] == $g['id'] ? 'selected' : ''?> value="<?=$g['id']?>"><?=$g['guild_name']?></option>
-							<?php } ?>
-						</select>
+							<input name="guildname" type="text" data-provide="typeahead" data-items"<?=count($guildNames)?>" value="<?=$formData['guildname']?>"
+							data-source='[<?='"' . implode(array_map(function($el){return $el['guild_name']; }, $guildNames),'","') . '"'?>]'>
 					</div>
 				</div>
 			</div>
