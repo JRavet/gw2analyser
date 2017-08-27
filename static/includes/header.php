@@ -30,7 +30,7 @@
 
 				<li class="dropdown br bb" id="graphical-analyser-dropdown" ><a href="#" data-toggle="dropdown" data-target="#graphical-analyser-dropdown" class="dropdown-toggle"><span class="text">Analyser Charts</span><b class="caret"></b></a>
 				  <ul class="dropdown-menu">
-					<li><a href="#">NOT AVAILABLE Score Graphs</a></li>
+					<li><a href="/graph/score_history">Score History</a></li>
 					<li class="divider"></li>
 					<li><a href="#">NOT AVAILABLE Historical Map</a></li>
 				  </ul>
