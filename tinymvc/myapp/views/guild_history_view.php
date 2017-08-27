@@ -51,9 +51,11 @@
 				<div class="control-group">
 					<div class="controls span12">
 						<label class="control-label"> Claim time-range </label>
-						<input placeholder="HH:MM:SS" value="<?=$formData['startTime']?>" name="startTime" class="span3" type="text">
+						<input name="startTime" class="span3" data-provide="typeahead" data-items="<?=count($timeList)?>" type="text"
+						data-source='[<?= '"' . implode($timeList,'","') . '"'?>]' value="<?=$formData['startTime']?>">
 						-
-						<input placeholder="HH:MM:SS" value="<?=$formData['endTime']?>" name="endTime" class="span3" type="text">
+						<input name="endTime" class="span3" data-provide="typeahead" data-items="<?=count($timeList)?>" type="text"
+						data-source='[<?= '"' . implode($timeList,'","') . '"'?>]' value="<?=$formData['endTime']?>">
 					</div>
 				</div>
 			</div>

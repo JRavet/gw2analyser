@@ -32,6 +32,16 @@ class Table_Controller extends TinyMVC_Controller
 		$this->view->display('capture_history_view');
 	}
 
+	public function getTimeFormList() {
+		$times = array();
+		for ($i = 0; $i < 96; $i++) {
+			$times[] = date("H:i:s", $i*15*60);
+		}
+		asort($times);
+		$times[] = "24:00:00"; // date() disallows this time
+		return $times;
+	}
+
 	public function guild_history()
 	{
 		$this->load->model("guild");
@@ -78,12 +88,13 @@ class Table_Controller extends TinyMVC_Controller
 				"startDate" => date('m/d/Y', strtotime('last Friday')), 
 				"endDate" => date('m/d/Y', strtotime('next Friday')),
 				"startTime" => "00:00:00",
-				"endTime" => "23:59:59",
+				"endTime" => "24:00:00",
 			);
 			$this->view->assign('formData', $data); // setting default values
 			$this->view->assign("guildNames", $this->guild->getFormList());
 		}
 
+		$this->view->assign("timeList", $this->getTimeFormList());
 		$this->view->assign("srv", $this->server_info->getFormList());
 		$this->view->assign("matches", $this->match_detail->getFormList());
 		$this->view->display("guild_history_view");
