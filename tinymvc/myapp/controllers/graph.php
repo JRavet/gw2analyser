@@ -13,9 +13,6 @@ class Graph_Controller extends TinyMVC_Controller
 		if ($this->view->form_submitted()) {
 
 			$data = $this->view->getData();
-			// later on: select via checkbox of matches?
-			$params = array();
-			// TODO: select (region+tier AND weeknum) OR server AND weeknum
 
 			$params = array(
 				"where" => array(

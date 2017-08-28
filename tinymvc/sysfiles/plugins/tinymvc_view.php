@@ -68,16 +68,18 @@ class TinyMVC_View
 	 */    
   public function display($_tmvc_filename,$view_vars=null)
   {
-  	session_start();
-  	$prefs = new User_Preference($_SESSION['user_id']);
+	session_start();
+	$user = new User($_SESSION['user_id']);
+	$prefs = new User_Preference($_SESSION['user_id']);
 	$colorScheme = $prefs->getColorScheme();
 		// default bgColors set by $prefs if user isnt logged in
-  	$this->assign("bgColor1", $colorScheme['bgColor1']);
-  	$this->assign("bgColor2", $colorScheme['bgColor2']);
-  	$this->assign("redServer", $colorScheme['redServer']);
-  	$this->assign("blueServer", $colorScheme['blueServer']);
-  	$this->assign("greenServer", $colorScheme['greenServer']);
-    return $this->_view("{$_tmvc_filename}.php",$view_vars);
+	$this->assign("bgColor1", $colorScheme['bgColor1']);
+	$this->assign("bgColor2", $colorScheme['bgColor2']);
+	$this->assign("redServer", $colorScheme['redServer']);
+	$this->assign("blueServer", $colorScheme['blueServer']);
+	$this->assign("greenServer", $colorScheme['greenServer']);
+	$this->assign("username", $user->name);
+    return $this->_view("{$_tmvc_filename}.php", $view_vars);
   }  
 
 	/**

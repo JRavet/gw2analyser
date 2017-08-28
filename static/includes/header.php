@@ -39,13 +39,13 @@
 				<?php if (isset($username)) { ?>
 					<li class="dropdown br bb" id="user-profile"><a href="#" data-toggle="dropdown" data-target="#user-profile" class="dropdown-toggle"><span class="text"><?=$username?></span><b class="caret"></b></a>
 					  <ul class="dropdown-menu">
-						<li><a href="#"><i class="icon-user"></i>NOT AVAILABLE Preferences</a></li>
+						<li><a href="/users/preferences"><i class="icon-user"></i>Preferences</a></li>
 						<li class="divider"></li>
-						<li><a href="#"><i class="icon-key"></i>NOT AVAILABLE Log Out</a></li>
+						<li><a href="/users/logout"><i class="icon-key"></i>Log Out</a></li>
 					  </ul>
 					</li>
 				<?php } else { ?>
-					<li class="br bb"><a href="#">NOT AVAILABLE Log in</a></li>
+					<li class="br bb"><a href="/users/login">Log in</a></li>
 				<?php } ?>
 			</ul>
 		</div>
