@@ -19,8 +19,15 @@ class Graph_Controller extends TinyMVC_Controller
 
 			$params = array(
 				"where" => array(
+					"week_num" => $data['weekNum'],
 				)
 			);
+
+			if ( isset($data['serverid']) ) { // filter by server's id
+				$params['where']['server_id'] = $data['serverid'];
+			} else { // filter by match_id if no server id provided
+				$params['where']['match_id'] = $data['matchid'];
+			}
 
 			$score_history = $this->map_score->getScores($params);
 			$skirmish_history = $this->skirmish_history->getScores($params);
@@ -32,7 +39,8 @@ class Graph_Controller extends TinyMVC_Controller
 
 		}
 
-		$this->view->assign("matches", $this->match_detail->getFormList()); // TODO remove All NA, all EU
+		$this->view->assign("matches", $this->match_detail->getFormList());
+		$this->view->assign("week_numbers", $this->match_detail->getWeekNumbers());
 		$this->view->assign("srv", $this->server_info->getFormList());
 		$this->view->display("score_history_view");
 	}

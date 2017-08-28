@@ -44,21 +44,44 @@ class match_detail extends TinyMVC_Model
 
 	}
 
-	public function getFormList()
+	public function getWeekNumbers() {
+		$this->db->select("week_num");
+		$this->db->from($this->_table);
+		$this->db->orderby("week_num DESC");
+		$this->db->groupby("week_num");
+
+		return $this->db->query_all();
+	}
+
+	public function getFormList($include_regionals=false)
 	{
-		return array(
-			"All NA"    => "1-%",
-			"NA Tier 1" => "1-1",
-			"NA Tier 2" => "1-2",
-			"NA Tier 3" => "1-3",
-			"NA Tier 4" => "1-4",
-			"All EU"    => "2-%",
-			"EU Tier 1" => "2-1",
-			"EU Tier 2" => "2-2",
-			"EU Tier 3" => "2-3",
-			"EU Tier 4" => "2-4",
-			"EU Tier 5" => "2-5",
-		);
+		if ($include_regionals == true) {
+			return array(
+				"All NA"    => "1-%",
+				"NA Tier 1" => "1-1",
+				"NA Tier 2" => "1-2",
+				"NA Tier 3" => "1-3",
+				"NA Tier 4" => "1-4",
+				"All EU"    => "2-%",
+				"EU Tier 1" => "2-1",
+				"EU Tier 2" => "2-2",
+				"EU Tier 3" => "2-3",
+				"EU Tier 4" => "2-4",
+				"EU Tier 5" => "2-5",
+			);
+		} else { // single-matches only
+			return array(
+				"NA Tier 1" => "1-1",
+				"NA Tier 2" => "1-2",
+				"NA Tier 3" => "1-3",
+				"NA Tier 4" => "1-4",
+				"EU Tier 1" => "2-1",
+				"EU Tier 2" => "2-2",
+				"EU Tier 3" => "2-3",
+				"EU Tier 4" => "2-4",
+				"EU Tier 5" => "2-5",
+			);
+		}
 	}
 }
 
