@@ -67,7 +67,8 @@ class Table_Controller extends TinyMVC_Controller
 				}
 			}
 
-			$guildStats = $this->guild->getSummaryList($params, $data['page']*100);
+			$guildStats = $this->guild->getSummaryList($params);
+			$this->view->assign("guildNames", $guildStats);
 			$this->view->assign("data", $guildStats);
 			$this->view->assign("formData", $data);
 		} else { // fresh page-load
@@ -76,9 +77,9 @@ class Table_Controller extends TinyMVC_Controller
 				"endTime" => "24:00:00",
 			);
 			$this->view->assign('formData', $data); // setting default values
+			$this->view->assign("guildNames", $this->guild->getFormList());
 		}
 
-		$this->view->assign("guildNames", $this->guild->getFormList($params));
 		$this->view->assign("timeList", $this->getTimeFormList());
 		$this->view->assign("srv", $this->server_info->getFormList());
 		$this->view->assign("matches", $this->match_detail->getFormList(true));

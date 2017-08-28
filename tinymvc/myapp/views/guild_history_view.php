@@ -95,7 +95,7 @@
 						<label class="control-label"> Viewing Results </label>
 						<select name="page">
 							<? for ($i = 0; $i < count($guildNames) / 100; $i++) { ?>
-								<option <?=$formData['page'] == $i ? 'selected' : ''?> value="<?=$i?>"><?=$i*100?> - <?=($i+1)*100?></option>
+								<option <?=$formData['page'] == $i ? 'selected' : ''?> value="<?=$i?>"><?=($i*100)+1?> - <?=($i+1)*100?></option>
 							<? } ?>
 						</select>
 					</div>
@@ -110,10 +110,13 @@
 <br/>
 <div>
 	<div>
-		<?php $count = $formData['page']*100; ?>
+		<?php $count = 0; ?>
 			<? foreach($data as $a) {
 				$count++;
-				if ($count > ($formData['page']+1)*100) break;
+				if (count($guildNames) > 100) {
+					if ($count < $formData['page']*100+1) continue;
+					if ($count > ($formData['page']+1)*100) break;
+				}
 			?>
 			<a href="#collapse<?=$a['id']?>" data-toggle="collapse">
 				<div class="widget-title">
