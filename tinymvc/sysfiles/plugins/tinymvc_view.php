@@ -130,7 +130,7 @@ class TinyMVC_View
   public function getData() {
 	$data = $_POST;
 	foreach($data as $k=>$v) {
-		$v = mysql_real_escape_string($v);
+		//$v = mysql_real_escape_string($v);
 		if ($v == "NULL" || !isset($v) || $v == "") {
 			unset($data[$k]);
 		}

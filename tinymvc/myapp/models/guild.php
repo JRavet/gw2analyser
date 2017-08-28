@@ -87,7 +87,7 @@ class Guild extends TinyMVC_Model
 	 *			- join=>array("table"=>"t1.col = t2.col")
 	 * @return array() of guild stats for any number of selected guilds
 	 */
-	public function getSummaryList($params=array())
+	public function getSummaryList($params=array(), $offset=NULL)
 	{
 		$this->db->select("g.guild_id as 'id',
 		concat(g.name, ' [', g.tag, ']') as guild_name,
@@ -114,8 +114,10 @@ class Guild extends TinyMVC_Model
 		$this->db->join("match_detail md", "md.id = cah.match_detail_id");
 		$this->db->groupby("ch.claimed_by");
 		$this->db->orderby("COUNT(*) DESC, g.name ASC");
+		if (isset($offset)) {
+			$this->db->limit("18446744073709551615", $offset);
+		}
 		$this->append_query($params);
-		$this->db->limit(100); // TODO arbitrary testing limit
 
 		$results = array();
 		foreach($this->db->query_all() as $row) {

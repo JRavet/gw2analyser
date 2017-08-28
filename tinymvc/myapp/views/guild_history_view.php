@@ -89,6 +89,19 @@
 				</div>
 			</div>
 
+			<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span3">
+						<label class="control-label"> Viewing Results </label>
+						<select name="page">
+							<? for ($i = 0; $i < count($guildNames) / 100; $i++) { ?>
+								<option <?=$formData['page'] == $i ? 'selected' : ''?> value="<?=$i?>"><?=$i*100?> - <?=($i+1)*100?></option>
+							<? } ?>
+						</select>
+					</div>
+				</div>
+			</div>
+
 			<input type="submit" value="Filter">
 			<a class="btn" style="margin-top:5px" href="/table/guild_history">Reset Filter</a>
 		</form>
@@ -97,11 +110,15 @@
 <br/>
 <div>
 	<div>
-		<? foreach($data as $a) { ?>
+		<?php $count = $formData['page']*100; ?>
+			<? foreach($data as $a) {
+				$count++;
+				if ($count > ($formData['page']+1)*100) break;
+			?>
 			<a href="#collapse<?=$a['id']?>" data-toggle="collapse">
 				<div class="widget-title">
 					<span class="icon"><i class="icon-arrow-down"></i></span>
-					<span class="span12"><?=$a['guild_name']?> - <?=$a['claims_total']?> total claims</span>
+					<span class="span12">(<?=$count?>) <?=$a['guild_name']?> - <?=$a['claims_total']?> total claims</span>
 				</div>
 			</a>
 			<div class="collapse" id="collapse<?=$a['id']?>">

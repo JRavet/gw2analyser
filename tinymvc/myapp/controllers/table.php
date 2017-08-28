@@ -46,7 +46,6 @@ class Table_Controller extends TinyMVC_Controller
 			$specialKeys = array(
 				"startDate" => array("key" => "DATE(ch.claimed_at) >=", "val" => date("Y-m-d", strtotime($data['startDate']))),
 				"endDate" => array("key" => "DATE(ch.claimed_at) <=", "val" => date("Y-m-d", strtotime($data['endDate']))),
-
 			); // keys which need to ensure there is data for
 
 			$params = array(
@@ -68,21 +67,18 @@ class Table_Controller extends TinyMVC_Controller
 				}
 			}
 
-			$guildStats = $this->guild->getSummaryList($params);
+			$guildStats = $this->guild->getSummaryList($params, $data['page']*100);
 			$this->view->assign("data", $guildStats);
-			$this->view->assign("guildNames", $guildStats); // also use query data for guild-name-select list
 			$this->view->assign("formData", $data);
 		} else { // fresh page-load
 			$data = array( // setting some default values for fields
-				// "startDate" => date('m/d/Y', strtotime('last Friday')), 
-				// "endDate" => date('m/d/Y', strtotime('next Friday')),
 				"startTime" => "00:00:00",
 				"endTime" => "24:00:00",
 			);
 			$this->view->assign('formData', $data); // setting default values
-			$this->view->assign("guildNames", $this->guild->getFormList());
 		}
 
+		$this->view->assign("guildNames", $this->guild->getFormList($params));
 		$this->view->assign("timeList", $this->getTimeFormList());
 		$this->view->assign("srv", $this->server_info->getFormList());
 		$this->view->assign("matches", $this->match_detail->getFormList(true));
