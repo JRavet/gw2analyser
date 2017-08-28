@@ -12,36 +12,46 @@ class gw2_api extends TinyMVC_Controller {
 	}
 
 	/**
+	 * Requests data from the API until it has valid data; half second delay between attempts
+	 *
+	 * @param url - full url (including arguments) to pull data from
+	 * @return requested data
+	 */
+	private function call_api($url) {
+		$data = json_decode(file_get_contents($url));
+		$delay = 0;
+		while ( is_null($data) || !isset($data) ) {
+			usleep(500000 + $delay*1000000); // half-second + up to 2 seconds delay
+			$data = json_decode(file_get_contents($url));
+			if ($delay < 2) { // until the delay is 2 seconds, add more to it
+				$delay += 0.5;
+			} else { // else delay is maxed: show error of invalid data
+				$this->helper->log_message(501);
+			}
+		}
+		return $data;
+	}
+
+	/**
 	 * Retrieves full match-data for this instances match_id
 	 *
 	 * @return object of match-data
 	**/
 	public function get_match_data()
 	{
-		$match = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?id=' . $this->match_id));
-		$delay = 0;
-		while ( is_null($match) || !isset($match->start_time) )
-		{ // if the api failed in returning data, try again
-			usleep(500000 + ($delay*1000000)); // half-second
-			$match = json_decode(file_get_contents('https://api.guildwars2.com/v2/wvw/matches?id=' . $this->match_id));
-			$this->helper->log_message(501);
-			if ($delay < 2)
-			{ // allow a delay up to 2.5 seconds, for a total of 3 seconds
-				$delay += 0.5; // increase delay by a half second
-			}
-		}
+		$match = $this->call_api('https://api.guildwars2.com/v2/wvw/matches?id=' . $this->match_id);
 
 		return $match;
 	}
 
 	public function get_server_population($server_id)
 	{
-		return json_decode(file_get_contents("https://api.guildwars2.com/v2/worlds?ids=" . $server_id))[0]->population;
+		return $this->call_api("https://api.guildwars2.com/v2/worlds?ids=" . $server_id)[0]->population;
 	}
 
 	public function get_guild($guild_id)
 	{
-		return json_decode(file_get_contents("https://api.guildwars2.com/v1/guild_details.json?guild_id=" . $guild_id));
+		return $this->call_api("https://api.guildwars2.com/v1/guild_details.json?guild_id=" . $guild_id);
 	}
 
 	/**
@@ -51,7 +61,7 @@ class gw2_api extends TinyMVC_Controller {
 	**/
 	public function get_scores()
 	{
-		return json_decode(file_get_contents("https://api.guildwars2.com/v2/wvw/matches/scores?id=" . $this->match_id));
+		return $this->call_api("https://api.guildwars2.com/v2/wvw/matches/scores?id=" . $this->match_id);
 	}
 
 	/**
@@ -61,7 +71,7 @@ class gw2_api extends TinyMVC_Controller {
 	**/
 	public function get_server_info()
 	{
-		return json_decode(file_get_contents("https://api.guildwars2.com/v2/worlds?ids=all"));
+		return $this->call_api("https://api.guildwars2.com/v2/worlds?ids=all");
 	}
 
 	/**
@@ -71,7 +81,7 @@ class gw2_api extends TinyMVC_Controller {
 	**/
 	public function get_guild_upgrades()
 	{
-		return json_decode(file_get_contents("https://api.guildwars2.com/v2/guild/upgrades?ids=all"));
+		return $this->call_api("https://api.guildwars2.com/v2/guild/upgrades?ids=all");
 	}
 
 	/**
@@ -81,7 +91,7 @@ class gw2_api extends TinyMVC_Controller {
 	**/
 	public function get_objectives()
 	{
-		return json_decode(file_get_contents("https://api.guildwars2.com/v2/wvw/objectives?ids=all"));
+		return $this->call_api("https://api.guildwars2.com/v2/wvw/objectives?ids=all");
 	}
 }
 
