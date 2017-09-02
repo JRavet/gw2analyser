@@ -4,32 +4,9 @@
 	<div class="widget-content nopadding">
 		<form action="#" method="POST">
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-				<label class="control-label"> Match Tier </label>
-					<select>
-						<option value="1-1">NA Tier 1</option>
-						<option value="1-2">NA Tier 2</option>
-						<option value="1-3">NA Tier 3</option>
-						<option value="1-4">NA Tier 4</option>
-					</select>
-				</div>
-			</div>
-		</div>
+		<?= $form['matchList'] ?>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-					<label class="control-label"> Server Owner </label>
-					<select>
-						<option value="Maguuma"> Maguuma </option>
-						<option value="Northern Shiverpeaks"> Northern Shiverpeaks </option>
-						<option value="..."> ... </option>
-					</select>
-				</div>
-			</div>
-		</div>
+		<?= $form['serverList'] ?>
 
 		<div class="row-fluid">
 			<div class="control-group">
@@ -53,16 +30,16 @@
 				<th>Red Servers</th>
 				<th>Blue Servers</th>
 				<th>Green Servers</th>
-			<?php foreach($data as $a) { ?>
+			<?php foreach($matches as $match) { ?>
 				<tr>
 
-					<td><input type="checkbox" value='<?=$a['id']?>'></td>
-					<td><?=preg_replace(array("/1\-/","/2\-/"), array("NA Tier ","EU Tier "), $a['match_id'])?></td>
-					<td><?=$a['start_time']?></td>
-					<td><?=$a['end_time']?></td>
-					<td><?=$a['red_servers']?><br/><?=$a['red_skirmish_score']?></td>
-					<td><?=$a['blue_servers']?><br/><?=$a['blue_skirmish_score']?></td>
-					<td><?=$a['green_servers']?><br/><?=$a['green_skirmish_score']?></td>
+					<td><input type="checkbox" value='<?=$match['id']?>'></td>
+					<td><?=preg_replace(array("/1\-/","/2\-/"), array("NA Tier ","EU Tier "), $match['match_id'])?></td>
+					<td><?=$match['start_time']?></td>
+					<td><?=$match['end_time']?></td>
+					<td><?=$match['red_servers']?><br/><?=$match['red_skirmish_score']?></td>
+					<td><?=$match['blue_servers']?><br/><?=$match['blue_skirmish_score']?></td>
+					<td><?=$match['green_servers']?><br/><?=$match['green_skirmish_score']?></td>
 				</tr>
 			<?php } ?>
 			</table>
