@@ -64,6 +64,25 @@ class Form extends TinyMVC_Controller
 		return $el;
 	}
 
+	public function weekdayList($input) {
+		$el = '
+		<div class="row-fluid">
+			<div class="control-group">
+				<div class="controls span12">
+					<label class="control-label"> Days </label>
+					<input type="checkbox" name="weekday[]" ' . (in_array(1, $input) ? 'checked' : '') . ' value="1">Sunday
+					<input type="checkbox" name="weekday[]" ' . (in_array(2, $input) ? 'checked' : '') . ' value="2">Monday
+					<input type="checkbox" name="weekday[]" ' . (in_array(3, $input) ? 'checked' : '') . ' value="3">Tuesday
+					<input type="checkbox" name="weekday[]" ' . (in_array(4, $input) ? 'checked' : '') . ' value="4">Wednesday
+					<input type="checkbox" name="weekday[]" ' . (in_array(5, $input) ? 'checked' : '') . ' value="5">Thursday
+					<input type="checkbox" name="weekday[]" ' . (in_array(6, $input) ? 'checked' : '') . ' value="6">Friday
+					<input type="checkbox" name="weekday[]" ' . (in_array(7, $input) ? 'checked' : '') . ' value="7">Saturday
+				</div>
+			</div>
+		</div>';
+		return $el;
+	}
+
 	public function getTimeFormList() {
 		$times = array();
 		for ($i = 0; $i < 96; $i++) {

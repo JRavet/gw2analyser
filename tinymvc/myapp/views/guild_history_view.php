@@ -23,21 +23,7 @@
 				</div>
 			</div>
 
-			<!-- Weekday selection -->
-			<div class="row-fluid">
-				<div class="control-group">
-					<div class="controls span12">
-						<label class="control-label"> Days </label>
-						<input type="checkbox" name="weekday[]" <?=in_array(1, $formData['weekday']) ? 'checked' : ''?> value="1">Sunday
-						<input type="checkbox" name="weekday[]" <?=in_array(2, $formData['weekday']) ? 'checked' : ''?> value="2">Monday
-						<input type="checkbox" name="weekday[]" <?=in_array(3, $formData['weekday']) ? 'checked' : ''?> value="3">Tuesday
-						<input type="checkbox" name="weekday[]" <?=in_array(4, $formData['weekday']) ? 'checked' : ''?> value="4">Wednesday
-						<input type="checkbox" name="weekday[]" <?=in_array(5, $formData['weekday']) ? 'checked' : ''?> value="5">Thursday
-						<input type="checkbox" name="weekday[]" <?=in_array(6, $formData['weekday']) ? 'checked' : ''?> value="6">Friday
-						<input type="checkbox" name="weekday[]" <?=in_array(7, $formData['weekday']) ? 'checked' : ''?> value="7">Saturday
-					</div>
-				</div>
-			</div>
+			<?= $form['weekdayList'] ?>
 
 			<?= $form['timeList'] ?>
 

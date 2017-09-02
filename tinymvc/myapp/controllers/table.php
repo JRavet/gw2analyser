@@ -82,6 +82,7 @@ class Table_Controller extends TinyMVC_Controller
 		$form['serverList'] = $formBuilder->serverList($data['serverid']);
 		$form['matchList'] = $formBuilder->matchList($data['matchid']);
 		$form['timeList'] = $formBuilder->timeList($data['startTime'], $data['endTime']);
+		$form['weekdayList'] = $formBuilder->weekdayList($data['weekday']);
 
 		$this->view->assign("form", $form);
 		$this->view->display("guild_history_view");
