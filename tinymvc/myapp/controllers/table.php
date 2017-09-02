@@ -66,16 +66,14 @@ class Table_Controller extends TinyMVC_Controller
 				}
 			}
 
-			$guildStats = $this->guild->getSummaryList($params);
-			$guildList = $guildStats; // for form-building
-			$this->view->assign("data", $guildStats);
-			$this->view->assign("formData", $data);
+			$guildList = $this->guild->getSummaryList($params);
+			$this->view->assign("data", $guildList);
 		} else { // fresh page-load
 			$data = array( // setting some default values for fields
 				"startTime" => "00:00:00",
 				"endTime" => "24:00:00",
 			);
-			$guildList = $this->guild->getFormList(); // for form building
+			$guildList = $this->guild->getFormList(); // to fill the guildname select
 		}
 
 		$formBuilder = new Form();
@@ -85,7 +83,13 @@ class Table_Controller extends TinyMVC_Controller
 		$form['weekdayList'] = $formBuilder->weekdayList($data['weekday']);
 		$form['guildList'] = $formBuilder->guildList($data['guildname'], $guildList);
 		$form['pageList'] = $formBuilder->pageList($data['page'], $guildList);
+		$form['dateList'] = $formBuilder->dateList($data['startDate'], $data['endDate']);
+		// for paginating the displayed data
+		$form['pageNum'] = $data['page'];
 		$form['listCount'] = count($guildList);
+		// submit/reset buttons
+		$form['submitBtn'] = $formBuilder->submitBtn();
+		$form['resetBtn'] = $formBuilder->resetBtn("/table/guild_history");
 
 		$this->view->assign("form", $form);
 		$this->view->display("guild_history_view");

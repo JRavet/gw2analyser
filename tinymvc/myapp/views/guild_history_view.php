@@ -4,24 +4,10 @@
 	<div class="widget-content nopadding">
 		<form action="/table/guild_history" method="POST">
 			<?= $form['matchList'] ?>
+
 			<?= $form['serverList'] ?>
-			<!-- Date span -->
-			<div class="row-fluid">
-				<div class="control-group">
-					<div class="controls span12">
-						<label class="control-label"> Claim date-range </label>
-						<div data-date="" class="input-append date datepicker">
-							<input value="<?=$formData['startDate']?>" data-date-format="mm/dd/yyyy" name="startDate" type="text">
-							<span class="add-on"><i class="icon-th"></i></span>
-						</div>
-						-
-						<div data-date="" class="input-append date datepicker">
-							<input value="<?=$formData['endDate']?>" data-date-format="mm/dd/yyyy" name="endDate" type="text">
-							<span class="add-on"><i class="icon-th"></i></span>
-						</div>
-					</div>
-				</div>
-			</div>
+
+			<?= $form['dateList'] ?>
 
 			<?= $form['weekdayList'] ?>
 
@@ -31,8 +17,8 @@
 
 			<?= $form['pageList'] ?>
 
-			<input type="submit" value="Filter">
-			<a class="btn" style="margin-top:5px" href="/table/guild_history">Reset Filter</a>
+			<?= $form['submitBtn'] ?>
+			<?= $form['resetBtn'] ?>
 		</form>
 	</div>
 </div>
@@ -43,8 +29,8 @@
 			<? foreach($data as $a) {
 				$count++;
 				if ($form['listCount'] > 100) {
-					if ($count < $formData['page']*100+1) continue;
-					if ($count > ($formData['page']+1)*100) break;
+					if ($count < $form['pageNum']*100+1) continue;
+					if ($count > ($form['pageNum']+1)*100) break;
 				}
 			?>
 			<a href="#collapse<?=$a['id']?>" data-toggle="collapse">

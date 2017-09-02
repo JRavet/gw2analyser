@@ -64,6 +64,27 @@ class Form extends TinyMVC_Controller
 		return $el;
 	}
 
+	public function dateList($startDate, $endDate) {
+		$el = '<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span12">
+						<label class="control-label"> Claim date-range </label>
+						<div data-date="" class="input-append date datepicker">
+							<input value="' . $startDate . '" data-date-format="mm/dd/yyyy" name="startDate" type="text">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+						-
+						<div data-date="" class="input-append date datepicker">
+							<input value="' . $endDate . '" data-date-format="mm/dd/yyyy" name="endDate" type="text">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+					</div>
+				</div>
+			</div>';
+
+		return $el;
+	}
+
 	public function weekdayList($input) {
 		$el = '
 		<div class="row-fluid">
@@ -116,6 +137,14 @@ class Form extends TinyMVC_Controller
 			</div>
 		</div>';
 		return $el;
+	}
+
+	public function submitBtn() {
+		return '<input type="submit" value="Filter">';
+	}
+
+	public function resetBtn($url) {
+		return '<a class="btn" style="margin-top:5px" href="' . $url . '">Reset Filter</a>';
 	}
 
 	public function getTimeFormList() {
