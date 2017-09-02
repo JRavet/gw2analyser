@@ -83,6 +83,41 @@ class Form extends TinyMVC_Controller
 		return $el;
 	}
 
+	public function guildList($input, $guildNames) {
+		$el = '<div class="row-fluid">
+			<div class="control-group">
+				<div class="controls span3">
+				<label class="control-label"> Guild </label>
+						<input autocomplete="off" name="guildname" type="text" data-provide="typeahead" data-items"' . count($guildNames) . '" value="' . $input .'"
+						data-source=\'["' . implode(array_map(function($el){return $el['guild_name']; }, $guildNames),'","') . '"]\'>
+				</div>
+			</div>
+		</div>';
+		return $el;
+	}
+
+	public function pageList($pageNum, $list) {
+		if ( !isset($pageNum) ) {
+			$pageNum = 0;
+		}
+
+		$el = '<div class="row-fluid">
+			<div class="control-group">
+				<div class="controls span3">
+					<label class="control-label"> Viewing Results </label>
+					<select name="page">';
+
+		for ($i = 0; $i < count($list) / 100; $i++) {
+			$el .= "<option " . ($pageNum == $i ? 'selected' : '') . " value=\"" . $i . "\">" . (($i*100)+1) . " - " . (($i+1)*100) . "</option>\n";
+		}
+
+		$el .= '		</select>
+				</div>
+			</div>
+		</div>';
+		return $el;
+	}
+
 	public function getTimeFormList() {
 		$times = array();
 		for ($i = 0; $i < 96; $i++) {

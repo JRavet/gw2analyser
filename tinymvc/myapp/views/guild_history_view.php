@@ -27,29 +27,9 @@
 
 			<?= $form['timeList'] ?>
 
-			<!-- Guild name -->
-			<div class="row-fluid">
-				<div class="control-group">
-					<div class="controls span3">
-					<label class="control-label"> Guild </label>
-							<input autocomplete="off" name="guildname" type="text" data-provide="typeahead" data-items"<?=count($guildNames)?>" value="<?=$formData['guildname']?>"
-							data-source='[<?='"' . implode(array_map(function($el){return $el['guild_name']; }, $guildNames),'","') . '"'?>]'>
-					</div>
-				</div>
-			</div>
+			<?= $form['guildList'] ?>
 
-			<div class="row-fluid">
-				<div class="control-group">
-					<div class="controls span3">
-						<label class="control-label"> Viewing Results </label>
-						<select name="page">
-							<? for ($i = 0; $i < count($guildNames) / 100; $i++) { ?>
-								<option <?=$formData['page'] == $i ? 'selected' : ''?> value="<?=$i?>"><?=($i*100)+1?> - <?=($i+1)*100?></option>
-							<? } ?>
-						</select>
-					</div>
-				</div>
-			</div>
+			<?= $form['pageList'] ?>
 
 			<input type="submit" value="Filter">
 			<a class="btn" style="margin-top:5px" href="/table/guild_history">Reset Filter</a>
@@ -62,7 +42,7 @@
 		<?php $count = 0; ?>
 			<? foreach($data as $a) {
 				$count++;
-				if (count($guildNames) > 100) {
+				if ($form['listCount'] > 100) {
 					if ($count < $formData['page']*100+1) continue;
 					if ($count > ($formData['page']+1)*100) break;
 				}
