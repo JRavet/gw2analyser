@@ -28,9 +28,9 @@
 		<?php $count = 0; ?>
 			<? foreach($data as $a) {
 				$count++;
-				if ($form['listCount'] > 100) {
-					if ($count < $form['pageNum']*100+1) continue;
-					if ($count > ($form['pageNum']+1)*100) break;
+				if ($form['listCount'] > $form['pageAmount']) {
+					if ($count < $form['pageNum']*$form['pageAmount']+1) continue;
+					if ($count > ($form['pageNum']+1)*$form['pageAmount']) break;
 				}
 			?>
 			<a href="#collapse<?=$a['id']?>" data-toggle="collapse">

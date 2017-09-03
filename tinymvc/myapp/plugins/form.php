@@ -120,7 +120,7 @@ class Form extends TinyMVC_Controller
 		return $el;
 	}
 
-	public function pageList($pageNum, $list) {
+	public function pageList($pageNum, $list, $pageAmount) {
 		if ( !isset($pageNum) ) {
 			$pageNum = 0;
 		}
@@ -131,8 +131,8 @@ class Form extends TinyMVC_Controller
 					<label class="control-label"> Viewing Results </label>
 					<select name="page">';
 
-		for ($i = 0; $i < count($list) / 100; $i++) {
-			$el .= "<option " . ($pageNum == $i ? 'selected' : '') . " value=\"" . $i . "\">" . (($i*100)+1) . " - " . (($i+1)*100) . "</option>\n";
+		for ($i = 0; $i < count($list) / $pageAmount; $i++) {
+			$el .= "<option " . ($pageNum == $i ? 'selected' : '') . " value=\"" . $i . "\">" . (($i*$pageAmount)+1) . " - " . (($i+1)*$pageAmount) . "</option>\n";
 		}
 
 		$el .= '		</select>

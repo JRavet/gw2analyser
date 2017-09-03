@@ -75,12 +75,13 @@ class Table_Controller extends TinyMVC_Controller
 		}
 
 		$formBuilder = new Form();
+		$form['pageAmount'] = 100;
 		$form['serverList'] = $formBuilder->serverList($data['serverid']);
 		$form['matchList'] = $formBuilder->matchList($data['matchid']);
 		$form['timeList'] = $formBuilder->timeList($data['startTime'], $data['endTime']);
 		$form['weekdayList'] = $formBuilder->weekdayList($data['weekday']);
 		$form['guildList'] = $formBuilder->guildList($data['guildname'], $guildList);
-		$form['pageList'] = $formBuilder->pageList($data['page'], $guildList);
+		$form['pageList'] = $formBuilder->pageList($data['page'], $guildList, $form['pageAmount']);
 		$form['dateList'] = $formBuilder->dateList($data['startDate'], $data['endDate']);
 		// for paginating the displayed data
 		$form['pageNum'] = $data['page'];
