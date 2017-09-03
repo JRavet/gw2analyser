@@ -16,7 +16,7 @@ class Form extends TinyMVC_Controller
 						<option value="NULL">All</option>';
 		foreach($srv as $s) {
 			$el .= "<option " . ($input == $s['id'] ? 'selected' : '')
-			. " value=\"" . $s['id'] . "\">" . $s['name'] . "</option>\n";
+			. " value=\"" . $s['id'] . "\">" . preg_replace("/\(\)/", "", $s['name']) . "</option>\n";
 		}
 		$el .= "	</select>
 				</div>
