@@ -67,16 +67,20 @@ class Form extends TinyMVC_Controller
 		return $el;
 	}
 
-	public function dateList($startDate, $endDate) {
+	public function dateList($startDate, $endDate, $halfList=false, $text="Date-range") {
 		$el = '<div class="row-fluid">
 				<div class="control-group">
 					<div class="controls span12">
-						<label class="control-label"> Date-range </label>
+						<label class="control-label">' . $text . ' </label>
 						<div data-date="" class="input-append date datepicker">
 							<input value="' . $startDate . '" data-date-format="mm/dd/yyyy" name="startDate" type="text">
 							<span class="add-on"><i class="icon-th"></i></span>
-						</div>
-						-
+						</div>';
+		if ($halfList === true) {
+			$el .= "</div></div></div>";
+			return $el;
+		}
+		$el .= '				-
 						<div data-date="" class="input-append date datepicker">
 							<input value="' . $endDate . '" data-date-format="mm/dd/yyyy" name="endDate" type="text">
 							<span class="add-on"><i class="icon-th"></i></span>

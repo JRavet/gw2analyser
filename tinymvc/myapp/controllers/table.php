@@ -19,6 +19,9 @@ class Table_Controller extends TinyMVC_Controller
 		$formBuilder = new Form();
 		$form['serverList'] = $formBuilder->serverList($data['serverid']);
 		$form['matchList'] = $formBuilder->matchList($data['matchid']);
+		$form['dateList'] = $formBuilder->dateList($data['startDate'], NULL, true, "Start Date"); // only get half of the datelist
+		$form['submitBtn'] = $formBuilder->submitBtn();
+		$form['resetBtn'] = $formBuilder->resetBtn("/table/match_history");
 
 		$this->view->assign("form", $form);
 		$this->view->assign("matches", $matches);

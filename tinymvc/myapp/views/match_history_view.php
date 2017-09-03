@@ -2,24 +2,16 @@
 <title> History Analyser </title>
 <div class="container-fluid">
 	<div class="widget-content nopadding">
-		<form action="#" method="POST">
+		<form action="/table/match_history" method="POST">
 
 		<?= $form['matchList'] ?>
 
 		<?= $form['serverList'] ?>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span12">
-					<label class="control-label"> Match Start Date </label>
-					<div data-date="" class="input-append date datepicker">
-						<input value="07-21-2017" data-date-format="mm-dd-yyyy" class="span10" type="text">
-						<span class="add-on"><i class="icon-th"></i></span>
-					</div>
-				</div>
-			</div>
-		</div>
+		<?= $form['dateList'] ?>
 
+		<?= $form['submitBtn'] ?>
+		<?= $form['resetBtn'] ?>
 		</form>
 
 			<table class="table table-bordered table-striped with-check">
