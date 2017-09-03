@@ -49,10 +49,13 @@ class Form extends TinyMVC_Controller
 	public function timeList($startTime, $endTime) {
 		$timeList = $this->getTimeFormList();
 
+		$startTime = isset($startTime) ? $startTime : "00:00:00";
+		$endTime = isset($endTime) ? $endTime : "24:00:00";
+
 		$el = '<div class="row-fluid">
 				<div class="control-group">
 					<div class="controls span12">
-						<label class="control-label"> Claim time-range </label>
+						<label class="control-label"> Time of day </label>
 						<input autocomplete="off" name="startTime" class="span3" data-provide="typeahead" data-items="' . count($timeList) . '" type="text"
 						data-source=\'["' . implode($timeList,'","') . '"]\' value="' . $startTime . '">
 						-
@@ -68,7 +71,7 @@ class Form extends TinyMVC_Controller
 		$el = '<div class="row-fluid">
 				<div class="control-group">
 					<div class="controls span12">
-						<label class="control-label"> Claim date-range </label>
+						<label class="control-label"> Date-range </label>
 						<div data-date="" class="input-append date datepicker">
 							<input value="' . $startDate . '" data-date-format="mm/dd/yyyy" name="startDate" type="text">
 							<span class="add-on"><i class="icon-th"></i></span>

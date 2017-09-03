@@ -1,5 +1,7 @@
 <?php
 
+//ini_set("display_errors", 1);
+
 class Table_Controller extends TinyMVC_Controller
 {
 	public function match_history()
@@ -69,10 +71,6 @@ class Table_Controller extends TinyMVC_Controller
 			$guildList = $this->guild->getSummaryList($params);
 			$this->view->assign("data", $guildList);
 		} else { // fresh page-load
-			$data = array( // setting some default values for fields
-				"startTime" => "00:00:00",
-				"endTime" => "24:00:00",
-			);
 			$guildList = $this->guild->getFormList(); // to fill the guildname select
 		}
 
