@@ -146,6 +146,26 @@ class Form extends TinyMVC_Controller
 		return $el;
 	}
 
+	public function objectiveTypeList($input) {
+
+		$el = '<div class="row-fluid">
+			<div class="control-group">
+				<div class="controls span3">
+					<label class="control-label"> Objective Type </label>
+					<select name="objectiveType">
+						<option ' . ($input == 'Castle' ? 'selected' : '') . ' value="Castle"> Castle </option>
+						<option ' . ($input == 'Keep' ? 'selected' : '') . ' value="Keep"> Keep </option>
+						<option ' . ($input == 'Tower' ? 'selected' : '') . ' value="Tower"> Tower </option>
+						<option ' . ($input == 'Camp' ? 'selected' : '') . ' value="Camp"> Camp </option>
+						<option ' . ($input == 'Ruin' ? 'selected' : '') . ' value="Ruin"> Ruin </option>
+					</select>
+				</div>
+			</div>
+		</div>';
+
+		return $el;
+	}
+
 	public function submitBtn() {
 		return '<input type="submit" value="Filter">';
 	}

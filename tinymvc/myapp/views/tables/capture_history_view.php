@@ -2,87 +2,25 @@
 <title> History Analyser </title>
 <div class="container-fluid">
 	<div class="widget-content nopadding">
-		<form action="#" method="POST">
+		<form action="/table/capture_history" method="POST">
+			<?= $form['matchList'] ?>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-				<label class="control-label"> Match Tier </label>
-					<select>
-						<option value="1-1">NA Tier 1</option>
-						<option value="1-2">NA Tier 2</option>
-						<option value="1-3">NA Tier 3</option>
-						<option value="1-4">NA Tier 4</option>
-					</select>
-				</div>
-			</div>
-		</div>
+			<?= $form['serverList'] ?>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-					<label class="control-label"> Objective Type </label>
-					<select>
-						<option value="Castle"> Castle </option>
-						<option value="Keep"> Keep </option>
-						<option value="Tower"> Tower </option>
-						<option value="Camp"> Camp </option>
-						<option value="Ruin"> Ruin </option>
-					</select>
-				</div>
-			</div>
-		</div>
+			<?= $form['objectiveTypeList'] ?>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-					<label class="control-label"> Server Owner </label>
-					<select>
-						<option value="Maguuma"> Maguuma </option>
-						<option value="Northern Shiverpeaks"> Northern Shiverpeaks </option>
-						<option value="..."> ... </option>
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span12">
-					<label class="control-label"> Last Flipped - Date range </label>
-					<div data-date="" class="input-append date datepicker">
-						<input value="07-21-2017" data-date-format="mm-dd-yyyy" class="span10" type="text">
-						<span class="add-on"><i class="icon-th"></i></span>
-					</div>
+			<?= $form['dateList'] ?>
 
-					-
+			<?= $form['weekdayList'] ?>
 
-					<div data-date="" class="input-append date datepicker">
-						<input value="07-28-2017" data-date-format="mm-dd-yyyy" class="span10" type="text">
-						<span class="add-on"><i class="icon-th"></i></span>
-					</div>
-				</div>
-			</div>
+			<?= $form['timeList'] ?>
 
-			<div class="control-group">
-				<div class="controls span12">
-					<label class="control-label"> Last Flipped - Time span (per day) </label>
-					<input placeholder="HH:MM:SS" class="span3" type="text">
-					-
-					<input placeholder="HH:MM:SS" class="span3" type="text">
-				</div>
-			</div>
-		</div>
+			<?= $form['guildList'] ?>
 
-		<div class="row-fluid">
-			<div class="control-group">
-				<div class="controls span3">
-					<label class="control-label"> Claimed By </label>
-					<input class="span7" placeholder="Guild name" type="text">
-					<input class="span5" placeholder="Guild tag" type="text">
-				</div>
-			</div>
-		</div>
+			<?= $form['pageList'] ?>
 
+			<?= $form['submitBtn'] ?>
+			<?= $form['resetBtn'] ?>
 		</form>
 
 			<table class="table table-bordered">
@@ -93,57 +31,48 @@
 				<th class="span2"> Server </th>
 				<th class="span4"> Duration Held </th>
 			</table>
-			<?php
-			foreach($data as $ch) {
+			<? foreach($captureList as $ch) {
 				if (preg_match("/Ruins|Spawn/i",$ch['place'])) continue; ?>
 
-				<a href="#collapse<?=$ch['id']?>" data-toggle="collapse"> 
 				<div class="widget-title" style="Background-color: <?switch ($ch["owner_color"]){
-						case "Red": echo "#ff8c95"; break;
-						case "Blue": echo "#8c8fff"; break;
-						case "Green": echo "#8cff9f"; break;
+						case "Red": echo $redServer; break;
+						case "Blue": echo $blueServer; break;
+						case "Green": echo $greenServer; break;
 						default: echo "light-grey"; break;
-					}?>">
-				<span class="icon"><i class="icon-arrow-down"></i></span>
-				<tr style="Background-color: <?switch ($ch["owner_color"]){
-						case "Red": echo "#ff8c95"; break;
-						case "Blue": echo "#8c8fff"; break;
-						case "Green": echo "#8cff9f"; break;
-						default: echo "light-grey"; break;
-					}?>">
-				<span class="span3"> <?= $ch['last_flipped'] ?> </span>
-				<span class="span2"> <?= $ch['name'] ?> </span>
-				<span class="span1"> <?= $ch['place'] ?> </span>
-				<span class="span1"> <?= $ch['map_type'] ?> </span>
-				<span class="span2"> <?= $ch['server_owner'] ?> </span>
-				<span class="span3"> <?= $ch['duration_owned'] ?> </span>
+				}?>">
+				<? if ( !empty($ch['details']) ) { ?>
+					<a href="#collapse<?=$ch['id']?>" data-toggle="collapse"> 
+					<span title="Click to expand" class="icon"><i class="icon-arrow-down"></i></span>
+				<? } else { ?>
+					<span title="No further information" class="icon"><i class="icon-lock"></i></span>
+				<? } ?>
+				<tr>
+					<span class="span3"> <?= $ch['last_flipped'] ?> </span>
+					<span class="span2"> <?= $ch['name'] ?> </span>
+					<span class="span1"> <?= $ch['place'] ?> </span>
+					<span class="span1"> <?= $ch['map_type'] ?> </span>
+					<span class="span2"> <?= $ch['server_owner'] ?> </span>
+					<span class="span3"> <?= $ch['duration_owned'] ?> </span>
 				</tr>
-				</div></a>
+				</a>
+				</div>
 				<div class="collapse" id="collapse<?=$ch['id']?>">
 					<div class="widget-content">
 					<table class="table table-bordered data-table">
 					<th class="span2"> Type </th> <th class="span4"> Timestamp </th> <th class="span4"> Name </th> <th class="span2"> Duration Claimed </th>
-				<?php
-				foreach($ch['details'] as $c)
-				{
-				?>
+				<? foreach($ch['details'] as $c) {	?>
 					<tr>
 						<td><?= $c['type'] ?></td>
-					<?php
-					foreach($c as $k=>$v)
-					{
+						<? foreach($c as $k=>$v) {
 						if (preg_match("/type|capture_history_id|^id/i",$k)) continue; ?>
-						<td><?=$v?></td>
-					<?php
-					}
-					?>
+							<td><?=$v?></td>
+						<? } ?>
 					</tr>
-					<?php
-				} ?>
+				<? } ?>
 				</table>
 				</div>
 				</div>
-			<?php }	?>
+			<? } ?>
 	</div>
 </div>
 <!--

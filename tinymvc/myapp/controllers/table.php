@@ -66,9 +66,37 @@ class Table_Controller extends TinyMVC_Controller
 	public function capture_history()
 	{
 		$this->load->model('capture_history');
-		$data = $this->capture_history->getList(); // get all
+		$this->load->model('guild');
 
-		$this->view->assign("data", $data);
+		if ($this->view->form_submitted()) {
+
+			$data = $this->view->getData();
+
+			$captureList = $this->capture_history->getList($params);
+
+		}
+
+		$guildList = $this->guild->getFormList(); // to fill the guildname select
+
+		$formBuilder = new Form();
+		$form['pageAmount'] = 300;
+		$form['serverList'] = $formBuilder->serverList($data['serverid']);
+		$form['matchList'] = $formBuilder->matchList($data['matchid']);
+		$form['timeList'] = $formBuilder->timeList($data['startTime'], $data['endTime']);
+		$form['weekdayList'] = $formBuilder->weekdayList($data['weekday']);
+		$form['objectiveTypeList'] = $formBuilder->objectiveTypeList($data['objectiveType']);
+		$form['guildList'] = $formBuilder->guildList($data['guildname'], $guildList);
+		$form['pageList'] = $formBuilder->pageList($data['page'], $captureList, $form['pageAmount']);
+		$form['dateList'] = $formBuilder->dateList($data['startDate'], $data['endDate']);
+		// for paginating the displayed data
+		$form['pageNum'] = $data['page'];
+		$form['listCount'] = count($captureList);
+		// submit/reset buttons
+		$form['submitBtn'] = $formBuilder->submitBtn();
+		$form['resetBtn'] = $formBuilder->resetBtn("/table/guild_history");
+
+		$this->view->assign("form", $form);
+		$this->view->assign("captureList", $captureList);
 		$this->view->display('tables/capture_history_view');
 	}
 
