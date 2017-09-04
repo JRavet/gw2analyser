@@ -12,10 +12,9 @@ class match_detail extends TinyMVC_Model
 	protected $_table = "match_detail";
 	protected $pk = "id";
 
-	public function getList()
+	public function getList($params=array())
 	{
-		$data = $this->db->pdo->query("
-			SELECT md.id, md.start_time, md.end_time, md.match_id,
+		$this->db->select("md.id, md.start_time, md.end_time, md.match_id,
 			max(red_skirmish_score) as red_skirmish_score,
 			max(blue_skirmish_score) as blue_skirmish_score,
 			max(green_skirmish_score) as green_skirmish_score,
@@ -33,15 +32,15 @@ class match_detail extends TinyMVC_Model
 					FROM server_linking sl
 					LEFT JOIN server_info si on si.server_id = sl.server_id
 					WHERE server_color = 'Green' AND md.id = sl.match_detail_id
-				) green_servers
-			FROM match_detail md
-			LEFT JOIN skirmish_score sc on sc.match_detail_id = md.id
-			GROUP BY md.id
-			ORDER BY md.start_time DESC, md.match_id;"
-		);
+				) green_servers");
+		$this->db->from($this->_table . " md");
+		$this->db->join("skirmish_score sc", "sc.match_detail_id = md.id");
+		$this->db->join("server_linking sl", "sl.match_detail_id = md.id");
+		$this->db->groupby("md.id");
+		$this->db->orderby("md.start_time DESC, md.match_id");
+		$this->append_query($params);
 
-		return $data;
-
+		return $this->db->query_all();
 	}
 
 	public function getWeekNumbers() {

@@ -12,6 +12,34 @@ class Table_Controller extends TinyMVC_Controller
 
 			$data = $this->view->getData();
 
+			if ( !empty($data['matchids']) ) { // selecting match_detail_ids for use in other pages
+				$_SESSION['matchids'] = $data['matchids'];
+				$params = array(
+					"wherein" => array(
+						"md.id" => $data['matchids']
+					)
+				);
+			} else {
+				$specialKeys = array(
+					"startDate" => array("key" => "DATE(md.start_time) =", "val" => date("Y-m-d", strtotime($data['startDate']))),
+				); // keys which need to ensure there is data for
+
+				$params = array(
+					"where" => array (
+						"sl.server_id" => $data['serverid'],
+						"md.match_id LIKE" => $data['matchid'],
+					)
+				);
+
+				foreach($specialKeys as $k=>$v) { // special empty-checks for these keys and values
+					if ( isset($data[$k]) && $data[$k] != "") {
+						$params["where"][$v['key']] = $v['val'];
+					}
+				}
+			}
+
+			$matches = $this->match_detail->getList($params);
+
 		} else {
 			$matches = $this->match_detail->getList(); // get all
 		}
@@ -22,6 +50,7 @@ class Table_Controller extends TinyMVC_Controller
 		$form['dateList'] = $formBuilder->dateList($data['startDate'], NULL, true, "Start Date"); // only get half of the datelist
 		$form['submitBtn'] = $formBuilder->submitBtn();
 		$form['resetBtn'] = $formBuilder->resetBtn("/table/match_history");
+		$form['matchids'] = $data['matchids'];
 
 		$this->view->assign("form", $form);
 		$this->view->assign("matches", $matches);
