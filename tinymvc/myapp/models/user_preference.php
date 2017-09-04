@@ -25,9 +25,9 @@ class user_preference extends TinyMVC_Model
 		$defaults = array(
 			"bgColor1"    => "white",
 			"bgColor2"    => "gray",
-			"redServer"   => "#ff8c95",
-			"blueServer"  => "#8c8fff",
-			"greenServer" => "#8cff9f"
+			"redServer"   => "#ffc6c6",
+			"blueServer"  => "#c6ceff",
+			"greenServer" => "#c6ffc6"
 		);
 		if ( isset($this->user_id) ) { // user logged in, get prefs
 
