@@ -72,8 +72,33 @@ class Table_Controller extends TinyMVC_Controller
 
 			$data = $this->view->getData();
 
-			$captureList = $this->capture_history->getList($params);
+			$specialKeys = array(
+				"startDate" => array("key" => "DATE(ch.claimed_at) >=", "val" => date("Y-m-d", strtotime($data['startDate']))),
+				"endDate" => array("key" => "DATE(ch.claimed_at) <=", "val" => date("Y-m-d", strtotime($data['endDate']))),
+			); // keys which need to ensure there is data for
 
+			$params = array(
+				"where" => array(
+					"md.match_id LIKE" => $data['matchid'],
+					"concat(g.name, ' [', g.tag, ']') LIKE" => "%" . $data['guildname'] . "%",
+					"ch.owner_server" => $data['serverid'],
+					"TIME(ch.last_flipped) >=" => $data['startTime'],
+					"TIME(ch.last_flipped) <=" => $data['endTime'],
+					"o.type" => $data['objectiveType']
+				),
+				"wherein" => array(
+					"DAYOFWEEK(ch.last_flipped)" => $data['weekday']
+				)
+			);
+
+			foreach($specialKeys as $k=>$v) { // special empty-checks for these keys and values
+				if ( isset($data[$k]) && $data[$k] != "") {
+					$params["where"][$v['key']] = $v['val'];
+				}
+			}
+
+			$captureList = $this->capture_history->getList($params);
+			$this->view->assign("captureList", $captureList);
 		}
 
 		$guildList = $this->guild->getFormList(); // to fill the guildname select
@@ -93,10 +118,9 @@ class Table_Controller extends TinyMVC_Controller
 		$form['listCount'] = count($captureList);
 		// submit/reset buttons
 		$form['submitBtn'] = $formBuilder->submitBtn();
-		$form['resetBtn'] = $formBuilder->resetBtn("/table/guild_history");
+		$form['resetBtn'] = $formBuilder->resetBtn("/table/capture_history");
 
 		$this->view->assign("form", $form);
-		$this->view->assign("captureList", $captureList);
 		$this->view->display('tables/capture_history_view');
 	}
 

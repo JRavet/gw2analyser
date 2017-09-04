@@ -31,8 +31,14 @@
 				<th class="span2"> Server </th>
 				<th class="span4"> Duration Held </th>
 			</table>
+			<? $count = 0; ?>
 			<? foreach($captureList as $ch) {
-				if (preg_match("/Ruins|Spawn/i",$ch['place'])) continue; ?>
+				if (preg_match("/Ruins|Spawn/i",$ch['place'])) continue;
+				$count++;
+				if ($form['listCount'] > $form['pageAmount']) {
+					if ($count < $form['pageNum']*$form['pageAmount']+1) continue;
+					if ($count > ($form['pageNum']+1)*$form['pageAmount']) break;
+				} ?>
 
 				<div class="widget-title" style="Background-color: <?switch ($ch["owner_color"]){
 						case "Red": echo $redServer; break;
@@ -47,7 +53,8 @@
 					<span title="No further information" class="icon"><i class="icon-lock"></i></span>
 				<? } ?>
 				<tr>
-					<span class="span3"> <?= $ch['last_flipped'] ?> </span>
+					<span class="span1"> (<?= $count ?>) </span>
+					<span class="span2"> <?= $ch['last_flipped'] ?> </span>
 					<span class="span2"> <?= $ch['name'] ?> </span>
 					<span class="span1"> <?= $ch['place'] ?> </span>
 					<span class="span1"> <?= $ch['map_type'] ?> </span>

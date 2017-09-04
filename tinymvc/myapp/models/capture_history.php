@@ -78,15 +78,18 @@ class capture_history extends TinyMVC_Model
 		}
 	}
 
-	public function getList()
+	public function getList($params=array())
 	{
 		$this->db->select("ch.id, timeStamp, last_flipped, owner_color, si.name, o.name,
 			concat(o.compass_direction, ' ', o.type) as 'place', o.map_type, duration_owned, si.name as server_owner");
 		$this->db->from($this->_table . " ch");
 		$this->db->join("objective o", "o.obj_id = ch.obj_id");
 		$this->db->join("server_info si", "si.server_id = ch.owner_server");
-		$this->db->orderby("ch.last_flipped desc");
-		$this->db->limit(100);
+		$this->db->join("match_detail md", "md.id = ch.match_detail_id");
+		$this->db->join("claim_history chi", "chi.capture_history_id = ch.id");
+		$this->db->join("guild g", "g.guild_id = chi.claimed_by");
+		$this->db->orderby("ch.last_flipped asc");
+		$this->append_query($params);
 
 		$results = array();
 

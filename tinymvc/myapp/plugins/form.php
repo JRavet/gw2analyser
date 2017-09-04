@@ -153,6 +153,7 @@ class Form extends TinyMVC_Controller
 				<div class="controls span3">
 					<label class="control-label"> Objective Type </label>
 					<select name="objectiveType">
+						<option ' . (!isset($input) ? 'selected' : '') . ' value="NULL"> All </option>
 						<option ' . ($input == 'Castle' ? 'selected' : '') . ' value="Castle"> Castle </option>
 						<option ' . ($input == 'Keep' ? 'selected' : '') . ' value="Keep"> Keep </option>
 						<option ' . ($input == 'Tower' ? 'selected' : '') . ' value="Tower"> Tower </option>
