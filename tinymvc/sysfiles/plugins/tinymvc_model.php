@@ -94,6 +94,9 @@ class TinyMVC_Model
         if ( isset($v) && !empty($v) ) $this->db->in($k, (array)$v);
       }
     }
+    if (isset($params['limit'])) {
+      $this->db->limit($params['limit']);
+    }
   }
 
   function find($data, $order_by=array()) {

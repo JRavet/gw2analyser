@@ -22,7 +22,9 @@
 			<?= $form['submitBtn'] ?>
 			<?= $form['resetBtn'] ?>
 		</form>
-
+		<? if ( count($captureList) == $form['dataLimit'] ) { ?>
+			<span>Limited to <?= $form['dataLimit'] ?> results</span>
+		<? } ?>
 			<table class="table table-bordered">
 				<th class="span3"> Last Flipped </th>
 				<th class="span2"> Name </th>

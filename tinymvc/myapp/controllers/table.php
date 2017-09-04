@@ -71,6 +71,7 @@ class Table_Controller extends TinyMVC_Controller
 		if ($this->view->form_submitted()) {
 
 			$data = $this->view->getData();
+			$form['dataLimit'] = 5000; // otherwise may be too much
 
 			$specialKeys = array(
 				"startDate" => array("key" => "DATE(ch.claimed_at) >=", "val" => date("Y-m-d", strtotime($data['startDate']))),
@@ -88,7 +89,8 @@ class Table_Controller extends TinyMVC_Controller
 				),
 				"wherein" => array(
 					"DAYOFWEEK(ch.last_flipped)" => $data['weekday']
-				)
+				),
+				"limit" => $form['dataLimit']
 			);
 
 			foreach($specialKeys as $k=>$v) { // special empty-checks for these keys and values
