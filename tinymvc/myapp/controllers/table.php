@@ -60,7 +60,7 @@ class Table_Controller extends TinyMVC_Controller
 
 		$this->view->assign("form", $form);
 		$this->view->assign("matches", $matches);
-		$this->view->display('match_history_view');
+		$this->view->display('tables/match_history_view');
 	}
 
 	public function capture_history()
@@ -69,7 +69,7 @@ class Table_Controller extends TinyMVC_Controller
 		$data = $this->capture_history->getList(); // get all
 
 		$this->view->assign("data", $data);
-		$this->view->display('capture_history_view');
+		$this->view->display('tables/capture_history_view');
 	}
 
 	public function guild_history()
@@ -129,7 +129,7 @@ class Table_Controller extends TinyMVC_Controller
 		$form['resetBtn'] = $formBuilder->resetBtn("/table/guild_history");
 
 		$this->view->assign("form", $form);
-		$this->view->display("guild_history_view");
+		$this->view->display('tables/guild_history_view');
 	}
 }
 ?>

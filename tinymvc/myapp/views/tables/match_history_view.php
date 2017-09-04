@@ -23,7 +23,6 @@
 				<th>Green Servers</th>
 			<?php foreach($matches as $match) { ?>
 				<tr>
-
 					<td><input type="checkbox" <?= in_array($match['id'], $form['matchids']) ? 'checked' : '' ?> name="matchids[]" value='<?=$match['id']?>'></td>
 					<td><?=preg_replace(array("/1\-/","/2\-/"), array("NA Tier ","EU Tier "), $match['match_id'])?></td>
 					<td><?=$match['start_time']?></td>
