@@ -13,12 +13,18 @@ class Table_Controller extends TinyMVC_Controller
 			$data = $this->view->getData();
 
 			if ( !empty($data['matchids']) ) { // selecting match_detail_ids for use in other pages
-				$_SESSION['matchids'] = $data['matchids'];
-				$params = array(
-					"wherein" => array(
-						"md.id" => $data['matchids']
-					)
-				);
+				session_start();
+				if ( isset($data['unset']) ) { // user wants to unset search params
+					unset($_SESSION['matchids']); // remove matchids from $_SESSION
+					unset($data['matchids']); // remove auto-checking too
+				} else { // user wants to set matchids for future use
+					$_SESSION['matchids'] = $data['matchids'];
+					$params = array(
+						"wherein" => array(
+							"md.id" => $data['matchids']
+						)
+					);
+				}
 			} else {
 				$specialKeys = array(
 					"startDate" => array("key" => "DATE(md.start_time) =", "val" => date("Y-m-d", strtotime($data['startDate']))),

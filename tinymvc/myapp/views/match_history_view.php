@@ -3,7 +3,6 @@
 <div class="container-fluid">
 	<div class="widget-content nopadding">
 		<form action="/table/match_history" method="POST">
-
 		<?= $form['matchList'] ?>
 
 		<?= $form['serverList'] ?>
@@ -35,7 +34,8 @@
 				</tr>
 			<?php } ?>
 			</table>
-			<input type="submit" class="btn" value="Set search parameters for all pages">
+			<input type="submit" class="btn" name="set" value="Set search parameters for all pages">
+			<input type="submit" class="btn" name="unset" value="Unset search parameters for all pages">
 		</form>
 	</div>
 </div>
