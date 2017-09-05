@@ -45,6 +45,24 @@ class Form extends TinyMVC_Controller
 		return $el;
 	}
 
+	public function mapList($input) {
+		$el = '<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span3">
+					<label class="control-label"> Map </label>
+						<select id="map" name="map">
+							<option value="NULL"> All </option>
+							<option ' . ($input == "Center" ? "selected" : '') . ' value="Center"> Eternal Battlegrounds </option>
+							<option ' . ($input == "GreenHome" ? "selected" : '') . ' value="GreenHome"> Green Borderlands </option>
+							<option ' . ($input == "BlueHome" ? "selected" : '') . ' value="BlueHome"> Blue Borderlands </option>
+							<option ' . ($input == "RedHome" ? "selected" : '') . ' value="RedHome"> Red Borderlands </option>
+						</select>
+					</div>
+				</div>
+			</div>';
+		return $el;
+	}
+
 	public function matchList($input) {
 		$this->load->model("match_detail");
 

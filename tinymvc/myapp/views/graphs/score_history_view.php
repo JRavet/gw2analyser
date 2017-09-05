@@ -10,6 +10,7 @@
 				<span class="label label-warning"><?=$error?></span>
 			<? } ?>
 			<hr/>
+			<?= $form['mapList'] ?>
 			<?= $form['dateList'] ?>
 			<?= $form['timeList'] ?>
 			<?= $form['submitBtn'] ?>
@@ -18,6 +19,8 @@
 	</div>
 </div>
 <br/>
+
+<? print_r($scores); ?>
 
 <div class="row-fluid">
 	<div class="span6">
@@ -76,3 +79,8 @@
 	</div>
 </div>
 <?php include "static/includes/footer.php"; ?>
+<script>
+	$(document).ready(function(){
+
+	});
+</script>

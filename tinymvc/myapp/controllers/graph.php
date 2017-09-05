@@ -20,7 +20,7 @@ class Graph_Controller extends TinyMVC_Controller
 				"where" => array(
 					"TIME(s.timeStamp) >=" => $data['startTime'],
 					"TIME(s.timeStamp) <=" => $data['endTime'],
-					"md.start_time" => $data['matchDate']
+					"md.start_time" => $data['matchDate'],
 				)
 			);
 
@@ -31,7 +31,7 @@ class Graph_Controller extends TinyMVC_Controller
 			}
 
 			if ( isset($data['serverid']) ) { // filter by server's id first
-				$params['where']['server_id'] = $data['serverid'];
+				$params['where']['sl.server_id'] = $data['serverid'];
 			} elseif( isset($data['matchid']) ) { // filter by match_id if no server id provided
 				$params['where']['match_id'] = $data['matchid'];
 			} else {
@@ -39,7 +39,8 @@ class Graph_Controller extends TinyMVC_Controller
 			}
 
 			if ( !isset($error) ) {
-				$score_history = $this->map_score->getScores($params);
+				$score_history = $this->map_score->getScores($params, $data['map']);
+					// the second parameter in above is required because skirmish_score doesn't have maps
 				$skirmish_history = $this->skirmish_score->getScores($params);
 
 				$this->view->assign("scores", $score_history);
@@ -54,6 +55,7 @@ class Graph_Controller extends TinyMVC_Controller
 		$form['matchList'] = $formBuilder->matchList($data['matchid']);
 		$form['timeList'] = $formBuilder->timeList($data['startTime'], $data['endTime']);
 		$form['dateList'] = $formBuilder->matchDatesList($data['matchDate']);
+		$form['mapList'] = $formBuilder->mapList($data['map']);
 		$form['submitBtn'] = $formBuilder->submitBtn();
 		$form['resetBtn'] = $formBuilder->resetBtn("/graph/score_history");
 
