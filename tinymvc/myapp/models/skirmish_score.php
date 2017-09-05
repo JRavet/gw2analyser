@@ -15,6 +15,15 @@ class skirmish_score extends TinyMVC_Model
 {
 	protected $_table = "skirmish_score";
 	protected $pk = "id";
+
+	public function getScores($params) {
+		$this->db->select("*");
+		$this->db->from($this->_table . " s");
+		$this->db->join("match_detail md", "md.id = s.match_detail_id");
+		$this->db->join("server_linking sl", "sl.match_detail_id = md.id");
+		$this->append_query($params);
+		return $this->db->query_all();
+	}
 }
 
 ?>

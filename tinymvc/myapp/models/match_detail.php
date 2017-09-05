@@ -43,11 +43,11 @@ class match_detail extends TinyMVC_Model
 		return $this->db->query_all();
 	}
 
-	public function getWeekNumbers() {
-		$this->db->select("week_num");
+	public function getMatchDates() {
+		$this->db->select("start_time, end_time");
 		$this->db->from($this->_table);
-		$this->db->orderby("week_num DESC");
-		$this->db->groupby("week_num");
+		$this->db->orderby("start_time DESC");
+		$this->db->groupby("start_time");
 
 		return $this->db->query_all();
 	}

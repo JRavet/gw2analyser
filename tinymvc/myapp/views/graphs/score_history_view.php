@@ -3,69 +3,76 @@
 <div class="container-fluid">
 	<div class="widget-content nopadding">
 		<form action="/graph/score_history" method="POST">
-			<!-- Match region and tier -->
-			<div class="row-fluid">
-				<div class="control-group">
-					<div class="controls span2">
-					<label class="control-label"> Match Tier </label>
-						<select id="matchid" name="matchid">
-							<option value="NULL">All</option>
-							<?php foreach($matches as $k=>$v) { ?>
-								<option <?=$formData['matchid'] == $v ? 'selected' : ''?> value="<?=$v?>"><?=$k?></option>
-							<?php } ?>
-						</select>
-					</div>
-					<div class="span1">
-					- OR -
-					</div>
-					<div class="controls span2">
-					<label class="control-label"> Owner Server </label>
-						<select id="serverid" name="serverid">
-							<option value="NULL">All</option>
-							<?php foreach($srv as $s) { ?>
-								<option <?=$formData['serverid'] == $s['id'] ? 'selected' : ''?> value="<?=$s['id']?>"><?=$s['name']?></option>
-							<?php } ?>
-						</select>
-					</div>
-				</div>
-			</div>
-
-			<!-- Week number -->
-			<div class="row-fluid">
-				<div class="control-group">
-					<div class="controls span3">
-						<label class="control-label"> Week number </label>
-						<select name="weekNum">
-							<?php foreach($week_numbers as $n) { ?>
-								<option <?=$formData['weekNum'] == $n['week_num'] ? 'selected' : ''?> value="<?=$n['week_num']?>"><?=$n['week_num']?></option>
-							<?php } ?>
-						</select>
-					</div>
-				</div>
-			</div>
-
-			<!-- Time span -->
-			<div class="row-fluid">
-				<div class="control-group">
-					<div class="controls span12">
-						<!-- TODO: slider; selecting weeknum ajax's to filter it properly -->
-					</div>
-				</div>
-			</div>
-
-			<input type="submit" value="Filter">
-			<a class="btn" style="margin-top:5px" href="/graph/score_history">Reset Filter</a>
+			<?= $form['matchList'] ?>
+			<b>OR</b>
+			<?= $form['serverList'] ?>
+			<? if ( isset($error) ) { ?>
+				<span class="label label-warning"><?=$error?></span>
+			<? } ?>
+			<hr/>
+			<?= $form['dateList'] ?>
+			<?= $form['timeList'] ?>
+			<?= $form['submitBtn'] ?>
+			<?= $form['resetBtn'] ?>
 		</form>
 	</div>
 </div>
 <br/>
-<div>
-	<div>
 
+<div class="row-fluid">
+	<div class="span6">
+		<div class="widget-box">
+		<div class="widget-title"> <span class="icon"> <i class="icon-signal"></i> </span>
+			<h5>PPT</h5>
+		</div>
+		<div class="widget-content">
+			<div id="ppt" class="chart"></div>
+		</div>
+		</div>
+	</div>
+	<div class="span6">
+		<div class="widget-box">
+		<div class="widget-title"> <span class="icon"> <i class="icon-signal"></i> </span>
+			<h5>Score</h5>
+		</div>
+		<div class="widget-content">
+			<div id="scores" class="chart"></div>
+		</div>
+		</div>
 	</div>
 </div>
-<!--
-
--->
-
+<div class="row-fluid">
+	<div class="span6">
+		<div class="widget-box">
+		<div class="widget-title"> <span class="icon"> <i class="icon-signal"></i> </span>
+			<h5>Kills</h5>
+		</div>
+		<div class="widget-content">
+			<div id="kills" class="chart"></div>
+		</div>
+		</div>
+	</div>
+	<div class="span6">
+		<div class="widget-box">
+		<div class="widget-title"> <span class="icon"> <i class="icon-signal"></i> </span>
+			<h5>Deaths</h5>
+		</div>
+		<div class="widget-content">
+			<div id="deaths" class="chart"></div>
+		</div>
+		</div>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6">
+		<div class="widget-box">
+		<div class="widget-title"> <span class="icon"> <i class="icon-signal"></i> </span>
+			<h5>KDR</h5>
+		</div>
+		<div class="widget-content">
+			<div id="kdr" class="chart"></div>
+		</div>
+		</div>
+	</div>
+</div>
 <?php include "static/includes/footer.php"; ?>

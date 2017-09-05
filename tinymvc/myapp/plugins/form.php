@@ -11,7 +11,7 @@ class Form extends TinyMVC_Controller
 		$el = '<div class="row-fluid">
 			<div class="control-group">
 				<div class="controls span3">
-				<label class="control-label"> Owner Server </label>
+				<label class="control-label"> Server </label>
 					<select id="serverid" name="serverid">
 						<option value="NULL">All</option>';
 		foreach($srv as $s) {
@@ -22,6 +22,26 @@ class Form extends TinyMVC_Controller
 				</div>
 			</div>
 		</div>";
+		return $el;
+	}
+
+	public function matchDatesList($input) {
+		$this->load->model("match_detail");
+
+		$el = '<div class="row-fluid">
+				<div class="control-group">
+					<div class="controls span3">
+					<label class="control-label"> Match Dates </label>
+						<select id="matchDate" name="matchDate">';
+		foreach ($this->match_detail->getMatchDates() as $date) {
+			$el .= "<option " . ($input == $date['start_time'] ? 'selected' : '') . ' value="'
+				. $date['start_time'] . '">' . date("m/d/Y", strtotime($date['start_time'])) . " - "
+				. date("m/d/Y", strtotime($date['end_time'])) . "</option>\n";
+		}
+		$el .= 	"	</select>
+					</div>
+				</div>
+			</div>";
 		return $el;
 	}
 

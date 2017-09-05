@@ -1,5 +1,7 @@
 <?php
 
+// ini_set("display_errors", 1);
+
 class Graph_Controller extends TinyMVC_Controller
 {
 
@@ -16,30 +18,47 @@ class Graph_Controller extends TinyMVC_Controller
 
 			$params = array(
 				"where" => array(
-					"week_num" => $data['weekNum'],
+					"TIME(s.timeStamp) >=" => $data['startTime'],
+					"TIME(s.timeStamp) <=" => $data['endTime'],
+					"md.start_time" => $data['matchDate']
 				)
 			);
 
-			if ( isset($data['serverid']) ) { // filter by server's id
-				$params['where']['server_id'] = $data['serverid'];
-			} else { // filter by match_id if no server id provided
-				$params['where']['match_id'] = $data['matchid'];
+			foreach($specialKeys as $k=>$v) { // special empty-checks for these keys and values
+				if ( isset($data[$k]) && $data[$k] != "") {
+					$params["where"][$v['key']] = $v['val'];
+				}
 			}
 
-			$score_history = $this->map_score->getScores($params);
-			$skirmish_history = $this->skirmish_history->getScores($params);
+			if ( isset($data['serverid']) ) { // filter by server's id first
+				$params['where']['server_id'] = $data['serverid'];
+			} elseif( isset($data['matchid']) ) { // filter by match_id if no server id provided
+				$params['where']['match_id'] = $data['matchid'];
+			} else {
+				$error = "Must specify either a server or match tier!";
+			}
 
-			$this->view->assign("scores", $score_history);
-			$this->view->assign("skirmish_points", $skirmish_history);
-			$this->view->assign("formData", $data);
-		} else { // fresh page-load
+			if ( !isset($error) ) {
+				$score_history = $this->map_score->getScores($params);
+				$skirmish_history = $this->skirmish_score->getScores($params);
 
+				$this->view->assign("scores", $score_history);
+				$this->view->assign("skirmish_points", $skirmish_history);
+			} else {
+				$this->view->assign("error", $error);
+			}
 		}
 
-		$this->view->assign("matches", $this->match_detail->getFormList());
-		$this->view->assign("week_numbers", $this->match_detail->getWeekNumbers());
-		$this->view->assign("srv", $this->server_info->getFormList());
-		$this->view->display("score_history_view");
+		$formBuilder = new Form();
+		$form['serverList'] = $formBuilder->serverList($data['serverid']);
+		$form['matchList'] = $formBuilder->matchList($data['matchid']);
+		$form['timeList'] = $formBuilder->timeList($data['startTime'], $data['endTime']);
+		$form['dateList'] = $formBuilder->matchDatesList($data['matchDates']);
+		$form['submitBtn'] = $formBuilder->submitBtn();
+		$form['resetBtn'] = $formBuilder->resetBtn("/graph/score_history");
+
+		$this->view->assign("form", $form);
+		$this->view->display("graphs/score_history_view");
 	}
 }
 ?>
