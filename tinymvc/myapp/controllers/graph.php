@@ -53,7 +53,7 @@ class Graph_Controller extends TinyMVC_Controller
 		$form['serverList'] = $formBuilder->serverList($data['serverid']);
 		$form['matchList'] = $formBuilder->matchList($data['matchid']);
 		$form['timeList'] = $formBuilder->timeList($data['startTime'], $data['endTime']);
-		$form['dateList'] = $formBuilder->matchDatesList($data['matchDates']);
+		$form['dateList'] = $formBuilder->matchDatesList($data['matchDate']);
 		$form['submitBtn'] = $formBuilder->submitBtn();
 		$form['resetBtn'] = $formBuilder->resetBtn("/graph/score_history");
 
