@@ -33,9 +33,9 @@ class map_score extends TinyMVC_Model
 			sum(blueScore) as bluescore, sum(redScore) as redscore,
 			sum(green_ppt) as greenppt, sum(blue_ppt) as blueppt,
 			sum(red_ppt) as redppt,
-			sum(greenKills)/sum(greenDeaths) as greenkdr,
-			sum(blueKills)/sum(blueDeaths) as bluekdr,
-			sum(redKills)/sum(redDeaths) as redkdr,
+			sum(greenKills)/sum(greenDeaths)*100 as greenkdr,
+			sum(blueKills)/sum(blueDeaths)*100 as bluekdr,
+			sum(redKills)/sum(redDeaths)*100 as redkdr,
 				(SELECT name as red_server
 					FROM server_linking sl
 					LEFT JOIN server_info si on si.server_id = sl.server_id
@@ -62,8 +62,7 @@ class map_score extends TinyMVC_Model
 		$this->db->join("server_linking sl", "sl.match_detail_id = md.id");
 		$this->db->join("server_info si", "si.server_id = sl.server_id");
 		$this->db->groupby("s.timeStamp");
-		$this->db->orderBy("s.timeStamp DESC");
-		$this->db->limit(100);
+		$this->db->orderBy("s.timeStamp");
 		$this->append_query($params);
 		return $this->db->query_all();
 	}

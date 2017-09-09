@@ -57,7 +57,7 @@ class Graph_Controller extends TinyMVC_Controller
 		$form['dateList'] = $formBuilder->matchDatesList($data['matchDate']);
 		$form['mapList'] = $formBuilder->mapList($data['map']);
 		$form['submitBtn'] = $formBuilder->submitBtn();
-		$form['resetBtn'] = $formBuilder->resetBtn("/graph/score_history");
+		$form['resetBtn'] = $formBuilder->resetBtn("/graphs/score_history");
 
 		$this->view->assign("form", $form);
 		$this->view->display("graphs/score_history_view");

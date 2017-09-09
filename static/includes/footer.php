@@ -9,5 +9,3 @@
 <script src="/static/js/select2.min.js"></script>
 <script src="/static/js/matrix.js"></script>
 <script src="/static/js/matrix.form_common.js"></script>
-
-</html>
