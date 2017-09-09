@@ -22,7 +22,7 @@
 			<?= $form['submitBtn'] ?>
 			<?= $form['resetBtn'] ?>
 		</form>
-		<? if ( count($captureList) == $form['dataLimit'] ) { ?>
+		<? if ( count($captureList) == $form['dataLimit'] && isset($form['dataLimit']) ) { ?>
 			<span>Limited to <?= $form['dataLimit'] ?> results</span>
 		<? } ?>
 			<table class="table table-bordered">
