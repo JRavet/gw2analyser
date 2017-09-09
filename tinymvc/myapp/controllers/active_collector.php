@@ -66,7 +66,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 				$this->store_capture_history($match, $tick_timer, $timeStamp, $match_detail_id);
 
-				if ( $sync_data['save_scores'] === true )
+				if ( $sync_data['save_scores'] === true || $tick_timer == 5 )
 				{ // store scores after every point tick
 					$this->store_scores($match, $timeStamp, $match_detail_id);
 					$sync_data['save_scores'] = NULL; // not true, not false - prevents sync / scores
