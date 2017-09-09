@@ -62,6 +62,8 @@ class map_score extends TinyMVC_Model
 		$this->db->join("server_linking sl", "sl.match_detail_id = md.id");
 		$this->db->join("server_info si", "si.server_id = sl.server_id");
 		$this->db->groupby("s.timeStamp");
+		$this->db->orderBy("s.timeStamp DESC");
+		$this->db->limit(100);
 		$this->append_query($params);
 		return $this->db->query_all();
 	}

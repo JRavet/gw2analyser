@@ -26,6 +26,7 @@
 <span class="span3"></span>
 <table class="table">
 	<thead>
+		<th>TimeStamp</th>
 		<th>RKills</th>
 		<th>BKills</th>
 		<th>GKills</th>
@@ -39,6 +40,7 @@
 	<tbody>
 		<? foreach ($scores as $score) { ?>
 			<tr>
+				<td><?=$score['timeStamp']?></td>
 				<td style="background-color: <?=$redServer?>"><?=$score['redkills']?></td>
 				<td style="background-color: <?=$blueServer?>"><?=$score['bluekills']?></td>
 				<td style="background-color: <?=$greenServer?>"><?=$score['greenkills']?></td>
