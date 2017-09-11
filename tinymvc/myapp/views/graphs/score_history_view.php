@@ -74,28 +74,28 @@
 
 <div class="row">
     <div class="span6">
-        <?= generate_googleChart(generate_jsontable($scores,array("greenppt","blueppt","redppt")),"PPT","ppt_chart", NULL, $redServer, $blueServer, $greenServer); ?>
+        <?= generate_googleChart(generate_jsontable($scores,array("greenppt","blueppt","redppt")),"PPT","ppt_chart", NULL, $colorPrefs['redServer'], $colorPrefs['blueServer'], $colorPrefs['greenServer']); ?>
     </div>
     <div class="span6">
-        <?= generate_googleChart(generate_jsontable($scores,array("greenscore","bluescore","redscore")),"Score","score_chart", NULL, $redServer, $blueServer, $greenServer); ?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="span6">
-        <?= generate_googleChart(generate_jsontable($scores,array("greenkills","bluekills","redkills")),"Kills","kills_chart", NULL, $redServer, $blueServer, $greenServer); ?>
-    </div>
-    <div class="span6">
-        <?= generate_googleChart(generate_jsontable($scores,array("greendeaths","bluedeaths","reddeaths")),"Deaths","deaths_chart", NULL, $redServer, $blueServer, $greenServer); ?>
+        <?= generate_googleChart(generate_jsontable($scores,array("greenscore","bluescore","redscore")),"Score","score_chart", NULL, $colorPrefs['redServer'], $colorPrefs['blueServer'], $colorPrefs['greenServer']); ?>
     </div>
 </div>
 
 <div class="row">
     <div class="span6">
-        <?= generate_googleChart(generate_jsontable($scores,array("greenkdr","bluekdr","redkdr")),"KDR","kdr_chart", NULL, $redServer, $blueServer, $greenServer); ?>
+        <?= generate_googleChart(generate_jsontable($scores,array("greenkills","bluekills","redkills")),"Kills","kills_chart", NULL, $colorPrefs['redServer'], $colorPrefs['blueServer'], $colorPrefs['greenServer']); ?>
     </div>
     <div class="span6">
-        <?= generate_googleChart(generate_jsontable($skirmish_points,array("green_skirmish_score","blue_skirmish_score","red_skirmish_score")),"Skirmish Points","skirmish_chart", NULL, $redServer, $blueServer, $greenServer); ?>
+        <?= generate_googleChart(generate_jsontable($scores,array("greendeaths","bluedeaths","reddeaths")),"Deaths","deaths_chart", NULL, $colorPrefs['redServer'], $colorPrefs['blueServer'], $colorPrefs['greenServer']); ?>
+    </div>
+</div>
+
+<div class="row">
+    <div class="span6">
+        <?= generate_googleChart(generate_jsontable($scores,array("greenkdr","bluekdr","redkdr")),"KDR","kdr_chart", NULL, $colorPrefs['redServer'], $colorPrefs['blueServer'], $colorPrefs['greenServer']); ?>
+    </div>
+    <div class="span6">
+        <?= generate_googleChart(generate_jsontable($skirmish_points,array("green_skirmish_score","blue_skirmish_score","red_skirmish_score")),"Skirmish Points","skirmish_chart", NULL, $colorPrefs['redServer'], $colorPrefs['blueServer'], $colorPrefs['greenServer']); ?>
     </div>
 </div>
 

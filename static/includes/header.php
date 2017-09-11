@@ -13,7 +13,7 @@
 		<link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet" />
 		<link href="/static/css/override.css" rel="stylesheet" />
 	</head>
-	<body style="background-color:<?=$bgColor1?>">
+	<body style="background-color:<?=$colorPrefs['bgColor1']?>">
 	<div class="row">
 		<div class="span3"></div>
 		<div class="navbar span6">

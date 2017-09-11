@@ -43,9 +43,9 @@
 				} ?>
 
 				<div class="widget-title" style="Background-color: <?switch ($ch["owner_color"]){
-						case "Red": echo $redServer; break;
-						case "Blue": echo $blueServer; break;
-						case "Green": echo $greenServer; break;
+						case "Red": echo $colorPrefs['redServer']; break;
+						case "Blue": echo $colorPrefs['blueServer']; break;
+						case "Green": echo $colorPrefs['greenServer']; break;
 						default: echo "light-grey"; break;
 				}?>">
 				<? if ( !empty($ch['details']) ) { ?>
