@@ -33,6 +33,7 @@
             var options = {
                 title: \"$title\",
                 width: 600,
+                focusTarget: 'category',
                 $options
                 height: 300,
                 hAxis: {
