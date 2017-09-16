@@ -165,8 +165,13 @@ class Form extends TinyMVC_Controller
 				$.ajax({
 					url: "/table/loadGuildList",
 					method: "POST",
+					dataType: "json",
 					success: function(data) {
-						$("#guildname").attr("data-source", data);
+						console.log(data);
+						$("#guildname").typeahead({
+							source: data,
+							items: 8
+						});
 						$("#guildsLoading").hide();
 					}
 				});
