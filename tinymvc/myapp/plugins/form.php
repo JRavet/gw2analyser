@@ -153,9 +153,10 @@ class Form extends TinyMVC_Controller
 		$el = '<div class="row-fluid">
 			<div class="control-group">
 				<div class="controls span3">
+				<span id="guildsLoading" class="label label-info"> Loading guilds ... </span>
 				<label class="control-label"> Guild </label>
-						<input autocomplete="off" id="guildname" name="guildname" type="text" data-provide="typeahead" value="' . (isset($input) ? $input : "Loading guilds ...") .'"
-						data-source="["Loading guilds ..."]">
+						<input autocomplete="off" id="guildname" name="guildname" type="text" data-provide="typeahead" value="'.$input.'"
+						data-source=\'\'>
 				</div>
 			</div>
 		</div>';
@@ -165,8 +166,8 @@ class Form extends TinyMVC_Controller
 					url: "/table/loadGuildList",
 					method: "POST",
 					success: function(data) {
-						$("#guildname").val("' . $input . '");
 						$("#guildname").attr("data-source", data);
+						$("#guildsLoading").hide();
 					}
 				});
 			});
