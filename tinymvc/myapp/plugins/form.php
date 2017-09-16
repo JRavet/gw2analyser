@@ -149,20 +149,31 @@ class Form extends TinyMVC_Controller
 		return $el;
 	}
 
-	public function guildList($input, $guildNames) {
+	public function guildList($input) {
 		$el = '<div class="row-fluid">
 			<div class="control-group">
 				<div class="controls span3">
 				<label class="control-label"> Guild </label>
-						<input autocomplete="off" name="guildname" type="text" data-provide="typeahead" data-items"' . count($guildNames) . '" value="' . $input .'"
-						data-source=\'["' . implode(array_map(function($el){return $el['guild_name']; }, $guildNames),'","') . '"]\'>
+						<input autocomplete="off" id="guildname" name="guildname" type="text" data-provide="typeahead" value="' . $input .'"
+						data-source=""]\'>
 				</div>
 			</div>
 		</div>';
-		return $el;
+		$js = '<script type="text/javascript">
+			$(document).on("ready", function() {
+				$.ajax({
+					url: "/table/loadGuildList",
+					method: "POST",
+					success: function(data) {
+						$("#guildname").attr("data-source", data);
+					}
+				});
+			});
+		</script>';
+		return array("element"=>$el, "javascript"=>$js);
 	}
 
-	public function pageList($pageNum, $list, $pageAmount) {
+	public function pageList($pageNum, $listCount, $pageAmount) {
 		if ( !isset($pageNum) ) {
 			$pageNum = 0;
 		}
@@ -173,7 +184,7 @@ class Form extends TinyMVC_Controller
 					<label class="control-label"> Viewing Results </label>
 					<select name="page">';
 
-		for ($i = 0; $i < count($list) / $pageAmount; $i++) {
+		for ($i = 0; $i < ($listCount / $pageAmount); $i++) {
 			$el .= "<option " . ($pageNum == $i ? 'selected' : '') . " value=\"" . $i . "\">" . (($i*$pageAmount)+1) . " - " . (($i+1)*$pageAmount) . "</option>\n";
 		}
 

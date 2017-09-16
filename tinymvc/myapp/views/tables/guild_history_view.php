@@ -13,7 +13,7 @@
 
 			<?= $form['timeList'] ?>
 
-			<?= $form['guildList'] ?>
+			<?= $form['guildList']['element'] ?>
 
 			<?= $form['pageList'] ?>
 
@@ -134,8 +134,6 @@
 		<? } ?>
 	</div>
 </div>
-<!--
-
--->
 
 <?php include "static/includes/footer.php"; ?>
+<?= $form['guildList']['javascript'] ?>

@@ -15,7 +15,7 @@
 
 			<?= $form['timeList'] ?>
 
-			<?= $form['guildList'] ?>
+			<?= $form['guildList']['element'] ?>
 
 			<?= $form['pageList'] ?>
 
@@ -121,3 +121,4 @@ inconclusive
 </div> -->
 
 <?php include "static/includes/footer.php" ?>
+<?= $form['guildList']['javascript'] ?>

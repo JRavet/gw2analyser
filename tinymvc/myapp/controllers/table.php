@@ -63,6 +63,17 @@ class Table_Controller extends TinyMVC_Controller
 		$this->view->display('tables/match_history_view');
 	}
 
+	public function loadGuildList() {
+		$this->load->model('guild');
+		die(
+			json_encode(
+				array_map(
+					function($el){return $el['guild_name']; }, $this->guild->getFormList()
+				)
+			)
+		);
+	}
+
 	public function capture_history()
 	{
 		$this->load->model('capture_history');
@@ -112,8 +123,8 @@ class Table_Controller extends TinyMVC_Controller
 		$form['timeList'] = $formBuilder->timeList($data['startTime'], $data['endTime']);
 		$form['weekdayList'] = $formBuilder->weekdayList($data['weekday']);
 		$form['objectiveTypeList'] = $formBuilder->objectiveTypeList($data['objectiveType']);
-		$form['guildList'] = $formBuilder->guildList($data['guildname'], $guildList);
-		$form['pageList'] = $formBuilder->pageList($data['page'], $captureList, $form['pageAmount']);
+		$form['guildList'] = $formBuilder->guildList($data['guildname']);
+		$form['pageList'] = $formBuilder->pageList($data['page'], count($captureList), $form['pageAmount']);
 		$form['dateList'] = $formBuilder->dateList($data['startDate'], $data['endDate']);
 		// for paginating the displayed data
 		$form['pageNum'] = $data['page'];
@@ -162,8 +173,6 @@ class Table_Controller extends TinyMVC_Controller
 
 			$guildList = $this->guild->getSummaryList($params);
 			$this->view->assign("data", $guildList);
-		} else { // fresh page-load
-			$guildList = $this->guild->getFormList(); // to fill the guildname select
 		}
 
 		$formBuilder = new Form();
@@ -172,8 +181,8 @@ class Table_Controller extends TinyMVC_Controller
 		$form['matchList'] = $formBuilder->matchList($data['matchid']);
 		$form['timeList'] = $formBuilder->timeList($data['startTime'], $data['endTime']);
 		$form['weekdayList'] = $formBuilder->weekdayList($data['weekday']);
-		$form['guildList'] = $formBuilder->guildList($data['guildname'], $guildList);
-		$form['pageList'] = $formBuilder->pageList($data['page'], $guildList, $form['pageAmount']);
+		$form['guildList'] = $formBuilder->guildList($data['guildname']);
+		$form['pageList'] = $formBuilder->pageList($data['page'], count($guildList), $form['pageAmount']);
 		$form['dateList'] = $formBuilder->dateList($data['startDate'], $data['endDate']);
 		// for paginating the displayed data
 		$form['pageNum'] = $data['page'];
