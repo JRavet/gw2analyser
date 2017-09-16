@@ -77,7 +77,6 @@ class Table_Controller extends TinyMVC_Controller
 	public function capture_history()
 	{
 		$this->load->model('capture_history');
-		$this->load->model('guild');
 
 		if ($this->view->form_submitted()) {
 
@@ -113,8 +112,6 @@ class Table_Controller extends TinyMVC_Controller
 			$captureList = $this->capture_history->getList($params);
 			$this->view->assign("captureList", $captureList);
 		}
-
-		$guildList = $this->guild->getFormList(); // to fill the guildname select
 
 		$formBuilder = new Form();
 		$form['pageAmount'] = 300;
