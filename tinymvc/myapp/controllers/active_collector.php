@@ -16,6 +16,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private $match_detail, $server_linking, $capture_history,
 			$claim_history, $upgrade_history, $yak_history, $guild,
 			$guild_emblem, $objective, $map_score, $skirmish_score; // models
+		private $skirmish_cache, $guild_cache, $capture_history_cache, $claim_history_cache,
+			$upgrade_history_cache, $yak_history_cache;
 
 		/**
 		 * Constructor
@@ -139,12 +141,11 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			$this->helper->log_message(1, MATCH_ID);
 
-			// if ( $sync_data['sync_wait'] === TRUE && $processing_time < (18*SECONDS) )
-			// { // if there should be an initial delay, and the processing-time wasnt too long, idle for some time
-			// 	$this->helper->log_message(4, 17*SECONDS - $processing_time);
-			// TODO commented out for now, even though it should be fine
-			// 	usleep(17*SECONDS - $processing_time); // sleep for a combined (processing+idle) time of 21 seconds
-			// }
+			if ( $sync_data['sync_wait'] === TRUE && $processing_time < (18*SECONDS) )
+			{ // if there should be an initial delay, and the processing-time wasnt too long, idle for some time
+				$this->helper->log_message(4, 17*SECONDS - $processing_time);
+				usleep(17*SECONDS - $processing_time); // sleep for a combined (processing+idle) time of 21 seconds
+			}
 
 			$prev_match = $this->api->get_match_data();
 
