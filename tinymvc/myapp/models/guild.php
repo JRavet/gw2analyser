@@ -137,6 +137,7 @@ class Guild extends TinyMVC_Model
 	{
 		$this->db->select("concat(g.name, ' [', g.tag, ']') as 'guild_name'");
 		$this->db->from($this->_table . " g");
+		/*
 		$this->db->join("claim_history ch", "ch.claimed_by = g.guild_id");
 		$this->db->join("capture_history cah", "cah.id = ch.capture_history_id");
 		$this->db->join("objective o", "o.obj_id = cah.obj_id");
@@ -145,6 +146,7 @@ class Guild extends TinyMVC_Model
 		$this->append_query($params);
 		$this->db->groupby("ch.claimed_by");
 		$this->db->orderby("COUNT(*) DESC, g.name ASC");
+		*/
 		return $this->db->query_all();
 	}
 
