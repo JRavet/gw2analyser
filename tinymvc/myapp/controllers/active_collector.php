@@ -16,8 +16,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private $match_detail, $server_linking, $capture_history,
 			$claim_history, $upgrade_history, $yak_history, $guild,
 			$guild_emblem, $objective, $map_score, $skirmish_score; // models
-		private $skirmish_cache, $guild_cache, $capture_history_cache, $claim_history_cache,
-			$upgrade_history_cache, $yak_history_cache;
+		private $guild_cache, $capture_history_cache, $claim_history_cache,
+			$upgrade_history_cache, $yak_history_cache, $objective_cache;
 
 		/**
 		 * Constructor
@@ -41,6 +41,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$this->map_score = new map_score();
 			$this->skirmish_score = new skirmish_score();
 			$this->main_loop(); // start the collector
+			$this->guild_cache = $this->capture_history_cache = $this->claim_history_cache
+				= $this->upgrade_history_cache = $this->yak_history_cache = array(); // initialize caches
 		}
 
 		/**
@@ -50,6 +52,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			$match_detail_id = null; // since this is only set once a week, store it in memory so we don't query DB for it all the time
 			$tick_timer = 5.0;
+			$this->objective_cache = $this->objective->find(array()); // gets all
 			$sync_data = $this->synchronize(); // initial synchronize
 			$sync_data['new_week'] = TRUE; // assume a new week to store new match_details for
 			while (true)
@@ -123,6 +126,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				}
 			} // end looping
 		} // END FUNCTION main_loop
+
 		private function synchronize($sync_data, $processing_time)
 		{
 			if (TEST_MODE === TRUE)
@@ -272,7 +276,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			$this->helper->log_message(5, "capture, claim, upgrade and yak history");
 
-			$server_owners = array(
+			$server_owners = array( // TODOcache this every time $match_details is stored/checked
 				"Red" => $this->server_linking->get_server_owner($match_detail_id, "red"),
 				"Blue" => $this->server_linking->get_server_owner($match_detail_id, "blue"),
 				"Green" => $this->server_linking->get_server_owner($match_detail_id, "green"),
@@ -283,22 +287,28 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			{
 				foreach($map->objectives as $objective)
 				{
-					$prev_capture_history = $this->capture_history->find_one(
-						array( // where
-							"match_detail_id" => $match_detail_id,
-							"obj_id" => $objective->id,
-							"last_flipped" => $objective->last_flipped
-						),
-						array( // order by
-							"timeStamp" => "DESC"
-						)
+					$where = array( // where
+						"match_detail_id" => $match_detail_id,
+						"obj_id" => $objective->id,
+						"last_flipped" => $objective->last_flipped
 					);
+
+					$prev_capture_history = $this->helper->check_cache($this->capture_history_cache, $where);
+
+					if (!isset($prev_capture_history['id'])) { // no cached item - query DB for it
+						$prev_capture_history = $this->capture_history->find_one(
+							$where,
+							array( // order by
+								"timeStamp" => "DESC"
+							)
+						);
+					}
 
 					$yaks = $objective->yaks_delivered;
 
 					if ( !isset($prev_capture_history['id']) )
 					{ // no previous record for this set of data; store a new set
-						$prev_capture_history['id'] = $this->capture_history->save(array(
+						$data = array(
 							"match_detail_id" => $match_detail_id,
 							"timeStamp" => $timeStamp,
 							"last_flipped" => $objective->last_flipped,
@@ -308,7 +318,11 @@ if (class_exists('Active_Collector_Controller', false) === false)
 							"tick_timer" => $tick_timer,
 							"num_yaks" => $yaks, // if $yaks == 140 from the api, the next run of code will update using our own calcs
 							"duration_owned" => $this->helper->calc_time_interval($objective->last_flipped, $timeStamp)
-						)); // also make an array storing only the id of the last_insert
+						);
+						// also make an array storing only the id of the last_insert
+						$prev_capture_history['id'] = $this->capture_history->save($data);
+						$data['id'] = $prev_capture_history['id']; // add the newly-added internal id to the data
+						$this->helper->add_to_cache($this->capture_history_cache, $data); // cache it!
 					}
 					else
 					{ // update duration_owned and the number of yaks -- all other data is already set
@@ -328,9 +342,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 						);
 					}
 
-					$obj = $this->objective->find_one(array(
-						"obj_id" => $objective->id
-					));
+					$obj = $this->helper->check_cache($this->objective_cache, array('obj_id'=>$objective->id));
 
 					if ( in_array( $obj['type'], array("Camp", "Tower", "Keep", "Castle") ) )
 					{ // only store following data for claimable objectives
@@ -345,37 +357,45 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		} // END FUNCTION store_capture_history
 		private function store_claim_history($objective, $capture_history, $timeStamp)
 		{
-			$prev_claim_history = $this->claim_history->find_one(
-				array( // where
-					"capture_history_id" => $capture_history['id']
-				),
-				array( // order-by
-					"id" => "DESC"
-				)
-			); // get the last known claim-history for the capture-history
+			$where = array("capture_history_id" => $capture_history['id']);
+
+			$prev_claim_history = $this->helper->check_cache($this->capture_history_cache, $where);
+
+			if (!isset($prev_claim_history['id'])) { // not cached
+				$prev_claim_history = $this->claim_history->find_one(
+					$where,
+					array( // order-by
+						"id" => "DESC"
+					)
+				); // get the last known claim-history for the capture-history
+			}
 
 			if ( $objective->owner != $capture_history['owner_color']
 				|| $objective->claimed_by != $prev_claim_history['claimed_by'] )
 			{ // owner-color changed or the guild claiming it changed - store new claim history
 				// see if the claiming guild has been stored yet
+				$where = array("guild_id" => $objective->claimed_by);
+				$guild_exists = $this->helper->check_cache($this->guild_cache, $where);
 
-				$guild_exists = $this->guild->find_one(array(
-					"guild_id" => $objective->claimed_by
-				));
-				// check if the guild exists in the database
+				if (!isset($guild_exists['guild_id'])) {
+					$guild_exists = $this->guild->find_one($where);
+					// check if the guild exists in the database
+				}
 
 				if ( is_null($guild_exists['guild_id']) )
 				{ // guild does not exist at all in db
 
 					$guild = $this->api->get_guild($objective->claimed_by);
 					// get the guild data from the api then save it
-
-					$this->guild->save(array(
+					$data = array(
 						"guild_id" => $guild->guild_id,
 						"name" => $guild->guild_name,
 						"tag" => $guild->tag,
 						"emblem_last_updated" => date("Y-m-d H:i:s")
-					));
+					);
+
+					$this->guild->save($data);
+					$this->helper->add_to_cache($this->guild_cache, $data);
 
 					// make shorthand name for the emblem
 					$emblem = $guild->emblem; // returned with the other guild data already
@@ -396,11 +416,14 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				if ( (is_null($objective->claimed_by) && !is_null($prev_claim_history['id']))
 					|| !is_null($objective->claimed_by) )
 				{ // only store null-claims if the objective was claimed prior
-					$prev_claim_history['id'] = $this->claim_history->save(array(
+					$data = array(
 						"capture_history_id" => $capture_history['id'],
 						"claimed_by" => $objective->claimed_by, // below: if claimed_at is null, use current timeStamp
 						"claimed_at" => ( is_null($objective->claimed_at) ? NULL : $objective->claimed_at )
-					));
+					);
+					$prev_claim_history['id'] = $this->claim_history->save($data);
+					$data['id'] = $prev_claim_history['id']; // add internal id to data
+					$this->helper->add_to_cache($this->claim_history_cache, $data); // cache it!
 				}
 
 			} // end if-need-to-insert claim_history
@@ -426,6 +449,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			foreach ($upgrades as $upgrade)
 			{ // see if an entry already exists for this capture_history and upgrade
+				//TODOcache this
 				$previous_upgrade = $this->upgrade_history->find_one(
 					array( // where
 						"capture_history_id" => $capture_history['id'],
@@ -449,7 +473,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		private function store_yak_history($yaks, $capture_history, $timeStamp)
 		{
 			$yaks = ( (int) substr($yaks, 0, -1) ) * 10; // 15 becomes 10, 143 becomes 140
-
+			//TODOcache this
 			$yaks_stored = $this->yak_history->find_one(array(
 				"capture_history_id" => $capture_history['id'],
 				"num_yaks" => $yaks
@@ -494,6 +518,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				// then store the server-linkings for this match-detail
 				$this->store_server_linkings($match, $match_detail_id);
 			}
+			//TODOcache the server links here
 			$this->helper->log_message(6, "match details");
 			return $match_detail_id;
 		} // END FUNCTION store_match_details

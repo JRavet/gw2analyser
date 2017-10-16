@@ -5,11 +5,13 @@ class helper extends TinyMVC_Controller
 
 	private $log_code;
 	private $match_id;
+	private $log_messages_cache;
 
 	public function __construct($match_id=null)
 	{ // match_id is only required by the active collector
 		parent::__construct();
 		$this->log_code = new log_code();
+		$this->log_messages_cache = $this->log_code->find(array()); // gets all
 		$this->match_id = $match_id;
 	}
 
@@ -111,7 +113,7 @@ class helper extends TinyMVC_Controller
 
 		$msg = preg_replace('/,/', ';', $msg); // changes commas to semicolons so as to not break CSVs
 
-		$details = $this->log_code->find_one(array("id"=>$code));
+		$details = $this->check_cache($this->log_messages_cache, array("id"=>$code));
 
 		$message = date("Y-m-d H:i:s") . "," . $details['id'] . "," . $details['type'] . "," . $details['message'] . "," . $msg . "\n";
 
@@ -126,6 +128,38 @@ class helper extends TinyMVC_Controller
 		}
 
 		echo $message; // put message in console as well
+	}
+
+	/**
+	 * Returns $item if $data exists in $cache
+	 * Returns false if $data not found in $cache
+	 *
+	 * @param $cache - the internal cache to use
+	 * @param $data - data to search the specified cache for
+	 * @return $item if $data exists in $cache, false otherwise
+	**/
+	public function check_cache($cache, $data)
+	{
+		foreach($cache as $item) {
+			$match = true; // assume the next cached item is the one we're looking for
+			foreach($data as $key=>$value) {
+				if ($item[$key] != $value) {
+					$match = false; // not the item we're looking for
+					break; // when a single value doesn't match the items', stop checking it
+				}
+			}
+			if ($match == true) {
+				return $item; // if all values matched, this is what we want - return it
+			}
+		}
+		return false; // no match found
+	}
+
+	public function add_to_cache(&$cache, $item) {
+		if (count($cache) > 300) {
+			$cache = array_slice($cache, 1, 300); // remove first item
+		}
+		array_unshift($cache, $item); // prepend items to the array so they show up first in searches
 	}
 
 }
