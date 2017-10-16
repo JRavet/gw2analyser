@@ -138,7 +138,7 @@ class helper extends TinyMVC_Controller
 	 * @param $data - data to search the specified cache for
 	 * @return $item if $data exists in $cache, false otherwise
 	**/
-	public function check_cache($cache, $data)
+	public function check_cache(&$cache, $data)
 	{
 		foreach($cache as $item) {
 			$match = true; // assume the next cached item is the one we're looking for
@@ -155,9 +155,9 @@ class helper extends TinyMVC_Controller
 		return false; // no match found
 	}
 
-	public function add_to_cache(&$cache, $item) {
-		if (count($cache) > 300) {
-			$cache = array_slice($cache, 1, 300); // remove first item
+	public function add_to_cache(&$cache, $item, $maxLen=300) {
+		if (count($cache) > $maxLen) {
+			$cache = array_slice($cache, 1, $maxLen); // remove first item
 		}
 		array_unshift($cache, $item); // prepend items to the array so they show up first in searches
 	}

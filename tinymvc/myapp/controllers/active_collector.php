@@ -17,7 +17,8 @@ if (class_exists('Active_Collector_Controller', false) === false)
 			$claim_history, $upgrade_history, $yak_history, $guild,
 			$guild_emblem, $objective, $map_score, $skirmish_score; // models
 		private $guild_cache, $capture_history_cache, $claim_history_cache,
-			$upgrade_history_cache, $yak_history_cache, $objective_cache;
+			$upgrade_history_cache, $yak_history_cache, $objective_cache,
+			$server_owners;
 
 		/**
 		 * Constructor
@@ -276,13 +277,6 @@ if (class_exists('Active_Collector_Controller', false) === false)
 		{
 			$this->helper->log_message(5, "capture, claim, upgrade and yak history");
 
-			$server_owners = array( // TODOcache this every time $match_details is stored/checked
-				"Red" => $this->server_linking->get_server_owner($match_detail_id, "red"),
-				"Blue" => $this->server_linking->get_server_owner($match_detail_id, "blue"),
-				"Green" => $this->server_linking->get_server_owner($match_detail_id, "green"),
-				"Neutral" => 0
-			);
-
 			foreach($match->maps as $map)
 			{
 				foreach($map->objectives as $objective)
@@ -313,7 +307,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 							"timeStamp" => $timeStamp,
 							"last_flipped" => $objective->last_flipped,
 							"obj_id" => $objective->id,
-							"owner_server" => $server_owners[$objective->owner],
+							"owner_server" => $this->server_owners[$objective->owner],
 							"owner_color" => $objective->owner,
 							"tick_timer" => $tick_timer,
 							"num_yaks" => $yaks, // if $yaks == 140 from the api, the next run of code will update using our own calcs
@@ -449,43 +443,60 @@ if (class_exists('Active_Collector_Controller', false) === false)
 
 			foreach ($upgrades as $upgrade)
 			{ // see if an entry already exists for this capture_history and upgrade
-				//TODOcache this
-				$previous_upgrade = $this->upgrade_history->find_one(
-					array( // where
-						"capture_history_id" => $capture_history['id'],
-						"upgrade_id" => $upgrade
-					),
-					array( // order-by
-						"id" => "DESC"
-					)
+
+				$where = array( // where
+					"capture_history_id" => $capture_history['id'],
+					"upgrade_id" => $upgrade
 				);
+
+				$previous_upgrade = $this->helper->check_cache($this->upgrade_history_cache, $where);
+
+				if (!isset($previous_upgrade['id'])) {
+					$previous_upgrade = $this->upgrade_history->find_one(
+						$where,
+						array( // order-by
+							"id" => "DESC"
+						)
+					);
+				}
 
 				if ( !isset($previous_upgrade['id']) && $upgrade != 0 )
 				{ // if the upgrade was not found in the tables, and it isn't tier 0, save it
-					$this->upgrade_history->save(array(
+					$data = array(
 						"timeStamp" => $timeStamp,
 						"capture_history_id" => $capture_history['id'],
 						"upgrade_id" => $upgrade
-					));
+					);
+					$this->upgrade_history->save($data);
+					$this->helper->add_to_cache($this->upgrade_history_cache, $data, 1000);
 				}
 			} // end foreach upgrades as upgrade
 		} // END FUNCTION store_upgrade_history
 		private function store_yak_history($yaks, $capture_history, $timeStamp)
 		{
 			$yaks = ( (int) substr($yaks, 0, -1) ) * 10; // 15 becomes 10, 143 becomes 140
-			//TODOcache this
-			$yaks_stored = $this->yak_history->find_one(array(
+
+			$where = array(
 				"capture_history_id" => $capture_history['id'],
 				"num_yaks" => $yaks
-			)); // see if this number of yaks has been stored for this capture-history yet
+			);
+
+			$yaks_stored = $this->helper->check_cache($this->yak_history_cache, $where);
+
+			if (!isset($yaks_stored['id'])) {
+				$yaks_stored = $this->yak_history->find_one($where);
+				// see if this number of yaks has been stored for this capture-history yet
+			}
 
 			if ( !isset($yaks_stored['id']) && $yaks > 0 )
 			{ // if it isn't saved yet, save it now, only if it has had any yaks at all
-				$this->yak_history->save(array(
+				$data = array(
 					"capture_history_id" => $capture_history['id'],
 					"num_yaks" => $yaks,
 					"timeStamp" => $timeStamp
-				));
+				);
+				$this->yak_history->save($data);
+				$this->helper->add_to_cache($this->yak_history_cache, $data, 1000);
 			}
 		} // END FUNCTION store_yak_history
 
@@ -518,7 +529,14 @@ if (class_exists('Active_Collector_Controller', false) === false)
 				// then store the server-linkings for this match-detail
 				$this->store_server_linkings($match, $match_detail_id);
 			}
-			//TODOcache the server links here
+
+			$this->server_owners = array(
+				"Red" => $this->server_linking->get_server_owner($match_detail_id, "red"),
+				"Blue" => $this->server_linking->get_server_owner($match_detail_id, "blue"),
+				"Green" => $this->server_linking->get_server_owner($match_detail_id, "green"),
+				"Neutral" => 0
+			);
+
 			$this->helper->log_message(6, "match details");
 			return $match_detail_id;
 		} // END FUNCTION store_match_details
