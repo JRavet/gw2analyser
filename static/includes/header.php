@@ -36,6 +36,12 @@
 				  </ul>
 				</li>
 
+				<li class="dropdown br bb" id="misc-dropdown" ><a href="#" data-toggle="dropdown" data-target="#misc-dropdown" class="dropdown-toggle"><span class="text">Miscellaneous</span><b class="caret"></b></a>
+				  <ul class="dropdown-menu">
+					<li><a href="/table/tomorrows_dailies">Tomorrow's Dailies</a></li>
+				  </ul>
+				</li>
+
 				<?php if (isset($username)) { ?>
 					<li class="dropdown br bb" id="user-profile"><a href="#" data-toggle="dropdown" data-target="#user-profile" class="dropdown-toggle"><span class="text"><?=$username?></span><b class="caret"></b></a>
 					  <ul class="dropdown-menu">

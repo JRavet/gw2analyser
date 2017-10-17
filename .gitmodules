@@ -1,0 +1,3 @@
+[submodule "tinymvc/myapp/views/misc/tomorrowsdailies"]
+	path = tinymvc/myapp/views/misc/tomorrowsdailies
+	url = https://github.com/ClaireL97/gw2tomorrowsdailies

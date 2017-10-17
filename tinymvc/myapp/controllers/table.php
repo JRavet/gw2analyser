@@ -4,6 +4,12 @@
 
 class Table_Controller extends TinyMVC_Controller
 {
+
+	public function tomorrows_dailies()
+	{
+		$this->view->display("misc/tomorrowsdailies/index");
+	}
+
 	public function match_history()
 	{
 		$this->load->model('match_detail');
