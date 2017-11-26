@@ -88,7 +88,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					$this->helper->log_message(500, "Too much time elapsed; processing_time=" . $processing_time
 						. "; fast-forwarding by " . $segments_to_skip . " 0.5-min intervals" );
 
-					$time_to_sleep = fmod(30 - (($processing_time/SECONDS),30));
+					$time_to_sleep = fmod(30 - ($processing_time/SECONDS),30);
 
 					$skipped_5min = false;
 					for ($i = 0; $i < $segments_to_skip; $i++)
