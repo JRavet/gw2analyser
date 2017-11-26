@@ -88,7 +88,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 					$this->helper->log_message(500, "Too much time elapsed; processing_time=" . $processing_time
 						. "; fast-forwarding by " . $segments_to_skip . " 0.5-min intervals" );
 
-					$time_to_sleep = 30 - (($processing_time/SECONDS) % 30);
+					$time_to_sleep = fmod(30 - (($processing_time/SECONDS),30));
 
 					$skipped_5min = false;
 					for ($i = 0; $i < $segments_to_skip; $i++)
@@ -344,6 +344,7 @@ if (class_exists('Active_Collector_Controller', false) === false)
 						$this->store_upgrade_history($objective, $prev_capture_history, $timeStamp);
 						$this->store_yak_history($yaks, $prev_capture_history, $timeStamp);
 					}
+					usleep(SECONDS/15);
 				} // end foreach map->objective as objective
 			} // end foreach match->maps as map
 

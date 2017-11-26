@@ -21,9 +21,9 @@ class gw2_api extends TinyMVC_Controller {
 		$data = json_decode(file_get_contents($url));
 		$delay = 0;
 		while ( is_null($data) || !isset($data) ) {
-			usleep(500000 + $delay*1000000); // half-second + up to 2 seconds delay
+			usleep(500000 + $delay*1000000); // half-second + up to 4 seconds delay
 			$data = json_decode(file_get_contents($url));
-			if ($delay < 2) { // until the delay is 2 seconds, add more to it
+			if ($delay < 4) { // until the delay is 4 seconds, add more to it
 				$delay += 0.5;
 			} else { // else delay is maxed: show error of invalid data
 				$this->helper->log_message(501);
