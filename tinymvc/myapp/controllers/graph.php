@@ -62,5 +62,54 @@ class Graph_Controller extends TinyMVC_Controller
 		$this->view->assign("form", $form);
 		$this->view->display("graphs/score_history_view");
 	}
+
+	public function activity_summary()
+	{
+		$this->load->model("map_score");
+		$this->load->model("claim_history");
+		$this->load->model("capture_history");
+		$this->load->model("match_detail");
+		$this->load->model("server_info");
+
+		if ($this->view->form_submitted()) {
+
+			$data = $this->view->getData();
+
+			$params = array(
+				"where" => array(
+					"TIME(timeStamp) >=" => date('Y-m-d H:i:s', strtotime("-1 hours"))
+				)
+			);
+
+			if ( isset($data['serverid']) ) { // filter by server's id first
+				$params['where']['sl.server_id'] = $data['serverid'];
+			} elseif( isset($data['matchid']) ) { // filter by match_id if no server id provided
+				$params['where']['match_id'] = $data['matchid'];
+			} else {
+				$error = "Must specify either a server or match tier!";
+			}
+
+			if ( !isset($error) ) {
+				$score_history = $this->map_score->getActivitySummary($params);
+					// the second parameter in above is required because skirmish_score doesn't have maps
+				// $capture_history = $this->skirmish_score->getActivitySummary($params);
+				// $claim_history = $this->claim_history->getActivitySummary($params);
+
+				$this->view->assign("scores", $score_history);
+				$this->view->assign("skirmish_points", $skirmish_history);
+			} else {
+				$this->view->assign("error", $error);
+			}
+		}
+
+		$formBuilder = new Form();
+		$form['serverList'] = $formBuilder->serverList($data['serverid']);
+		$form['matchList'] = $formBuilder->matchList($data['matchid']);
+		$form['submitBtn'] = $formBuilder->submitBtn();
+		$form['resetBtn'] = $formBuilder->resetBtn("/graphs/score_history");
+
+		$this->view->assign("form", $form);
+		$this->view->display("graphs/activity_summary_view");
+	}
 }
 ?>
