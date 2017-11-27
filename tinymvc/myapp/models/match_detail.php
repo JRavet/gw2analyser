@@ -38,6 +38,7 @@ class match_detail extends TinyMVC_Model
 		$this->db->join("server_linking sl", "sl.match_detail_id = md.id");
 		$this->db->groupby("md.id");
 		$this->db->orderby("md.start_time DESC, md.match_id");
+		$this->db->limit(27);
 		$this->append_query($params);
 
 		return $this->db->query_all();
