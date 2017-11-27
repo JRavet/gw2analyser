@@ -26,7 +26,11 @@ Eternal Battlegrounds in the last hour
         <th>Claims</th>
     </thead>
     <tbody>
-
+    <? foreach($score_history as $score) { ?>
+        <tr>
+            <td><?= $score['map_id'] == 'Center' ? $score['greenKills'] : ''?></td>
+        </tr>
+    <? } ?>
     </tbody>
 
 </table>
