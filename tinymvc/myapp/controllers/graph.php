@@ -43,7 +43,7 @@ class Graph_Controller extends TinyMVC_Controller
 					// the second parameter in above is required because skirmish_score doesn't have maps
 				$skirmish_history = $this->skirmish_score->getScores($params);
 
-				$this->view->assign("scores", $score_history);
+				$this->view->assign("score_history", $score_history);
 				$this->view->assign("skirmish_points", $skirmish_history);
 			} else {
 				$this->view->assign("error", $error);
@@ -91,12 +91,10 @@ class Graph_Controller extends TinyMVC_Controller
 
 			if ( !isset($error) ) {
 				$score_history = $this->map_score->getActivitySummary($params);
-					// the second parameter in above is required because skirmish_score doesn't have maps
 				// $capture_history = $this->skirmish_score->getActivitySummary($params);
 				// $claim_history = $this->claim_history->getActivitySummary($params);
 
-				$this->view->assign("scores", $score_history);
-				$this->view->assign("skirmish_points", $skirmish_history);
+				$this->view->assign("score_history", $score_history);
 			} else {
 				$this->view->assign("error", $error);
 			}

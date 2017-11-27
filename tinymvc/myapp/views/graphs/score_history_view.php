@@ -1,6 +1,6 @@
 <?php include "static/includes/header.php"; ?>
 
-<?  function generate_jsontable($resultSet, $varNames)
+<?php  function generate_jsontable($resultSet, $varNames)
     {
         $rows = array();
         $table = array();
@@ -57,9 +57,9 @@
 			<?= $form['matchList'] ?>
 			<b>OR</b>
 			<?= $form['serverList'] ?>
-			<? if ( isset($error) ) { ?>
+			<?php if ( isset($error) ) { ?>
 				<span class="label label-warning"><?=$error?></span>
-			<? } ?>
+			<?php } ?>
 			<hr/>
 			<?= $form['mapList'] ?>
 			<?= $form['dateList'] ?>

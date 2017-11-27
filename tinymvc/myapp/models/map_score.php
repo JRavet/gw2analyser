@@ -69,7 +69,12 @@ class map_score extends TinyMVC_Model
 
 	public function getActivitySummary($params)
 	{
-		$this->db->select("max(greenDeaths)-min(greenDeaths) as greendeaths,
+		$this->db->select("map_id,
+			max(greenDeaths)+max(blueDeaths)+max(redDeaths) - (
+				min(greenDeaths)+min(blueDeaths)+min(redDeaths) ) as totaldeaths,
+			max(greenKills)+max(blueKills)+max(redKills) - (
+				min(greenKills)+min(blueKills)+min(redKills) ) as totalkills,
+			max(greenDeaths)-min(greenDeaths) as greendeaths,
 			max(blueDeaths)-min(blueDeaths) as bluedeaths,
 			max(redDeaths)-min(redDeaths) as reddeaths,
 			max(greenKills)-min(greenKills) as greenkills,
