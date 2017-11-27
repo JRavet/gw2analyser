@@ -32,6 +32,7 @@
 				  <ul class="dropdown-menu">
 					<li><a href="/graph/score_history">Score History</a></li>
 					<li class="divider"></li>
+					<li><a href="/graph/activity_summary"> Last-hour Activity Summary</a></li>
 					<li><a href="#">NOT AVAILABLE Historical Map</a></li>
 				  </ul>
 				</li>
