@@ -77,7 +77,7 @@ class Graph_Controller extends TinyMVC_Controller
 
 			$params = array(
 				"where" => array(
-					"timeStamp >=" => date('Y-m-d H:i:s', strtotime("-1 hours"))
+					"timeStamp >=" => gmdate('Y-m-d H:i:s', strtotime("-1 hours"))
 				)
 			);
 
