@@ -26,7 +26,7 @@ Stats in the last hour
         <th>Map</th>
         <th>Kills</th>
         <th>Deaths</th>
-        <th>Captures</th>
+        <th title="Camps=1, Towers=2, Keeps=3, Castle=4">Captures (weighted)</th>
         <th>Claims</th>
     </thead>
     <tbody>
@@ -47,6 +47,26 @@ Stats in the last hour
                     <div class="bar bar-danger" style="width: <?=($score['reddeaths']/$score['totaldeaths'])*100?>%;"><?=$score['reddeaths']?></div>
                 </div>
             </td>
+			<td>
+				<?php foreach($capture_history as $ch) { ?>
+					<?php if ($ch['map_type'] == $score['map_id']) { ?>
+						<div class="progress">
+							<div class="bar bar-success" style="width: <?=($ch['greencaps']/$ch['totalcaps'])*100?>%;"><?=$ch['greencaps']?></div>
+							<div class="bar bar-info" style="width: <?=($ch['bluecaps']/$ch['totalcaps'])*100?>%;"><?=$ch['bluecaps']?></div>
+							<div class="bar bar-danger" style="width: <?=($ch['redcaps']/$ch['totalcaps'])*100?>%;"><?=$ch['redcaps']?></div>
+						</div>
+				<?php break; } } ?>
+			</td>
+			<td>
+				<?php foreach($claim_history as $ch) { ?>
+					<?php if ($ch['map_type'] == $score['map_id']) { ?>
+						<div class="progress">
+							<div class="bar bar-success" style="width: <?=($ch['greenclaims']/$ch['totalclaims'])*100?>%;"><?=$ch['greenclaims']?></div>
+							<div class="bar bar-info" style="width: <?=($ch['blueclaims']/$ch['totalclaims'])*100?>%;"><?=$ch['blueclaims']?></div>
+							<div class="bar bar-danger" style="width: <?=($ch['redclaims']/$ch['totalclaims'])*100?>%;"><?=$ch['redclaims']?></div>
+						</div>
+				<?php break; } } ?>
+			</td>
         </tr>
     <?php } ?>
     </tbody>

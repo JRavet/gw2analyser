@@ -130,6 +130,52 @@ class capture_history extends TinyMVC_Model
 		return $results;
 	}
 
+	public function getActivitySummary($params)
+	{
+		$this->db->select("o.map_type, count(ch.id) as number,
+		SUM(CASE WHEN owner_color = 'Red' THEN
+			CASE WHEN o.type = 'Camp' THEN 1 ELSE
+				CASE WHEN o.type = 'Tower' THEN 2 ELSE
+					CASE WHEN o.type = 'Keep' THEN 3 ELSE
+						CASE WHEN o.type = 'Castle' THEN 4 ELSE 0 END
+					END
+				END
+			END
+		ELSE 0 END) as redcaps,
+		SUM(CASE WHEN owner_color = 'Blue' THEN
+			CASE WHEN o.type = 'Camp' THEN 1 ELSE
+				CASE WHEN o.type = 'Tower' THEN 2 ELSE
+					CASE WHEN o.type = 'Keep' THEN 3 ELSE
+						CASE WHEN o.type = 'Castle' THEN 4 ELSE 0 END
+					END
+				END
+			END
+		ELSE 0 END) as bluecaps,
+		SUM(CASE WHEN owner_color = 'Green' THEN
+			CASE WHEN o.type = 'Camp' THEN 1 ELSE
+				CASE WHEN o.type = 'Tower' THEN 2 ELSE
+					CASE WHEN o.type = 'Keep' THEN 3 ELSE
+						CASE WHEN o.type = 'Castle' THEN 4 ELSE 0 END
+					END
+				END
+			END
+		ELSE 0 END) as greencaps,
+		SUM(CASE WHEN o.type = 'Camp' THEN 1 ELSE
+			CASE WHEN o.type = 'Tower' THEN 2 ELSE
+				CASE WHEN o.type = 'Keep' THEN 3 ELSE
+					CASE WHEN o.type = 'Castle' THEN 4 ELSE 0 END
+				END
+			END
+		END) as totalcaps");
+		$this->db->from($this->_table . " ch");
+		$this->db->groupby('o.map_type');
+		$this->db->join('objective o', 'o.obj_id = ch.obj_id');
+		$this->db->join("match_detail md", "md.id = ch.match_detail_id");
+		$this->db->join("server_linking sl", "sl.match_detail_id = md.id");
+		$this->db->join("server_info si", "si.server_id = sl.server_id");
+		$this->append_query($params);
+		return $this->db->query_all();
+	}
 }
 
 ?>

@@ -98,9 +98,6 @@ class map_score extends TinyMVC_Model
 					WHERE server_color = 'Green' AND md.id = sl.match_detail_id
 						AND server_lead = 1
 				) green_server");
-		if (isset($map)) {
-			$this->db->where("s.map_id", $map);
-		}
 		$this->db->from($this->_table . " s");
 		$this->db->groupby('map_id');
 		$this->db->join("match_detail md", "md.id = s.match_detail_id");

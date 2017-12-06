@@ -28,6 +28,24 @@ class claim_history extends TinyMVC_Model
 		}
 		return $this->db->query_all();
 	}
+
+	public function getActivitySummary($params)
+	{
+		$this->db->select("o.map_type, count(ch.id) as number,
+		SUM(CASE WHEN cah.owner_color = 'Red' THEN 1 ELSE 0 END) as redclaims,
+		SUM(CASE WHEN cah.owner_color = 'Blue' THEN 1 ELSE 0 END) as blueclaims,
+		SUM(CASE WHEN cah.owner_color = 'Green' THEN 1 ELSE 0 END) as greenclaims,
+		COUNT(cah.id) as totalclaims");
+		$this->db->from($this->_table . " ch");
+		$this->db->groupby('o.map_type');
+		$this->db->join("capture_history cah", "cah.id = ch.capture_history_id");
+		$this->db->join('objective o', 'o.obj_id = cah.obj_id');
+		$this->db->join("match_detail md", "md.id = cah.match_detail_id");
+		$this->db->join("server_linking sl", "sl.match_detail_id = md.id");
+		$this->db->join("server_info si", "si.server_id = sl.server_id");
+		$this->append_query($params);
+		return $this->db->query_all();
+	}
 }
 
 ?>

@@ -91,10 +91,34 @@ class Graph_Controller extends TinyMVC_Controller
 
 			if ( !isset($error) ) {
 				$score_history = $this->map_score->getActivitySummary($params);
-				// $capture_history = $this->skirmish_score->getActivitySummary($params);
-				// $claim_history = $this->claim_history->getActivitySummary($params);
+
+				$params = array(
+					"where" => array(
+						"last_flipped >=" => gmdate('Y-m-d H:i:s', strtotime("-1 hours"))
+					)
+				);
+				if ( isset($data['serverid']) ) { // filter by server's id first
+					$params['where']['sl.server_id'] = $data['serverid'];
+				} elseif( isset($data['matchid']) ) { // filter by match_id if no server id provided
+					$params['where']['match_id'] = $data['matchid'];
+				}
+				$capture_history = $this->capture_history->getActivitySummary($params);
+
+				$params = array(
+					"where" => array(
+						"claimed_at >=" => gmdate('Y-m-d H:i:s', strtotime("-1 hours"))
+					)
+				);
+				if ( isset($data['serverid']) ) { // filter by server's id first
+					$params['where']['sl.server_id'] = $data['serverid'];
+				} elseif( isset($data['matchid']) ) { // filter by match_id if no server id provided
+					$params['where']['match_id'] = $data['matchid'];
+				}
+				$claim_history = $this->claim_history->getActivitySummary($params);
 
 				$this->view->assign("score_history", $score_history);
+				$this->view->assign("capture_history", $capture_history);
+				$this->view->assign("claim_history", $claim_history);
 			} else {
 				$this->view->assign("error", $error);
 			}
@@ -104,7 +128,7 @@ class Graph_Controller extends TinyMVC_Controller
 		$form['serverList'] = $formBuilder->serverList($data['serverid']);
 		$form['matchList'] = $formBuilder->matchList($data['matchid']);
 		$form['submitBtn'] = $formBuilder->submitBtn();
-		$form['resetBtn'] = $formBuilder->resetBtn("/graphs/score_history");
+		$form['resetBtn'] = $formBuilder->resetBtn("/graphs/activity_summary");
 
 		$this->view->assign("form", $form);
 		$this->view->display("graphs/activity_summary_view");
